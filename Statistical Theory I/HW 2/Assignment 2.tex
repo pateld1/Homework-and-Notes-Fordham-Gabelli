@@ -1,0 +1,57 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, amsfonts}
+\newcommand{\ques}[1]{\noindent {\bf Question #1: }} 
+\renewcommand{\theenumi}{\alph{enumi}}
+\newcommand{\prob}[1]{\mathbb{P}(#1)}
+\newcommand{\pois}[2]{\left( \frac{#1^{#2} e^{-#1}}{#2!} \right) }
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Statistical Theory I}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center} \textbf{Assignment \#2: Chapter 3 Questions 48, 130, 152, 184, 196} \end{center}
+
+\ques{3.48} Two teams $A$ and $B$ play a series of games until one team wins four gams. Assume that the games are played independently and that the probability that $A$ wins any game is $p$. Compute the probability that the series lasts exactly five games. \\~\\
+To last $5$ games, a single team must win thrice and then lose, followed by a win. Thus
+$$ \prob{\text{5 games}} = \prob{\text{win 3 of 4 games}}\prob{\text{win 5th game}} = \binom{4}{3}p^3(1-p)p = 4p^4(1-p) $$ 
+\\
+\ques{3.130} A parking lot has two entrances. Cars arrive at entrance I according to a Poisson distribution at an average of three per hour and at entrance II according to a Poisson distribution at an average of four per hour. What is the probability that a total of three cars will arrive at the parking lot in a given hour? Assume that the numbers of cars arriving at the two entrances are independent. \\~\\
+Let $X_1 \sim \text{Poisson}(3)$ and $X_2 \sim \text{Poisson}(4)$. Then $$ \begin{aligned} 
+\prob{\text{3 cars}} &= \prob{X_1 = 0, X_2 = 3} + \prob{X_1 = 1, X_2 = 2} \\ &+ \prob{X_1 = 2, X_2 = 1} + \prob{X_1 = 3, X_2 = 0} \\ &= \prob{X_1 = 0}\prob{X_2 = 3} + \prob{X_1 = 1}\prob{X_2 = 2} \\ &+ \prob{X_1 = 2}\prob{X_2 = 1} + \prob{X_1 = 3}\prob{X_2 = 0} \\ &= \pois{3}{0}\pois{4}{3} + \pois{3}{1}\pois{4}{2} \\ &+ \pois{3}{2}\pois{4}{1} + \pois{3}{3}\pois{4}{0} \\ &= 0.0521 \end{aligned} $$ 
+\\
+\ques{3.152} If $Y$ has moment-generating function $m(t) = e^{6(e^t - 1)}$, what is $\mathbb{P}(|Y - \mu| \leq 2\sigma)$? \\~\\
+This is the moment-generation function for $\text{Poisson}(\lambda = 6)$. For the Poisson distribution, $\mu = \sigma^2 = 6$ and $\sigma = \sqrt{6}$. Then
+$$ \begin{aligned} \prob{|Y - \mu| \leq 2\sigma} &= \prob{\mu - 2\sigma \leq Y \leq \mu + 2\sigma} \\ &= \prob{6 - 2\sqrt{6} \leq Y \leq 6 + 2\sqrt{6}} \\ &= \prob{1.1 \leq Y \leq 10.9} \\ &= \prob{2 \leq Y \leq 10} \\ &= \sum_{i=2}^{10} \frac{6^i e^{-6}}{i!} \\ &= 0.940 \end{aligned} $$ 
+\newpage
+\ques{3.184} A city commissioner claims that $80\%$ of the people living in the city favor garbage collection by contract to a private company over collection by city employees. To test the commissioner's claim, $25$ city residents are randomly selected, yielding $22$ who prefer contracting to a private company. 
+\begin{enumerate} 
+\item If the commissioner's claim is correct, what is the probability that the sample would contain at least $22$ who prefer contracting to a private company? 
+\\ This is $X \sim \text{Binomial}(25, 0.8)$. $$ \prob{X \geq 22} = \sum_{i=22}^{25} \binom{25}{i} \times 0.8^i \times 0.2^{25 - i} = 0.234  $$ 
+\item If the commissioner's claim is correct, what is the probability that exactly $22$ would prefer contracting to a private company? \\
+$$ \prob{X = 22} = \binom{25}{22}0.8^{22}0.2^3 = 0.135 $$ 
+\item Based on observing $22$ in a sample of size $25$ who prefer contracting to a private company, what do you conclude about the commissioner's claim that $80\%$ of city residents prefer contracting to a private company? \\~\\
+The commissioner's claim is correct.
+\\
+\end{enumerate}
+
+
+\ques{3.196} The number of imperfections in the weave of a certain textile has a Poisson distribution with a mean of $4$ per square yard. The cost of repairing the imperfections in the weave is $\$10$ per imperfection. Find the mean and standard deviation of the repair cost for an $8$-square-yard bolt of the textile. \\
+If the textile is $8$-square-yard long, then the number of imperfections in the weave has a Poisson distribution with a mean of $4 \times 8 = 32$. Hence the mean and standard deviation of the repair cost is $$ \begin{aligned} 
+\mathrm{E}[\text{cost}] &= \mathrm{E}[10X] = 10\mathrm{E}[X] = 10 \cdot 32 = \$320 \\
+\sigma_{\text{cost}} &= \sqrt{\mathrm{Var}[\text{cost}]} = \sqrt{\mathrm{Var}[10X]} = \sqrt{10^2 \mathrm{Var}[X]} = \sqrt{100 \times 32} = \$56.568 \end{aligned} $$ 
+
+
+
+
+
+
+
+\end{document}

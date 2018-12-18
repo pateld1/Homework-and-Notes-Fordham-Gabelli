@@ -1,0 +1,123 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, amsthm, graphicx, tikz, pgfplots} 
+
+\tikzset{
+  treenode/.style = {shape=rectangle, rounded corners,
+                     draw, align=center,
+                     top color=white, bottom color=blue!20},
+  root/.style     = {treenode, font=\Large, bottom color=red!30},
+  env/.style      = {treenode, font=\ttfamily\normalsize},
+  dummy/.style    = {circle,draw}
+}
+
+
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Judgment and Decision Making}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center} \textbf{Homework \#3: Decision Trees} \end{center}
+
+A large machine in a factory has broken down and the company that owns the factory will incur costs of \$3000 for every day the machine is out of service. The factory's engineer has three immediate options: 
+\\~\\
+Option 1: She can return the machine to the supplier who has agreed to collect, repair and return it free of charge, but not to compensate the company for any losses they might incur while the repair is being carried out. The supplier will not agree to repair the machine if any other person has previously attempted to repair it. If the machine is returned, the supplier will guarantee to return it in working order in 10 days' time. 
+\\~\\
+Option 2: She can call in a specialist local engineering company. They will charge \$20000 to carry out the repair, and they estimate that there is a 30\% chance that they will be able to return the machine to working order in 2 days. There is, however, a 70\% chance that repairs will take 4 days. 
+\\~\\
+Option 3: She can attempt carry out the repair work herself, and she estimates that there is a 50\% chance that she could mend the machine in 5 days. However, if at the end of 5 days the attempted repair has no been successful, she will then have to decide whether to call in the local engineering company or to make a second attempt at repair by investigating a different part of the mechanism. This would take two further days, and she estimates that there is a 25\% chance that this second attempt would be successful. If she fails at the second attempt, she will have no alternative other than to call in the local engineering company. 
+
+\begin{enumerate} 
+\item Draw a decision tree to represent this problem. 
+ $$ \includegraphics[width = \textwidth]{DT} $$ 
+
+
+
+\newpage
+\item Calculate the total value at each endpoint. \\ 
+Going from top most endpoint to bottom most endpoint, 
+\begin{itemize} 
+
+\item if the engineer returns the machine to the supplier, then the total value is 
+$$ \$3,000 \times 10 \text{ days} = \$30,000 $$ 
+
+\item if the engineer decides to call the local engineering company and gets it repaired in $4$ days, then the total value is 
+$$ \$20,000 + (\$3,000 \times 4 \text{ days} ) = \$ 32,000 $$ 
+
+\item if the engineer decides to call the local engineering company and gets it repaired in $2$ days, then the total value is 
+$$ \$20,000 + (\$3,000 \times 2 \text{ days} ) = \$ 26,000 $$ 
+
+\item if the engineer attempts the work herself, fails, calls the local engineering company and gets it repaired in $4$ days, then the total value is 
+$$\$20,000 + (\$3,000 \times 5 \text{ days}) + (\$ 3,000 \times 4 \text{ days}) = \$47,000 $$ 
+
+\item if the engineer attempts the work herself, fails, calls the local engineering company and gets it repaired in $2$ days, then the total value is 
+$$ \$20,000 + (\$3,000 \times 5 \text{ days}) + (\$ 3,000 \times 2 \text{ days}) = \$41,000 $$ 
+
+\item if the engineer attempts the work herself, fails, try again, fail and get the engineering company to fix it in $4$ days, then the total value is 
+$$ \$20,000 + (\$3,000 \times 5 \text{ days}) + (\$3,000 \times 2 \text{ days}) + (\$3,000 \times 4 \text{ days}) = \$53,000 $$ 
+
+\item if the engineer attempts the work herself, fails, try again, fail and get the engineering company to fix it in $2$ days, then the total value is 
+$$ \$20,000 + (\$3,000 \times 5 \text{ days}) + (\$3,000 \times 2 \text{ days}) + (\$3,000 \times 2 \text{ days}) = \$47,000 $$ 
+
+\item if the engineer attempts the work herself, fails, try again and succeed in $2$ days, then the total value is 
+$$ (\$3,000 \times 5 \text{ days}) + (\$3,000 \times 2 \text{ days}) = \$21,000 $$ 
+
+\item if the engineer attempts the work herself and succeed in $5$ days, then the total value is 
+$$ \$3,000 \times 5 \text{ days} = \$15,000 $$ 
+
+\end{itemize} \newpage
+
+
+
+\item Solve the decision tree and summarize the optimal decision strategy. \\ 
+For option 1, the expected value is $\$30,000$. For option 2, the expected value is 
+$$ (0.7 \times \$32,000) + (0.3 \times \$26,000) = \$30,200 $$ 
+
+For option 3, if the engineer fails the work and calls the local engineering company, the expected value is $$ (0.7 \times \$47,000) + (0.3 \times \$41,000) = \$45,200$$ 
+
+But if the engineer fails and tries again and fails again and calls the local engineering company, the expected value is $$ (0.7 \times \$53,000) + (0.3 \times \$47,000) = \$51,200 $$ 
+However if the engineer fails and tries again and succeed in $2$ days, the expected value is $\$21,000$ and so the expected values of failing and trying again is 
+$$ (0.75 \times \$51,200) + (0.25 \times \$21,000) = \$43,650 $$ 
+Therefore the expected value of failing, considering calling the company and trying again, is 
+$$ (0.5 \times \$45,200) + (0.5 \times \$43,650) = \$44,425 $$ 
+Thus the actual expected value for option 3 is 
+$$ (0.5 \times \$44,425) + (0.5 \times \$15,000) = \$29,712.50$$ 
+
+To make a decision on which option to choose, choose the option that creates the least cost to the company. 
+$$ \begin{tabular}{c|c} 
+Option & Cost \\ \hline 
+1 & \$ 30,000 \\ \hline 
+2 & \$ 30,200 \\ \hline 
+3 & \$ 29,712.50 \end{tabular} $$ 
+The option that creates the least cost is option 3. The engineer should attempt to repair the machine herself. Note that option 1 comes to a close second with only a difference of \$287.50 in cost. 
+
+
+\newpage
+\item Suppose that the engineer is unsure of her estimate of there being a 50\% chance that she could fix the machine herself in 5 days. Conduct a sensitivity analysis on that estimate. What does the result of that analysis tell? \\
+Assume the probability of the engineer being able to fix the machine herself is $x$ and the probability of her failing to do so is $1-x$. Then the expected value 
+of option 3 is $15x + 44.425(1-x)$ which is in thousands. This looks like the following: 
+$$ \includegraphics[scale = 0.75]{SensitivityAnalysis} $$
+Looking closely in the range of the cost of option 1 and 2, we see the following: 
+$$ \includegraphics[scale = 0.75]{SensitivityCloseUp} $$
+This plot shows what estimate is needed to get the cost of options 1 and 2. If the estimate the engineer can fix the machine is 48.3\%, then the cost of going with option 2 and option 3 are the same. Likewise, if the estimate is 49\%, then the cost of going with option 1 and 3 are the same. Even a small change in the estimate that the engineer can fix the machine will cause a change in decision. If the estimate is greater than 49\%, then option 3 is favorable. However if it is less than 49\%, then option 1 is the better decision. The sensitivity of the decision lies within 1\% of how sure the engineer is. 
+
+
+\end{enumerate} 
+
+
+
+
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,96 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, amsfonts, graphicx}
+\newcommand{\ques}[1]{\noindent {\bf Question #1: }} 
+\renewcommand{\theenumi}{\alph{enumi}}
+\newcommand{\prob}[1]{\mathbb{P}(#1)}
+\newcommand{\cprob}[2]{\mathbb{P}(#1 ~|~ #2)}
+\newcommand{\pois}[2]{\left( \frac{#1^{#2} e^{-#1}}{#2!} \right) }
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Statistical Theory I}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center} \textbf{Assignment \#3: Chapter 4 Questions 14, 32, 138, 160, 174} \end{center}
+
+\ques{4.14} A gas station operates two pumps, each of which can pump up to $10,000$ gallons of gas in a month. The total amount of gas pumped at the station in a month is a random variable $Y$ (measured in $10,000$ gallons) with a probability density function given by $$ f(y) = \begin{cases} y &\text{ if } 0 < y < 1 \\ 2 - y &\text{ if } 1 \leq y < 2 \\ 0 &\text{ elsewhere } \end{cases} $$ 
+\begin{enumerate} 
+\item Graph $f(y)$. 
+$$ \includegraphics[scale = 0.1]{14a}$$ 
+
+\item Find $F(y)$ and graph it. \\
+For $0 < y < 1$, $$F(y) = \int_0^y t\,dt = \frac{y^2}{2}$$ 
+For $1 \leq y < 2$, $$ F(y) = \frac{y^2}{2} + \int_1^y 2-t \, dt = 2y - \frac{y^2}{2} - 1 $$ 
+For $y > 2$, $F(y) = 1$. Therefore 
+$$ F(y) = \begin{cases} 0 &\text{ if } y \leq 0 \\ \frac{y^2}{2} &\text{ if } 0 < y < 1 \\ 2y - \frac{y^2}{2} - 1 &\text{ if } 1 \leq y < 2 \\ 1 &\text{ if } y \geq 2 \end{cases} $$ 
+$$ \includegraphics[scale = 0.1]{14b}$$
+\item Find the probability that the station will pump between $8000$ and $12,000$ gallons in a particular month. 
+$$ \begin{aligned} \prob{0.8 < T < 1.2} &= F(1.2) - F(0.8) \\ &= \left( 2(1.2) - \frac{1.2^2}{2} -1 \right) - \left( \frac{0.8^2}{2} \right) \\ &= 0.68 - 0.32 \\ &= 0.36 \end{aligned} $$ 
+
+\item Given that the station pumped more than $10,000$ gallons in a particular month, find the probability that the station pumped more than $15,000$ gallons during the month. 
+$$ \begin{aligned} \cprob{Y > 1.5}{Y > 1} &= \frac{\prob{Y > 1.5 \text{ and } Y> 1}}{\prob{Y > 1}} \\ &= \frac{\prob{Y > 1.5}}{\prob{Y > 1}} \\ &= \frac{1 - F(1.5)}{1 - F(1)} \\ &= \frac{1 - [(2)(1.5) - (\frac{1.5^2}{2}) - 1]}{1 - [2(1) - (\frac{1^2}{2}) - 1]} \\ &= \frac{1 - 0.875}{1 - 0.5} \\ &= 0.25  \end{aligned} $$
+
+\end{enumerate} 
+
+\ques{4.32} Weekly CPU time used by an accounting firm has probability density function (measured in hours) given by 
+$$ f(y) = \begin{cases} \frac{3}{64}y^2(4-y) &\text{if } 0 \leq y \leq 4 \\ 0 &\text{ elsewhere } \end{cases} $$ 
+\begin{enumerate} 
+\item Find the expected value and variance of weekly CPU time. 
+$$ \begin{aligned} \text{E}[Y] &= \int_0^4 \frac{3}{64}y \cdot y^2 (4-y) \, dy \\ &= \frac{3}{64} \int_0^4 y^3(4-y) \, dy \\ &= \frac{3}{64}\left( y^4 - \frac{y^5}{5} \right)\Big|_{y=0}^{y=4} \\ &= 2.4 \\ 
+\text{E}[Y^2] &= \int_0^4 \frac{3}{64} y^4(4-y) \, dy \\ &= \frac{3}{64} \left( \frac{4y^5}{5} - \frac{y^6}{6} \right)\Big|_{y=0}^{y=4} \\ &= 6.4 \end{aligned} $$ 
+$$ \begin{aligned} \text{Var}[Y] &= E[Y^2] - (E[Y])^2 \\ &= 6.4 - (2.4^2) \\ &= 0.64 \end{aligned} $$ 
+\item The CPU time costs the firm $\$200$ per hour. Find the expected value and variance of the weekly cost for CPU time. 
+$$ \begin{aligned} \text{E}[C] &= \text{E}[200Y] = 200\text{E}[Y] = 200 \cdot 2.4 = \$480 \\ \text{Var}[C] &= \text{Var}[200Y] = 200^2 \cdot 0.64 = \$25600 \end{aligned} $$ 
+\item Would you expect the weekly cost to exceed $\$600$ very often? Why? 
+$$ \prob{200Y > 600} = \prob{Y > 3} = \frac{3}{64} \int_3^4 y^2(4-y) \, dy = 0.26 $$ 
+The weekly cost will exceed $\$600$ about $26\%$ of the time. Therefore it is expected to often exceed $\$600$. 
+
+\end{enumerate} 
+
+\ques{4.138} The moment generating function for $Y - \mu$, where $Y$ is normally distributed with mean $\mu$ and variance $\sigma^2$ is $$ m(t) = e^{\frac{t^2}{2}\sigma^2} $$ 
+\begin{enumerate} 
+\item Find the moment-generating function for $Y$. \\
+Let $Z = Y - \mu$. Then $Y = Z + \mu$. Then 
+$$ \begin{aligned} 
+m_Y(t) &= \text{E}[e^{t(Z + \mu)}] \\ &= \text{E}[e^{tZ}e^{t\mu}] \\ &= \text{E}[e^{tZ}]\text{E}[e^{t\mu}] \\ &= m(t) \cdot e^{t\mu} \\ &= e^{\frac{t^2}{2}\sigma^2} \cdot e^{t\mu} \\ &= e^{\frac{t^2}{2}\sigma^2 + t\mu} \end{aligned} $$ 
+\item Differentiate the above moment-generating function to show that $E(Y) = \mu$ and $V(Y) = \sigma^2$. 
+$$ \begin{aligned} m_Y'(t) &= e^{\frac{t^2}{2}\sigma^2 + t\mu} \cdot (t\sigma^2 + \mu) \\ m_Y'(0) &= e^{\frac{0^2}{2}\sigma^2 + (0)\mu} \cdot (0\sigma^2 + \mu) = 1 \cdot \mu \\ &= \mu = \text{E}[Y] \\ 
+m_Y''(t) &= (e^{\frac{t^2}{2}\sigma^2 + t\mu})(\sigma^2) + (e^{\frac{t^2}{2}\sigma^2 + t\mu})(t\sigma^2 + \mu)^2 \\ m_Y''(0) &= (e^{\frac{0^2}{2}\sigma^2 + (0)\mu})(\sigma^2) + (e^{\frac{0^2}{2}\sigma^2 + (0)\mu})((0)\sigma^2 + \mu)^2 \\ &= (1)(\sigma^2) + (1)(\mu)^2 = \sigma^2 + \mu^2 = \text{E}[Y^2] \\ \text{Var}[Y] &= \text{E}[Y^2] - (\text{E}[Y])^2 = \sigma^2 + \mu^2 - (\mu)^2 \\ &= \sigma^2 
+ \end{aligned} $$ 
+
+\end{enumerate} 
+
+\ques{4.160} Let the density function of a random variable $Y$ be given by $$ f(y) = \begin{cases} \frac{2}{\pi(1 + y^2)} &\text{ if } -1 \leq y \leq 1 \\ 0 &\text{ elsewhere } \end{cases} $$ 
+\begin{enumerate} 
+\item Find the distribution function. \\
+For $y < -1$, $F(y) = 0$. 
+For $-1 \leq y \leq 1$, $$ F(y) = \int_{-1}^y \frac{2}{\pi(1+y^2)} \, dy = \frac{2}{\pi} \tan^{-1} y + \frac{1}{2} $$ 
+For $y>1$, $F(y) = 1$. Thus 
+$$ F(y) = \begin{cases} 0 &\text{ if } y < -1 \\ \frac{2}{\pi} \tan^{-1} y + \frac{1}{2} &\text{ if } -1 \leq y \leq 1 \\ 1 &\text{ if } y > 1 \end{cases} $$ 
+\item Find $E(Y)$. 
+$$ \text{E}[Y] = \int_{-1}^1 \frac{2y}{\pi(1 + y^2)} \, dy $$ 
+Let $u = 1 + y^2$. Then $du = 2y \, dy$. Then $$ \text{E}[Y] = \int_{u = 2}^{u=2} \frac{1}{\pi u} \, du = 0$$ 
+\end{enumerate}
+
+
+\ques{4.174} The time (in hours) a manager takes to interview a job applicant has an exponential distribution with $\beta = \frac{1}{2}$. The applicants are scheduled at quarter-hour intervals, beginning at $8:00$ AM, and the applicants arrive exactly on time. When the applicant with an $8:15$ AM appointment arrives at the manager's office, what is the probability that he will have to wait before seeing the manager? \\
+The applicant will only have to wait if the $8:00$AM appointment is longer than $15$ minutes. 
+$$ \prob{Y > 0.25} = \int_{0.25}^\infty 2e^{-2y} \, dy = e^{-0.5} $$ 
+
+
+
+
+
+
+
+
+
+
+\end{document}

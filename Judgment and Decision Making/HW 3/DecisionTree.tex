@@ -1,0 +1,89 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, landscape, margin=0.5in]{geometry}
+\usepackage{amsmath, amsthm, graphicx, tikz, pdflscape} 
+
+\tikzset{
+  treenode/.style = {shape=rectangle, %rounded corners,
+                     draw, align=center,
+                     top color=white, bottom color=blue!20},
+  dec/.style = {%shape=text, rounded corners,
+                    draw, align=center,
+                    top color=white, bottom color=blue!20},
+  root/.style     = {treenode, font=\Large, bottom color=red!30},
+  env/.style      = {dec, font=\ttfamily\normalsize},
+  dummy/.style    = {circle,draw}
+}
+
+
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Judgment and Decision Making}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+
+
+$$ \begin{tikzpicture}
+  [
+  grow = right, 
+  %sibling distance = 4cm,
+ %level distance = 6cm,
+  edge from parent/.style = {draw, -latex}, 
+  every node/.style = {font = \footnotesize},
+  sloped
+  ]  
+  
+  \tikzstyle{level 1}=[sibling distance=30mm, level distance = 37mm] 
+  \tikzstyle{level 2}=[sibling distance = 15mm, level distance = 50mm]
+  \tikzstyle{level 3}=[sibling distance = 23mm, level distance = 40mm]
+  \tikzstyle{level 4}=[sibling distance = 12mm, level distance = 45mm]
+  \tikzstyle{level 5}=[sibling distance = 16mm, level distance = 50mm]
+
+
+		
+\node[root] {Decision} 
+	child {node [env] {Attempt work herself}
+		child {node [env] {Success in 5 days} 
+			edge from parent node [below] {0.5} }
+		child {node [env] {Failure}
+			child{node [env] {Try again}
+				child{node [env] {Success in 2 days}
+					edge from parent node [below] {0.25} }
+				child{node [env] {Failure - go to eng}
+					child{node [env] {Success in 2 days}
+						edge from parent node [below] {0.3} }
+					child{node [env] {Success in 4 days}
+						edge from parent node [above] {0.7} }
+					edge from parent node [above] {0.75} }
+				edge from parent node [below] {0.5} }
+			child{node [env] {Call company}
+				child{node [env] {Success in 2 days}
+					edge from parent node [below] {0.3} } 
+				child{node [env] {Success in 4 days}
+					edge from parent node [above] {0.7} }
+				edge from parent node [above] {0.5} }
+			edge from parent node [above] {0.5} }
+		edge from parent node [above] {} }
+	child {node [env] {Call local \\ engineering company}
+		child {node [env] {Success in 2 days}
+			edge from parent node [below] {0.3} }
+		child {node [env] {Success in 4 days} 
+			edge from parent node [above] {0.7} }
+		edge from parent node [below] {} } 
+	child {node [env] {Return to supplier - Success} 
+		edge from parent node [below] {} };
+		
+
+	
+	
+\end{tikzpicture} $$ 
+
+
+
+\end{document}

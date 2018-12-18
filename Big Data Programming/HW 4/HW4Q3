@@ -1,0 +1,6 @@
+studentList = load 'student' USING PigStorage('\t') AS (name: chararray, ID: int);
+resultList = load 'results' USING PigStorage('\t') AS (ID: int, grade: chararray);
+joinedList = join studentList by $1, resultList by $0;
+studentGrades = foreach joinedList generate name, grade;
+stupendousStudents = filter studentGrades by grade matches 'pass';
+dump stupendousStudents;

@@ -1,0 +1,216 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, listings, color} 
+
+\newcommand{\ques}[1]{\noindent {\bf Question #1: }} 
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  language=Scala,
+  showspaces=false,
+  backgroundcolor=\color{white},   % choose the background color
+  basicstyle=\footnotesize,        % size of fonts used for the code
+  breaklines=true,                 % automatic line breaking only at whitespace
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  keywordstyle=\color{blue},       % keyword style
+  stringstyle=\color{mymauve},     % string literal style
+  showstringspaces=false
+}
+
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Big Data Programming}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center} \textbf{Assignment \#3} \end{center}
+
+\ques{1} Implement Q3 of HW1 (word size count for file Alice.txt) in Spark and compare the performance with Hadoop MapReduce. 
+\begin{lstlisting}
+val file = sc.textFile("alice.txt")
+val counts = file.flatMap(line => line.split(" ")).map(word => (word, 1)).reduceByKey(_ + _)
+counts.saveAsTextFile("alice_output")
+\end{lstlisting}
+Compared to MapReduce, Spark completed these commands in an instant. This is because Spark RDDs can handle multiple map operations at once. It processes data in real time and faster unlike Hadoop. 
+\\~\\
+\ques{2} Given a travel data with the following format, use Spark RDD manipulations to answer the questions. 
+\begin{verbatim} 
+Column1: City pair (Combination of from and to ) : String
+Column2: From location : String
+Column3: To Location : String
+Column4: Product type : Integer (1=Air, 2=Car, 3=Air+Car, 4=Hotel,
+5=Air+Hotel, 6=Hotel+Car, 7=Air+Hotel+Car)
+Column5: Adults traveling : Integer
+Column6: Seniors traveling : Integer
+Column7: Children traveling : Integer
+Column8: Youth traveling : Integer
+Column9: Infant traveling : Integer
+Column10: Booking Date : Date
+Column11: Boarding Date : Date
+\end{verbatim}
+\begin{enumerate}
+\item Find top $20$ destination people travel the most. 
+
+\begin{lstlisting}
+val traveldata = sc.textFile("traveldata.txt")
+val splitOne = traveldata.map(lines => lines.split('\t')).map(x=>(x(2), 1)).reduceByKey(_+_)
+val splitOne_ordered = splitOne.map(x => x.swap).sortByKey(false)
+val quesOne = splitOne_ordered.map(x => x.swap).take(20)
+\end{lstlisting}
+\item Find top $20$ locations from where people travel the most. 
+\begin{lstlisting}
+val splitTwo = traveldata.map(lines => lines.split('\t')).map(x=>(x(1),1)).reduceByKey(_+_)
+val splitTwo_ordered = splitTwo.map(x => x.swap).sortByKey(false)
+val quesTwo = splitTwo_ordered.map(x => x.swap).take(20)
+\end{lstlisting}
+\item Find top $20$ cities that generate high airline revenues for travel, so that the site can concentrate on offering discount on booking to those cities to attract more bookings. 
+\begin{lstlisting}
+val airlinedata = traveldata.map(lines => lines.split('\t')).filter(x => {if ((x(3).matches(("1")))) true else false})
+val splitThree = airlinedata.map(x => (x(2), 1)).reduceByKey(_+_)
+val splitThree_ordered = splitThree.map(x => x.swap).sortByKey(false)
+val quesThree = splitThree_ordered.map(x => x.swap).take(20)
+\end{lstlisting}
+
+\end{enumerate}
+\newpage
+\ques{3} For the given employee data file (EMPSAL.txt), write a Scala program which calculates he minimum as well as the maximum salaries per department and saves the output in a file. (For the output, create any data with two columns, department and salary, for it.)
+\begin{lstlisting}
+import org.apache.spark.sql.types._
+import org.apache.spark.sql.Row
+
+def moneyToFloat (money: String): Float = {
+	money.replace("$", "").replace(",","").toFloat
+}
+
+def transformToRow (input: (String, (Float, Float))): Row = {
+	Row(input._1, input._2._1, input._2._2)
+}
+
+val schema = 
+	StructType (
+		StructField("Department", StringType, false)::
+		StructField("MinimumSalary", FloatType, false)::
+		StructField("MaximumSalary", FloatType, false) :: Nil)
+	
+val empsal = sc.textFile("empsal.txt")
+val getMaxs = empsal.map(lines=>lines.split('\t')).map(x=>(x(1), moneyToFloat(x(5)))).reduceByKey(math.max(_,_))
+val getMins = empsal.map(lines=>lines.split('\t')).map(x=>(x(1), moneyToFloat(x(5)))).reduceByKey(math.min(_,_))
+val sortMaxs = getMaxs.sortByKey()
+val sortMins = getMins.sortByKey()
+val joined = sortMins.join(sortMaxs)
+val together = joined.map(transformToRow)
+val df = spark.createDataFrame(together, schema)
+
+df.coalesce(1).write.format("com.databricks.spark.csv").option("header", "true").save("deptMinMaxSalary")
+\end{lstlisting}
+
+\ques{4} Airports data file (airports.csv) contains the following fields: 
+$$ \begin{tabular}{|c|c|} \hline 
+Field & Description \\ \hline 
+Airport ID & Unique OpenFlights identifier for this airport. \\ \hline 
+Name & Name of airport. May or may not contain the City name. \\ \hline 
+City & Main city served by airport. May be spelled differently from Name. \\ \hline 
+Country & Country or territory where airport is located. \\ \hline
+IATA/FAA & 3-letter FAA code, for airports locate in ``United States of America." \\ 
+& 3-letter IATA code, for all other airports. Blank if not assigned. \\ \hline 
+ICAO & 4-letter ICAO code. Blank if not assigned. \\ \hline 
+Latitude & Decimal degrees, usually to 6 significant digits. Negative is South, positive is North. \\ \hline 
+Longitude & Decimal degrees, usually to 6 significant digits. Negative is West, positive is East. \\ \hline
+Altitude & In feet. \\ \hline 
+Timezone & Hours offset from UTC. Fractional hours are expressed in decimals. \\ \hline 
+DST & Daylight savings time. One of E (Europe), A (US/Canada), S (South America), \\ 
+& O (Australia), Z (New Zealand), N (None) or U (Unknown). \\ \hline 
+timezone & Timezone in ``tz" (Olsen) format \\ \hline \end{tabular} $$ 
+\newpage
+Use SparkSQL analysis to answer the following questions: 
+\begin{lstlisting}
+val sqlcontext = new org.apache.spark.sql.SQLContext(sc)
+val airports = sqlcontext.read.format("csv").option("header", "true").option("inferSchema", "true").load("airports.csv")
+airports.createOrReplaceTempView("df")
+\end{lstlisting}
+\begin{enumerate} 
+\item Print the schema of the DataFrame created. 
+\begin{lstlisting}
+airports.printSchema()
+\end{lstlisting}
+
+\item How many airports are there in South east part of the dataset. 
+\begin{lstlisting}
+val q2 = spark.sql("SELECT AirportID FROM df WHERE Latitude < 0 AND Longitude > 0")
+q2.show
+\end{lstlisting}
+
+\item How many unique cities have airports in each country? 
+\begin{lstlisting}
+val q3 = spark.sql("SELECT Country, COUNT(*) City FROM df GROUP BY Country ORDER BY Country")
+q3.show
+\end{lstlisting}
+
+\item What is the average Altitude (in feet) of airports in each Country? 
+\begin{lstlisting}
+val q4 = spark.sql("SELECT Country, AVG(Altitude) FROM df GROUP BY Country ORDER BY Country")
+q4.show
+\end{lstlisting}
+
+\item How many airports are operating in each timezone? 
+\begin{lstlisting}
+val q5 = spark.sql("SELECT Timezone, COUNT(*) Airport FROM df GROUP BY Timezone ORDER BY Timezone")
+q5.show
+\end{lstlisting}
+
+\item Calculate average latitude and longitude for these airports in each country. 
+\begin{lstlisting}
+val q6 = spark.sql("SELECT Country, AVG(Latitude), AVG(Longitude) FROM df GROUP BY Country ORDER BY Country")
+q6.show
+\end{lstlisting}
+
+\item How many different DSTs are there? 
+\begin{lstlisting}
+val q7 = spark.sql("SELECT COUNT(DISTINCT DST) FROM df")
+q7.show
+\end{lstlisting}
+
+\end{enumerate} 
+\newpage
+\ques{6 from HW 2}
+In mathematics, the least common multiple (LCM) of two numbers is the smallest positive integer that can be divided by the two numbers without producing a remainder. LCM can be calculated as follows: $$ LCM(a.b) = \frac{a \cdot b}{GCD(a,b)} $$ where $GCD(a,b)$ is the greatest common divisor of $a$ and $b$, i.e., the largest number that divides both of them without leaving a remainder. Write a Scala program to implement a function to calculate $LCM(a,b)$ using Higher Order Functions. 
+\begin{lstlisting}
+object Question6 extends App{
+	
+	println("The LCM of 10 and 49 is: " + lcm(10, 40))
+	println("The LCM of 65 and 30 is: " + lcm(65, 30))
+	println("The LCM of 3 and 5 is: " + lcm(3,5))
+	println("The LCM of 6 and 3 is: " + lcm(6, 3))
+	println("The LCM of 12 and 48 is: " + lcm(12, 48))
+
+	def gcd(a: Int, b: Int): Int = {
+		if(b == 0) a
+		else gcd(b, a % b)
+	}
+
+	def lcm(a: Int, b: Int): Int = (a * b) / gcd(a, b)
+}
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

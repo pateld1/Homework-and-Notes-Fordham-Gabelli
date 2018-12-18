@@ -1,0 +1,452 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, amsthm} 
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{SD 7843: Judgment and Decision Making}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+
+\title{SD 7843: Judgment and Decision Making}
+\author{Darshan Patel}
+\date{Fall 2018}
+\maketitle
+
+\tableofcontents 
+\newpage
+\section{Normative Approach}
+
+\subsection{Course Introduction}
+\begin{itemize}
+\item Reading: Dave Armstrong (A)
+\item Decision making is broken down into judgment and choice
+\item Judgment: an evaluation of something that is uncertain 
+\item What makes it difficult? Randomness (aleatory uncertainty), incomplete knowledge (epistemic uncertainty)
+\item Choice: a selection between alternatives 
+\item What makes it difficult? Tradeoffs among conflicting objectives 
+\item Choice concerns our preferences or how much we value different outcomes 
+\item Judgment concerns our beliefs about the probability of these outcomes 
+\item Most decisions involve a combination of both 
+\item In the short run, quality of outcome = quality of decision + luck 
+\item In the long run, quality of outcome = quality of decision 
+\item It is important to separate decision quality from outcome quality when dealing with hiring/firing, rewards/punishments, learning/prediction
+\item It is more or less difficult to judge the decision of others depending on the type of world we're in: easy in a highly deterministic world, difficult in a highly random world 
+\item How do we study decision making? \begin{itemize} 
+\item Normative - how should decisions be made, how should you reason about a problem? 
+\item Descriptive - how do people make decisions, how do you reason about a problem?
+\item Prescriptive - given the way people actually make decision differs from the way they should, how can we help people make better decisions? \end{itemize} 
+\item How Do We Study Decision Making? \begin{itemize} 
+\item We have limited cognitive resources
+\item We often rely on intuitive short cuts (heuristics) to conserve these resources
+\item These short cus are often invoked automatically and without our conscious knowledge
+\item Sometimes these short cuts backfires, with predictable results (biases) 
+\item Goals: improve our own decision making, understand how others make decisions
+\end{itemize}
+\end{itemize}
+\newpage
+\subsection{Multiple Objectives}
+\begin{itemize}
+\item Reading: G\&W ch. 1 \& 3 (up to section ``Theoretical considerations'')
+\item Elements of a Decision Problem \begin{itemize} 
+\item Alternatives: available choice options 
+\item Objectives: what really matters in this decision 
+\item Attributes: measures of how well/badly well each alternative meets each objective \end{itemize} 
+\item Generating a list of objectives: what do you really want/have to have? what do you really want to avoid/cannot accept? what are potential good consequences of this decision that you want to maximize? what are potential bad consequences of this decision that you want to minimize? what makes one alternative better than another? 
+\item Most people concentrate on objectives that are tangible, quantitative and easy to evaluate; but not everything that can be counted counts and not everything that counts can be counted 
+\item Means Objectives: valuable because they contribute towards some larger objective 
+\item Fundamental Objectives: valuable in their own right 
+\item Objectives can be organized into a hierarchy: to move upward in the hierarchy (toward fundamental objectives) - why is this important?; to move downward in the hierarchy (away from fundamental objectives) - how could you achieve this? 
+\item A good list of objectives is: \begin{itemize} 
+\item Complete: includes everything that matters; if there were another means to minimize cost in this decision that we did not include, our list would not be complete
+\item Controllable: includes only those things that can be influenced by the decision; if our list included means to minimize costs, but that were not affected by this decision, our list would not be controllable
+\item Concise: there is no redundancy; if two of our means objects are measuring the same thing (or partially the same thing), then our list is not concise
+\item Measurable: there is an attribute that can quantify how well an alternative meets each objective
+\end{itemize} 
+\item To measure if alternatives meet your objectives, assign some attributes to your objectives 
+\item Lexicographic Choice Steps: \begin{enumerate} 
+\item Pick the most important choice 
+\item Choose the alternative that has the best attribute on that objective 
+\item If there is a tie, move on to the next most important objective, etc. \end{enumerate} 
+\item The lexicographic choice approach only requires you to rank your objectives but not to make explicit tradeoffs 
+\item But lexicographic strategies are non-compensatory: no matter how well an alternative does on one attribute, it cannot compensate for being worse on another attribute 
+\item SMART - Simple Multi-Attribute Rating Technique \begin{enumerate} 
+\item Score each alternative on each objective \begin{enumerate} 
+\item Assign a score of 100 to the best attribute value
+\item Assign a score of 0 to the worst attribute value 
+\item Assign intermediate scores to the other attribute values - this is done by creating a value function: identify a midpoint that is halfway between the least-preferred and most-preferred attribute values and assign it a value of 50, then do the same for 25 and 75, then find scores for each intermediate value of the attribute \end{enumerate}
+\item Weigh each objective relative to each others \begin{enumerate} 
+\item Construct hypothetical best and worst alternatives 
+\item Rank and assign weights to each objective based on the value of moving from the worst to the best attribute value 
+\item Normalize objective weights \end{enumerate}
+\item Multiply the scores by the objective weights and sum to provide each alternative with an overall weighted score 
+\item Conduct sensitivity analysis on questionable assumptions \end{enumerate} 
+\end{itemize} 
+\newpage
+\subsection{Uncertainty}
+\begin{itemize}
+\item Reading: G\&W ch. 5 \& 6 [4 \& 5 in old edition] (up to section ``The axioms of utility")
+\item Assignment: HW \#1
+\item The probability that an uncertain event results in a particular outcome is the relative frequency of that outcome in the long run 
+\item Events A and B are mutually exclusive if either one can occur or the other can occur or neither can occur but not both $$ P(A \text{ and } B) = P(A) + P(B) $$ 
+\item Events A and B are not mutually exclusive if either one can occur or the other can occur or neither can occur or both can occur $$ P(A \text{ or } B) = P(A) + P(B) - P(A \text{ and } B) $$ 
+\item Two outcomes are independent if the occurrence of one does not impact the probability of the other 
+\item The outcome that both event A and event B occur is called the joint outcome or intersection of outcomes A and B 
+\item For independent outcomes, $$ P(A \text{ and } B) = P(A) \cdot P(B) $$ 
+\item A conditional probability is the probability of an outcome occurring given a separate outcome occurring 
+\item For dependent outcomes, $$ P(A \text{ and } B) = P(A) \cdot P(B | A) $$ 
+\item The expected value of an uncertain prospect is the long run average value of that prospect 
+\item Expected value is the probability weighted sum of the monetary outcomes 
+\item Expected utility is the probability weighted sum of the utility of those outcomes
+\item A concave utility function implies risk aversion (CE < EV); A linear utility function implies risk neutrality (CE = EV); a convex utility function implies risk seeking (CE > EV)
+
+\end{itemize}
+
+\subsection{Decision Trees}
+\begin{itemize}
+\item Reading: G\&W ch. 7 [6 in old edition] (up to section ``Assessment of decision structure")
+\item Assignment: HW \#2
+\item Decision trees are graphical representations of decision problems that involve: points at which a choice between several options must be made and points of uncertainty which may resolve themselves in one of several ways 
+\item Decision trees can simplify seemingly complex problems with sequential decisions and dependent uncertainties
+\item Points at which a choice must be made are indicated by decision nodes; the branches from this node indicate each of the options that may be chosen 
+\item Points at which an uncertainty is resolved are indicated by chance nodes; the branches from this node indicate each of the possible outcomes of the uncertainty
+\item A decision problem is laid out in a decision tree from left to right 
+\item At the very left there is the root node, a decision representing the first choice that must be made
+\item On the far right are endpoints, all the possible outcomes from all combinations of choices and uncertainties
+\item The final elements are the probabilities for each branch of each chance node (the probabilities for its branches should sum to one)
+\item Decision trees are especially helpful when decision involve dependent uncertainties or sequential decisions
+\item A problem with a complex structure of nested if/then/else statements lends itself to the use of decision trees 
+\item Decision Criterion: choose the alternative with the highest expected value (expected monetary value)
+\item Start from the right (the outcomes) and move left
+\item When a chance node is encountered, calculate the expected value of that node and replace the entire node with its expected value
+\item When a decision node is encountered, choose the branch with the highest expected value and replace the entire node with that branch 
+\end{itemize}
+
+\newpage
+\section{Descriptive Approach}
+
+\subsection{Understanding Certainty I}
+\begin{itemize}
+\item Reading: What's The Trouble? How Doctors Think (Groopman), Fear Factor (Sunstein)
+\item Assignment: Survey \#1
+\item Intuition is associative: perceptual judgment (relative length/distance), social judgment, reading familiar text, solving familiar math problems, driving on a familiar road
+\item Reasoning is rule based: forming expectations about the future, planning, reading unfamiliar text, solving unfamiliar math problems, parking in a narrow road
+\item In making intuitive judgments about things that are unknown, we often rely on simplifying rules of thumb, called heuristics 
+\item  Judgments of distance are determined in part by its clarity - the more sharply the object is seen, the closer it appears to be 
+\item Lots of other things may impact relative clarity that have nothing to do with distance - such as fog, cloud, dust storms 
+\item If we rely on clarity as a cue to distance but fail to correct for other factors it will bias our judgment: over estimate distance on unusually foggy days, underestimate distance on unusually clear days 
+\item In making judgments about unknowns ,we often rely heuristics that utilize readily available cues; this is generally useful because it \begin{itemize} 
+\item Exploits structures of environments (the association between cues and judgment targets) 
+\item Exploit what we have evolved to be good at (learning those associations) \end{itemize} 
+\item Two problems: we form judgments in contexts in which the learned associations are not appropriate; we do so automatically and unconsciously and thus may not realize they are inappropriate 
+\item Relative judgment: is the height of Mt. Everest longer or shorter than x? 
+\item Point estimate: what is your best estimate of the height of Mt. Everest? 
+\item Anchoring and adjustment: begin with a salient starting point, or anchor and then adjust estimate in the direction we believe appropriate 
+\item Is this a good heuristic? We may start with an anchor with little relevance to our judgment and tend to terminate that adjustment too soon (adjust insufficiently)
+\item We adjust until we are too uncertain of whether to continue 
+\item Anchoring can lead us to: \begin{itemize} 
+\item Overestimate conjunctive probabilities: P(A and B) < P(A) or P(A < B) < P(B)
+\item Underestimate disjunctive probabilities: P(A or B) > P(A) or P(A or B) > P(B) 
+\end{itemize} 
+\item When forming judgments, we rely on salient starting points \begin{itemize} 
+\item We typically adjust insufficiently, leaving residual influence 
+\item Those anchors may not be relevant to the judgment \end{itemize} 
+\item Availability: refers to the tendency to judge the likelihood of an event by the ease with which relevant examples come to bind 
+\item Examples of availability include doctors making mistakes when their judgments about a patient are unconsciously influenced by the symptoms and illnesses of patients they have just seen 
+\item Availability: try to bring examples/instances to mind, judge frequency/probability based on how easily that is done 
+\item Biases occur when availability and frequency diverge 
+\item When our emotions are engaged, our judgment gets even more muddled 
+\item Vivid, dramatic images of harm can lead us to excessive fear of highly improbable risks whereas when we lack vivid images, we often treat the risk as if it were zero - the result is that we badly overestimate some risks and underestimate others 
+\item We are more likely to overestimate the likelihood, frequency, and causal impact of things that spring to mind, especially things that have come to mind recently, are the focus of our attention and if they are very evocative/vivid/emotional 
+\item Availability may generally be an acceptable strategy except when we have a biased sample in memory due to personal experience or biased reporting, the instances are extremely vivid or imaginable, similar instances have occurred recently or if the instances are described in an elaborated fashion
+\item Representativeness Error: doctors make such errors when their thinking is overly influenced by what is typically true; they fail to consider possibilities that contradict their mental templates of a disease 
+\item When people are asked to judge the probability that an object or event A belongs to class or process B, probabilities are evaluated by the degree to which A is representative of B, that is, by the degree to which A is similar to our stereotype of B
+\item We often have to combine different pieces of information to form judgments, or have to update our existing judgments in light of new information 
+\item Many problems have two types of information: individuating information specific to the thing being judged, background distributional information about the underlying category that thing belongs to 
+\item We tend to overweigh the individuating information and neglect the base rate 
+\item As the amount of detain in a scenario increases, its probability can only decrease steadily, but its representativeness and hence its apparent likelihood may increase
+\item Judgments of similarity don't have to follow the conjunction rule; using this heuristic can lead people to violate that rule 
+\end{itemize}
+\newpage
+\subsection{Understanding Certainty II}
+\begin{itemize}
+\item Reading: Don't Blink! The Hazards of Confidence (Kahneman), The Odds of That (Belkin), Cancer Cluster Myth (Gawande)
+\item Assignment: Survey \#2
+\item Anchoring: our final numerical estimates are often overly influenced by our starting point - if we start too high, we adjust towards the top of that range and stop; if we start too low, we adjust towards the bottom of that range and stop 
+\item Availability: how likely/frequent something is, how easily can I bring examples to mind 
+\item We overestimate the likelihood/frequency of things that we have recent experience with, are emotional or vivid, are over-reported, or are more specific
+\item Representativeness: how likely is it that an example belongs to a category, how similar is that example to our stereotype of that category 
+\item Chance is streakier, lumpier, than we think
+\item Our intuitions about random chance do hold for larger samples but we overapply that intuition to include smaller samples where it doe not hold 
+\item We believe that chance will correct itself after a streak 
+\item It cannot be random, there must be a cause 
+\item Lower sample size = greater variance (more dispersion around the average) 
+\item Lower sample size = less reliable knowledge; more chance 
+\item Var[performance] = Var[skill] + Var[luck]
+\item We underestimate the role of luck, we attribute variance in performance to differences in skill, people are insufficiently conservative (or regressive) when making predictions (expect the future to look like the past, largest errors in prediction for highest and lowest performers) 
+\item Extremes often trigger action 
+\item Extremes arise when both skill and luck align; skill persists but luck does not (on average) 
+\item We believe in the law of small numbers because we expect the characteristics of small samples to resemble those of the population of underlying process: we don't collect enough data and we make overly confident influences 
+\item We believe in the law of small numbers because we believe that random samples are smooth and balanced: we generate causal stories to explain noise, we predict that unbalanced and unsmooth processes will correct themselves 
+\item We view human performance as largely non-random 
+\item Extremes of luck (long strings of wins/losses) are seen as unlikely
+\item Three things: \begin{itemize} 
+\item Over-attribute outcomes to skill 
+\item Make overly extreme (non-regressive) predictions of the future
+\item Identify mean-reversion as causal \end{itemize} 
+\item Chance is streakier and more powerful than we expect it to be chance does not correct itself 
+\item Streakiness is inevitable and not necessarily evidence of cause 
+\item Small sample sizes = more variability 
+\item Extremes of performance are likely due, in part, to chance and are unlikely to be repeated 
+\end{itemize}
+\newpage
+\subsection{Overconfidence and Overoptimism}
+\begin{itemize}
+\item Reading: Delusions of Success (Lovallo \& Kahneman), The Overconfidence Problem in Forecasting (Thaler), Why Fact Don't Change Our Minds (Kolbert)
+\item Assignment: Survey \#3
+\item A large majority of people believe they are: \begin{itemize} 
+\item Better, more skilled and more likely to succeed than they are (overestimation) 
+\item Better, more skilled and more likely to succeed than others (overplacement) 
+\item More likely than others to experience favorable life events and less likely to suffer negative ones (comparative optimism) \end{itemize} 
+\item We hope our conclusions are shaped on the basis of evidence - seek evidence on all sides of a question , evaluate that evidence as objectively as one can 
+\item We do seek/shape evidence in support of a conclusion 
+\item Whenever you reason about the world, you have choices about: what information to gather, how much attention to pay to it; how to interpret it
+\item Motivated reasoning = desire + ambiguity 
+\item We apply different standards to claims that we like (can I believe it?) versus claims that we dislike (must I believe it?) 
+\item Self-serving biases need not reflect conscious corruption, you cannot overcome unconscious biases by increasing punishments for biases or rewards for objectivity; rather, you need to decrease desire or ambiguity or both 
+\item We explain away our failures and take credit for our successes 
+\item Primary knowledge: how much do you know? 
+\item Secondary knowledge: how much do you think you know? 
+\item Whether you know a lot or a little about a subject, you are still responsible for knowing how much you don't know 
+\item People's confidence intervals for their estimates of unknown quantities tend to be too narrow; we don't appreciate how much we don't know 
+\item Two sources of overprecision: confirmation bias and hindsight bias
+\item When gathering information, we tend to make tests consistent with our working hypothesis
+\item Confirmation Bias \begin{itemize} 
+\item The mere consideration of certain hypotheses makes information that is consistent with these hypotheses more accessible to the mind 
+\item People selectively search for information that confirms the hypothesis that they have in mind 
+\item People interpret the information that they have in a way that is consistence with the hypothesis that they have in mind \end{itemize} 
+\item All of these give people an unreasonable assurance that their hypotheses are correct 
+\item ``I knew it all along" effect: we misremember our past predictions as being more in line with actual outcomes and thus more accurate; this leads to excessive confidence in our predictions 
+\item Hindsight Bias: before an outcome occurs: role of uncertainty more salient; think about multiple possible choices; think about multiple possible causes 
+\item After an outcome occurs: previously uncertain outcomes take on an air of inevitability; if something had to occur, its cause must be obvious and direct (it must have been knowable) 
+\item Motivated Reasoning: we believe what we want to believe by applying different standards of evidence 
+\item Confirmatory Reasoning: we selectively seek out and overweigh evidence consistence with the hypothesis we have in mind 
+\item Hindsight Bias: we seek the past as being more predictable than it was; we see the future as more predictable that it is; we see ourselves as more accurate in our predictions than we are 
+\item Consequences of Overconfidence: overtrading and planning fallacy 
+\item People underestimate how long it will take them to complete tasks and how likely those tasks are to succeed, even when they know that such tasks usually run late or have often been unsuccessful in the past 
+\item Causes \begin{itemize} 
+\item Confirmation Bias: we seek support for our initial view rather than look for disconfirming evidence 
+\item Hindsight Bias: we believe that the world is more predictable than it really is; we overestimate our ability to make predictions 
+\item Availability: we have difficulty imagining all the ways events can unfold and focus on the few that most readily come to mind 
+\item Anchoring: we anchor on our best forecast and adjust insufficiently to account for uncertainty 
+\item Representativeness: if a plan or project looks like past successes, we just it to be likely to succeed, ignoring base rates \end{itemize} 
+\item Counteract confirmation bias by engaging in counter argumentation 
+\item Counteract hindsight bias by providing feedback 
+\item Counteract anchoring by thinking about the reasons values will be extremely low or extremely high first, rather than starting from your best estimate 
+\item Counteract availability bias by constructing fault trees 
+\item Counteract representativeness by taking an outside view 
+\item Overconfidence is bad when \begin{itemize} 
+\item Predicting or planning for the future
+\item Deciding what to do 
+\item We need to be receptive to contrary evidence 
+\item Others' overconfidence persuades us 
+\item It leads us to pursue costly opportunities \end{itemize} 
+\item Overconfidence is good when \begin{itemize} 
+\item Trying to motivate ourselves or others 
+\item We are trying to be persuasive \end{itemize} 
+\item Decider versus Doer, Motivator or Implementer \begin{itemize} 
+\item When you are deciding, be realistic 
+\item When you are implementing, indulge in overconfidence when it is valuable to your performance or that of others \end{itemize} 
+\end{itemize}
+\newpage
+\subsection{Group Judgment}
+\begin{itemize}
+\item Reading: Mass Intelligence (Surowiecki), Making Dumb Groups Smarter (Sunstein \& Hastie)
+\item Expertise: some members possess the right information
+\item A group is equivalent to their best member 
+\item Aggregation: the group collectively possesses the right information
+\item Group performs better than the best member 
+\item Synergy: information is more than the sum of its part 
+\item Group performs better than an aggregate 
+\item Deliberating groups tend to do better than their average members but not as well as their best members 
+\item The performance of a group is a function of \begin{itemize} 
+\item Group potential: a baseline level of performance (statistically aggregated knowledge of all group members)
+\item Effects of working together \begin{itemize} 
+\item Process Gains: synergistic aspects of a group of individuals working together 
+\item Process Losses: components that cause a group to perform at a level below its potential \end{itemize} \end{itemize} 
+\item Process Gains \begin{itemize} 
+\item Synergy: a member uses information in a way that the original holder did not because that member has different information or skills 
+\item Error Catching: groups are better at catching errors than are the individuals who proposed ideas 
+\item Stimulation: working as part of a group may stimulate and encourage individuals to perform better 
+\item Learning: members may learn from and imitate more skilled members to improve performance \end{itemize} 
+\item Process Losses \begin{itemize} 
+\item Social Loafing: each individual is less``on the hook" when part of a larger group, less incentive to work hard towards group accuracy 
+\item Social Conformity: people will modify their opinion in the direction perceived to be consistent with opinions held by others in a group 
+\item Poor Information Sharing: groups often have more information than the collection of individual members if those members have non-overlapping information and share that information with the group 
+\item Difficulty Identifying Expertise: when opinions conflict, whose opinion to weigh more? \end{itemize} 
+\item Identifying Expertise $$ \begin{tabular}{|c|c|c|} \hline 
+& General & Task Specific \\ \hline 
+Attribute & race, gender, age, & tenure, certifications, degrees, \\ 
+& attractiveness, height & job title, past task success \\ \hline 
+Behaviors & Accent, grammar, &  factual tone, fast/fluent speech, \\ 
+& dress, poise & claiming expertise, citing facts \\ \hline \end{tabular} $$ 
+\item It is hard to identify expertise - we mistake talkativeness / confidence / dominance with expertise; we are influenced by those we should ignore and ignore those we should be influenced by 
+\item Groups are formed by people we know and like, those who are similar to us in background and those who are likely to get along
+\item We often form groups with an aim towards group cohesiveness sacrificing diversity of information 
+\item Group Cohesion: enables action \begin{itemize} 
+\item Shared objectives 
+\item Efficiency - inducing norms (understood procedures, styles, expectations, etc.) 
+\item Fun 
+\item Trust \end{itemize} 
+\item Heterogeneity (diversity): enables accuracy \begin{itemize} 
+\item Diverse opinions, information, experience, values, etc
+\item Increases variety of ideas when creativity is needed 
+\item In forecasting, yields offsetting mistakes \end{itemize} 
+\item Fundamental Tension: factors that increase cohesion can decrease diversity and vice-versa 
+\item Ideal Group: \begin{itemize} 
+\item Cohesive on high-level goals, ideas, ethics, motivations and social relations 
+\item Diverse on deep levels (expertise, opinions, practical experience, etc.) in a context that enables dissenting opinions \end{itemize} 
+\item Group Polarization: opinions are not independence
+\item A group of diverse individuals has many heads while a group of similar individuals has one head; many heads is better than one head 
+\item Social Conformity: caused by the desire to be liked and accepted 
+\item Informational Conformity: caused by a desire to be correct 
+\item Master Title: opinions are not shared 
+\item Common information is likely to be shared first and most often; others with differing information conform to the group; others with differing information don't share it with the group 
+\item Groups are overconfident; we think we've identified the expert and consensus is mistaken for accuracy 
+\item A group is individuals who interact to come to a collective judgment (a statistical aggregation of individual judgments) 
+\item Averaging expert opinions is often a way to elicit good information from a group of people \begin{itemize} 
+\item Averaging cancels out idiosyncratic errors 
+\item Averaging forecasts can do no worse than the average individual 
+\item Averaging forecasts can often improve upon the best individual \end{itemize} 
+\item Prices in a market convey information 
+\item In prediction markets, you define an outcome and then invite people to buy/sell a contract based on that outcome 
+\item Statistical integration often misses out on \begin{itemize} 
+\item You don't see peoples' reasoning 
+\item You can't assess expertise (may be better not to try) 
+\item Helps with idiosyncratic but not systematic bias 
+\item Requires diversity \end{itemize} 
+\item To improve group judgment: have everyone separately write down a prediction and their reasoning, then have a moderator read all responses and finally, let people come together to discuss 
+\item Advantages \begin{itemize} 
+\item Anonymity: they don't know who we are, so we don't feel foolish; we don't know who they are so we won't be unduly inf;uenced
+\item Simultaneous revealing of information: initially expressed views don't affect how other information is revealed \end{itemize} 
+\end{itemize}
+\newpage
+\subsection{Psychology of Choice}
+\begin{itemize}
+\item Reading: Reversals (Kahneman)
+\item Assignment: Survey \#4
+\item Decision making can be broken down into judgment and choice 
+\item What makes choosing difficult? We don't know how to evaluate some attributes; we don't know how to trade off across attribute; we worry about making a mistake 
+\item We're not good at judging things in absolutes - we look for reference points which are malleable 
+\item Some attributes are easier to judge in isolation than others - more readily evaluable attributes are given more weight, differs across single/joint valuations 
+\item Option A is dominated by option B if: option B is at least as good as option  on all attributes and option B is better than option A on at least one attribute 
+\item The pain of a loss is often twice as great as the pleasure of a gain; we simply hate to lose - even small amounts 
+\item Two important consequences of loss aversion: we are resistance to change (status-quo bias) and we (often foolishly) try to claw ourselves out of a hole (sunk cost effect) 
+\item We should ignore sunk costs when making subsequent decisions about a possible course of action
+\item We often feel a need to continue persisting in the face of adversity out of hopes that it will allow us to recover those sunk costs 
+\item Be careful not to consider expended resources (sunk costs) when making decisions 
+\end{itemize}
+\newpage
+\subsection{Intuition vs. Algorithms}
+\begin{itemize}
+\item Reading: Noise (Kahneman, Rosenfield, Gandhi \& Blaser), Conditions for Intuitive Expertise (Kahneman \& Klein), Who's On First (Thaler \& Sunstein)
+\item Goodness of fit is measured by correlation $$ y = \alpha + \beta_1X_1 + \beta_2X_2 + \dots + \varepsilon $$ 
+\item A zero means no correlation, weak predictor of actual outcome; a one means perfectly correlated, strong predictor of actual outcome 
+\item We can be biased depending on if we are using the right variables, if we are weighing them incorrectly or if we are integrating them incorrectly 
+\item To deal with noise, average across people (across-people noise) or bootstrapping (within-person noise) 
+\item Bootstrapping: estimate a model of the expert's decisions - fit a model to the expert's decisions and use that model to replace the expert 
+\item Models often outperform humans: \begin{itemize} 
+\item Bias: wrong variables, wrong weighting, wrong integration 
+\item Noise: incidental effects of tiredness, hunger, mood, cloudy weather, etc 
+\item Even models of humans (bootstrapping) outperform humans 
+\item Averages of multiple judges can also reduce noise 
+\item The magnitude and cost of noise can often be judged even if we can't determine bias \end{itemize} 
+\end{itemize}
+\newpage
+\subsection{Improving Decision Making}
+\begin{itemize}
+\item Reading: Before You Make That Big Decision... (Kahneman, Lovallo \& Sibony), Choice Architecture (Thaler, Sunstein \& Balz)
+\item To improve decision making, either change the individual by improving our intuitive system (training) or invoke our reasoning system (cognitive strategies and rules/models) or change the environment by introducing mandates/bans, economic incentives or nudges 
+\item Process of Learning from Experience: make a decision, observe the outcome (was it successful?), avoid repeating mistakes, try to replicate successes 
+\item Learning from experience requires: that the same (or similar) decision be repeated over and over again and that we receive accurate and timely feedback about the quality of our decisions 
+\item Unfortunately, the real world often does not provide us with these things: \begin{itemize} 
+\item Decisions are often unique and not repeated 
+\item There is often a delay between actions and their outcomes 
+\item Most outcomes are the result of many different decisions 
+\item There is variability in the environment that can add noise to our feedback 
+\item We may not receive feedback on what might have happened had we decided differently \end{itemize} 
+\item We generate too few objectives / hypotheses / alternatives because of \begin{itemize} 
+\item Shallow thinking: putting in too little effort and stopping early 
+\item Narrow thinkingL focusing attention on only one category of objectives / hypotheses / alternatives \end{itemize} 
+\item ``Five Whys" routine can force a deeper search (drill down) for hypotheses
+\item Asking ``why" will lead you to what you really care: your fundamental objectives 
+\item Asking ``how" will lead you to: your means objectives 
+\item We more readily think of facts, experiences and arguments that support a current hypothesis more than readily than those that refute it (confirmation bias) 
+\item Have people start from opposite propositions when collecting information 
+\item People discount statistical information in favor of highly descriptive individual accounts (inside view) 
+\item Solution: generate a ``reference class" of similar cases and objects; implement procedures that emphasize base rates (prior probabilities) of success or failure 
+\item We attribute success/failures to the quality of the decision rather than to external factors such as luck 
+\item We reward/blame others for outcomes that may have largely been due to random chance (hindsight bias: once the outcome occurs, the role of randomness is discounted) 
+\item Solutions: document decision processes and underlying assumptions, so the quality of the decision process can be evaluated independently of the quality of the decision outcome 
+\item People have undue confidence in their conclusions 
+\item Build in corrections for overconfidence and create detailed work plans 
+\item Create overly narrow confidence intervals, start with extremes and think about time unpacking 
+\item When you are not paid for your performance, there is intrinsic motivation within the individual to enjoy the task/challenge and want to show that you can do well 
+\item When adding a small financial incentive, there is more motivation to do better 
+\item Without financial incentives, how hard should I work to make myself feel good about my performance? 
+\item With financial incentives, how hard should I work in order to earn \$x? 
+\item The motivation to arrive on time when there is no penalty for being late is social norms; it is rude to impose on others 
+\item When adding financial incentive to social norms, it does not change behavior and does the opposite of what is set out to be stopped 
+\item Without financial incentives, is it worth the inconvenience of arriving on time to avoid being rude? 
+\item With financial incentives, is it worth the inconvenience of arriving on time to avoid paying \$x? 
+\item Where is no payment for blood donation, you have selfless motivation (it is good to help others in need) and selfish motivation (it is good to look like someone who helps other) 
+\item Shifts Focus \begin{itemize} 
+\item Difficult to hold different rationales for a behavior in your mind at once 
+\item Money is very salient and tends to push out other reasons to engage in the behavior \end{itemize} 
+\item Information \begin{itemize} 
+\item A small reward tells us that the behavior is not valuable 
+\item A small punishment tells us that the behavior is not that bad \end{itemize} 
+\item Changing the nature of social interaction \begin{itemize} 
+\item Many of our interactions are based on mutually cooperating, following norms, reciprocating 
+\item Other interactions are based purely on economic exchange 
+\item Introducing a reward/punishment changes the ``rules of the game" \end{itemize} 
+\item Choice Architecture: the context in which people make decisions 
+\item Defaults work due to psychological reasons: \begin{itemize} 
+\item Risk/loss aversion (leads to inaction) 
+\item Regret (more potential regret from an action than an inaction)
+\item Lack of reasons for making an active choice 
+\item Procrastination \end{itemize} 
+\item Defaults also work due to belief-based reasons: \begin{itemize}
+\item Recommendations (that's what policy makers are recommending) 
+\item Social norms (that's what everyone does) 
+\item Prescriptive norms (that's the right decision) \end{itemize} 
+\item  If you want someone to do something; make it easy; if you don't want someone to do something, make it hard 
+\item Simplification: provide information, display information simply and graphically, provide clear feedback and consider the scale/units that information is provided in 
+\item When you want people to behave the way others do, provide a descriptive norm
+\item To make the effect of the norm stronger, make it more specific (and personal) 
+\item When you want people to behave differently from others, also provide an injunctive norm 
+\item When self-control is likely to be an issue in the future, get people to precommit to a behavior ahead of time
+\item If precommitment isn't feasible, get them to express an intention ahead of time
+\item Even better if the intention is specific and focuses on how the behavior will get done 
+\item Nudges \begin{itemize} 
+\item Default rules: what happens if no decision is made 
+\item Convenience: make desirable behaviors easy, make undesirable behaviors hard 
+\item Simplification: making information readily available / interpretable 
+\item Disclosure and self-disclosure: making clear the consequences of future choices, providing feedback on the consequences of past choices 
+\item Social norms: what others are doing, what others believe 
+\item Pre-commitment strategies and eliciting intention: forced planning, prospective decision making \end{itemize} 
+\end{itemize}
+
+
+
+
+\end{document}

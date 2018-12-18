@@ -1,0 +1,76 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, amsthm, graphicx} 
+
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Judgment and Decision Making}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+
+\title{SD 7843: Judgment and Decision Making}
+\author{Darshan Patel}
+\date{Fall 2018}
+%\maketitle
+\begin{center} \textbf{Homework \#1: Multiple Objectives} \end{center}
+
+A chemical company is expanding its operations and an old wool mill is to be converted into a processing plant. Four companies have submitted designs for the equipment that will be installed in the mill and a choice has to be made between them. The manager of the chemical company has identified three attributes that he considers to be important in the decision: ``cost," ``environmental impact," and ``reliability." 
+$$ \begin{tabular}{c|c|c|c} 
+Design & Cost & Environmental Impact & Reliability \\ \hline 
+A & \$90,000 & Moderate pollution & 100\% uptime \\ \hline 
+B & \$110,000 & Light pollution & 75\% uptime \\ \hline 
+C & \$170,000 & No pollution & 90\% uptime \\ \hline
+D & \$60,000 & Heavy pollution & 80\% uptime \end{tabular} $$
+
+\textbf{1.} Initially, the manager tells you that reliability is his number 1 concern, and therefore believes he should select design A, because it is the best on this attribute. What is the downside to such a decision strategy? Could you provide him with an example to demonstrate the problem? 
+\\~\\
+\textbf{Answer:} The downside to such a decision strategy is that it comes with a heavier impact on the environment. Design A has a moderate pollution impact on the environment whereas design B has a light pollution impact on the environment. 
+\\~\\
+The manager has decided it will be too difficult to think about costs and benefits together. For now he will focus only on the differences in environmental impact and reliability. He has assessed how well each design performs on each attribute by allocating values on a scale from 0 (the worst design) to 100 (the best design). These values are shown below: 
+$$ \begin{tabular}{c|c|c} 
+Design & Environmental Impact & Reliability \\ \hline 
+A & 20 & 100 \\ \hline 
+B & 70 & 0  \\ \hline 
+C & 100 & 90 \\ \hline 
+D & 0 & 50 \end{tabular} $$ 
+
+The manager is having trouble assigning weights to environmental impact and reliability. A plant that is only able to operate 75\% of the time would be a disaster for his business. However, the damage to his reputation from being a heavy polluter would also be significant. 
+\\~\\ \newpage
+\textbf{2.} To help him out, conduct a sensitivity analysis on the weight placed on environmental impact. Assume that the weights assigned to environmental impact and reliability add up to 100. Plot the results and interpret your findings. What would you tell the manager? 
+\\~\\
+\textbf{Answer:} \\ $$ \includegraphics{SensitivityAnalysis}$$
+For design A and D, as more weight is added to environmental impact and less to reliability, the total score drops dramatically. For design B, the score gets a large increase whereas for design C, the score does not change greatly. What this means is that design C is not very sensitive to the weight on environmental impact whereas design A, B and D are heavily sensitive to the weight on environmental impact.
+\\~\\
+\textbf{3.} Based upon your analysis the manager has elected to assign a weight of 30 to environmental impact and a weight of 70 to reliability. Calculate the benefit scores for each design. 
+\\~\\
+\textbf{Answer:} $$ \begin{tabular}{c|c} 
+Design & Benefit Score \\ \hline 
+A & $(0.3 \times 20) + (0.7 \times 100) = 76$ \\ \hline 
+B & $(0.3 \times 70) + (0.7 \times 0) = 21$ \\ \hline 
+C & $(0.3 \times 100) + (0.7 \times 90) = 93$ \\ \hline 
+D & $(0.3 \times 0) + (0.7 \times 50) = 35$ \end{tabular} $$ 
+\\~\\ \newline
+\textbf{4.} Now the manager is ready to consider cost. To assist him, first plot the benefits scores for each design against their cost and identify the designs which lie on the efficient frontier. 
+\\~\\ 
+\textbf{Answer:}  \\ $$ \includegraphics{CostBenefits} $$
+The designs that lie on the efficient frontier are design A, C and D. 
+\\~\\
+\textbf{5.} The manager also decides that if he was offered a hypothetical design which had the lowest reliability and the worst environmental impact he would be prepared to pay \$120,000 to convert that design to one which had the best impact on the environment but which still had the lowest level of reliability. What does this mean in terms of how much additional cost he is willing to incur for each additional point of benefits? 
+\\~\\
+\textbf{Answer:} The design with the lowest level of reliability is design B. The design with the best impact on the environment is design C. Thus the tradeoff between the two configurations the manager wants will come between these two designs. Looking at the cost vs benefits score graph, the additional cost the manager is willing to incur for each additional point of benefits is $$ \frac{\$170,000 - \$110,000}{93 - 21} = \$833.33$$
+\\~\\
+\textbf{6.} Based on your answers to questions 4 and 5, which design should the manager choose? \\~\\
+\textbf{Answer:} The manager should choose design C. Despite it being the costliest, it is the least sensitive to the change in the weight of environmental impact. In addition, it is on the efficient frontier and has the greatest benefits score. 
+
+\end{document}

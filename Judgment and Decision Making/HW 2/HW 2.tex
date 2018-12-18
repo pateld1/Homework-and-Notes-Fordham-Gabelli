@@ -1,0 +1,63 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, amsthm, graphicx} 
+
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Judgment and Decision Making}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+
+\title{SD 7843: Judgment and Decision Making}
+\author{Darshan Patel}
+\date{Fall 2018}
+%\maketitle
+\begin{center} \textbf{Homework \#2: Uncertainty} \end{center}
+
+A contractor is submitting an estimate to to a potential customer. The contractor believes that, if he offers to do the work for \$200,000, there is a 10\% probability that the customer will agree to that price, a 50\% probability that a price of \$120,000 would eventually be agreed upon, and a 40\% probability that the customer will simply refuse the offer and give the work to another contractor. \\~\\
+If instead the contractor offers to carry out the work for \$100,000, he believes that there is a 30\% probability that the customer will accept this price, a 60\% probability that the customer will bargain so that a price of \$80,000 will eventually be agreed upon, and a 10\% probability that the customer will refuse the offer and take the work elsewhere. \\~\\
+Now suppose that you inquire into the contractor's attitudes about risk and you find out: \begin{itemize}
+\item He is indifferent between \$80k for certain or a 60\% chance to win \$200k and a 40\% chance to win \$0
+\item He is indifferent between \$120k for certain or a 50\% chance to win \$200k and a 50\% chance to win \$80k
+\item He is indifferent between \$100k for certain or a 75\% chance to win \$120k and a 25\% chance to win \$80k 
+\end{itemize}
+
+\textbf{1. } Determine what price (\$200,000 or \$100,00) the contractor should offer, assuming he wishes to maximize expected monetary value. 
+\\~\\
+\textbf{Answer: } If the contractor offers \$200,000, the expected monetary value is
+$$ E[V_{200k}] = 0.1(\$200,000) + 0.5(\$120,000) + 0.4(\$0) = \$ 80,000 $$ 
+If the contractor offers \$100,000, the expected monetary value is 
+$$ E[V_{100k}] = 0.3(\$100,000) + 0.6(\$80,000) + 0.1(\$0) = \$78,000 $$ 
+The contractor should offer \$200,000 as it has the greatest expected monetary value. 
+\\~\\
+\textbf{2. } Based on the information above, sketch the contractor's utility function, assuming that the utility of the worst possible outcome (\$0) is 0 and the utility of the best possible outcome (\$200k) is 1. 
+\\~\\
+\textbf{Answer: } Let $u(0k) = 0$ and $u(200k) = 1$. Then
+$$ \begin{aligned} u(80k) &= .6u(200k) + .4u(0k) = .6(1) + .4(0) = .6 \\ u(120k) &= .5u(200k) + .5u(80k) = .5(1) + .5(.6) = .8 \\ u(100k) &= .75u(120k) + .25u(80k) = .75(.8) + .25(.6) = .75 \end{aligned} $$ 
+The contractor's utility function looks like: 
+$$ \includegraphics[width = \textwidth]{UtilityFunction} $$ 
+\\~\\
+\textbf{3. } Is the contractor risk averse/seeking/neutral? How can we tell (specifically)?
+\\~\\
+\textbf{Answer: } The shape of the contractor's utility function is concave. This means that the contractor is risk aversive. This means that he avoids riskier options. Looking at the graph, we note that the contractor believes a price of \$100k has a utility value of 0.75, which is close to the utility value of 1 at the price of \$200k, a 100\% fold increase in dollars. 
+\\~\\
+\textbf{4. } Determine what price (\$200,000 or \$100,000) the contractor should offer, assuming he wishes to maximize expected utility. 
+\\~\\
+\textbf{Answer: } If the contractor offers \$200,000, the expected utility is 
+$$ E[U_{200k}] = 0.1u(200k) + 0.5u(120k) + 0.4u(0k) = 0.1(1) + 0.5(.8) + 0.4(0) = 0.5 $$ 
+If the contractor offers \$100,000, the expected utility is 
+$$ E[U_{100k}] = 0.3u(100k) + 0.6u(80k) + 0.1u(0k) = 0.3(.75) + 0.6(.6) + 0.1(0) = 0.585 $$ 
+The contractor should offer \$100,000 as it has the greatest expected utility. 
+
+\end{document}

@@ -1,0 +1,102 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, graphicx, fancyvrb, amsfonts, bm}
+\newcommand{\ques}[1]{\noindent {\bf Question #1: }} 
+\newcommand{\prob}[1]{\mathbb{P}(#1)}
+\newcommand{\cprob}[2]{\prob{#1 ~|~ #2}}
+\newcommand{\low}{\text{low}}
+\newcommand{\high}{\text{high}}
+
+\setlength\parindent{0pt}
+
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Data Mining}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center} \textbf{Assignment 3} \end{center}
+
+\ques{1} Sign up for project teams in the shared document: Working alone. \\~\\
+
+\ques{2} Build a Naive Bayes classifier for the given training data with \textbf{add 1 smoothing} technique covered in the lecture slides: 
+
+$$ \begin{tabular}{|c|c|c|c|c|} \hline 
+Instance & Education Level & Career & Years of Experience & Salary \\ \hline 
+1 & High School & Management & Less than 3 & Low \\ \hline 
+2 & High School & Management & 3 to 10 & Low \\ \hline 
+3 & College & Management & Less than 3 & High \\ \hline 
+4 & College & Service & More than 10 & Low \\ \hline
+5 & High School & Service & 3 to 10 & Low \\ \hline 
+6 & College & Service & 3 to 10 & High \\ \hline 
+7 & College & Management & More than 10 & High \\ \hline 
+8 & College & Service & Less than 3 & Low \\ \hline
+9 & High School & Management & More than 10 & High \\ \hline 
+10 & High School & Service & More than 10 & Low \\ \hline \end{tabular} $$ 
+
+First, note $$ \prob{\low} = \frac{6}{10} = \frac{3}{5} ~~~~ \prob{\high} = \frac{4}{10} = \frac{2}{5} $$ 
+For the education levels: $$ \begin{aligned} 
+\cprob{Y = \low}{X_1 = \text{high school}} &= \frac{\cprob{X_1 = \text{high school}}{Y = \low} \prob{Y = \low}}{\prob{X_1 = \text{high school}}} \\ &= \frac{ \frac{4+1}{6+2} \cdot \frac{3}{5}}{\frac{1}{2}} = \bm{\frac{3}{4}} \\ 
+\cprob{Y = \high}{X_1 = \text{high school}} &= \frac{\cprob{X_1 = \text{high school}}{Y = \high} \prob{Y = \high}}{\prob{X_1 = \text{high school}}} \\ &= \frac{ \frac{1+1}{4 + 2} \cdot \frac{2}{5}}{\frac{1}{2}} = \bm{\frac{4}{15}} \\ 
+\cprob{Y = \low}{X_1 = \text{college}} &= \frac{\cprob{X_1 = \text{college}}{Y = \low} \cdot \prob{Y = \low}}{\prob{X_1 = \text{college}}} \\ &= \frac{ \frac{2+1}{6+2} \cdot \frac{3}{5}}{\frac{1}{2}} = \bm{\frac{9}{20}} \\
+\cprob{Y = \high}{X_1 = \text{college}} &= \frac{\cprob{X_1 = \text{college}}{Y = \high} \cdot \prob{\high}}{\prob{X_1 = \text{college}}} \\ &= \frac{ \frac{3+1}{4+2} \cdot \frac{2}{5}}{\frac{1}{2}} = \bm{\frac{8}{15}} \end{aligned} $$ 
+For the careers: $$ \begin{aligned} 
+\cprob{Y = \low}{X_2 = \text{management}} &= \frac{\cprob{X_2 = \text{management}}{Y = \low} \cdot \prob{Y = \low}}{\prob{X_2 = \text{management}}} \\ &= \frac{ \frac{2+1}{6+2} \cdot \frac{3}{5}}{\frac{1}{2}} = \bm{\frac{9}{20}} \\ 
+\cprob{Y = \high}{X_2 = \text{management}} &= \frac{\cprob{X_2 = \text{management}}{Y = \high} \cdot \prob{Y = \high}}{\prob{X_2 = \text{management}}} \\ &= \frac{ \frac{3+1}{4+2} \cdot \frac{2}{5}}{\frac{1}{2}} = \bm{\frac{8}{15}} \\ 
+\cprob{Y = \low}{X_2 = \text{service}} &= \frac{\cprob{X_2 = \text{service}}{Y = \low} \cdot \prob{Y = \low}}{\prob{X_2 = \text{service}}} \\ &= \frac{ \frac{4+1}{6+2} \cdot \frac{3}{5}}{\frac{1}{2}} = \bm{\frac{3}{4}} \\
+\cprob{Y = \high}{X_2 = \text{service}} &= \frac{\cprob{X_2 = \text{service}}{Y = \high} \cdot \prob{Y = \high}}{\prob{X_2 = \text{service}}} \\ &= \frac{ \frac{1+1}{4+2} \cdot \frac{2}{5}}{\frac{1}{2}} = \bm{\frac{4}{15}} 
+\end{aligned} $$ 
+For the levels of experience: $$ \begin{aligned} 
+\cprob{Y = \low}{X_3 = \text{less than 3}} &= \frac{\cprob{X_3 = \text{less than 3}}{Y = \low} \cdot \prob{Y = \low}}{\prob{X_3 = \text{less than 3}}} \\ &= \frac{\frac{2+1}{6+3} \cdot \frac{3}{5}}{\frac{3}{10}} = \bm{\frac{2}{3}} \\
+\cprob{Y = \high}{X_3 = \text{less than 3}} &= \frac{\cprob{X_3 = \text{less than 3}}{Y = \high} \cdot \prob{Y = \high}}{\prob{X_3 = \text{less than 3}}} \\ &= \frac{\frac{1+1}{4+3} \cdot \frac{2}{5}}{\frac{3}{10}} = \bm{\frac{8}{21}} \\ 
+\cprob{Y = \low}{X_3 = \text{3 to 10}} &= \frac{\cprob{X_3 = \text{3 to 10}}{Y = \low} \cdot \prob{Y = \low}}{\prob{X_3 = \text{3 to 10}}} \\ &= \frac{\frac{2+1}{6+3} \cdot \frac{3}{5}}{\frac{3}{10}} = \bm{\frac{2}{3}} \\ 
+\cprob{Y = \high}{X_3 = \text{3 to 10}} &= \frac{\cprob{X_3 = \text{3 to 10}}{Y = \high} \cdot \prob{Y = \high}}{\prob{X_3 = \text{3 to 10}}} \\ &= \frac{\frac{1+1}{4+3} \cdot \frac{2}{5}}{\frac{3}{10}} = \bm{\frac{8}{21}} \\
+\cprob{Y = \low}{X_3 = \text{more than 10}} &= \frac{\cprob{X_3 = \text{more than 10}}{Y = \low} \cdot \prob{Y = \low}}{\prob{X_3 = \text{more than 10}}} \\ &= \frac{\frac{2+1}{6+3} \cdot \frac{3}{5}}{\frac{4}{10}} = \bm{\frac{1}{2}} \\ 
+\cprob{Y = \high}{X_3 = \text{more than 10}} &= \frac{\cprob{X_3 = \text{more than 10}}{Y = \high} \cdot \prob{Y = \high}}{\prob{X_3 = \text{more than 10}}} \\ &= \frac{\frac{2+1}{4+3} \cdot \frac{2}{5}}{\frac{4}{10}} = \bm{\frac{3}{7}} \end{aligned} $$ 
+
+
+Use your model to classify the following new instances: 
+$$ \begin{tabular}{|c|c|c|c|} \hline 
+Instance & Education Level & Career & Years of Experience \\ \hline 
+1 & High School & Service & Less than 3 \\ \hline 
+2 & College & Retail & Less than 3 \\ \hline 
+3 & Graduate & Service & 3 to 10 \\ \hline \end{tabular} $$ 
+
+\textbf{Instance 1}: 
+$$ \begin{aligned} \cprob{Y = \low}{X = \text{hs, s, $<$ 3}} &= \cprob{X_1 = \text{high school}}{Y = \low} \cdot \cprob{X_2 = \text{service}}{Y = \low} \\ &\cdot \cprob{X_3 = \text{less than 3}}{Y = \low} \cdot \prob{Y = \low} \\ &= \frac{4+1}{6+2} \cdot \frac{4+1}{6+2} \cdot \frac{2+1}{6+3} \cdot \frac{3}{5} = 0.078 \\
+\cprob{Y = \high}{X = \text{hs, s, $<$ 3}} &= \cprob{X_1 = \text{high school}}{Y = \high} \cdot \cprob{X_2 = \text{service}}{Y = \high} \\ &\cdot \cprob{X_3 = \text{less than 3}}{Y = \high} \cdot \prob{Y = \high} \\ &= \frac{1+1}{4+2} \cdot \frac{1+1}{4+2} \cdot \frac{1+1}{4+3} \cdot \frac{2}{5} = 0.0126 \end{aligned} $$ 
+Now: $$ \cprob{Y = \low}{X = \text{hs, s, $<$ 3}} > \cprob{Y = \high}{X = \text{hs, s, $<$ 3}} $$ The predicted class label for \textbf{Instance 1} is: \textbf{low}. \\~\\
+\textbf{Instance 2}: 
+$$ \begin{aligned} \cprob{Y = \low}{X = \text{college, r, $<$ 3}} &= \cprob{X_1 = \text{college}}{Y = \low} \cdot \cprob{X_2 = \text{retail}}{Y = \low} \\ &\cdot \cprob{X_3 = \text{less than 3}}{Y = \low} \\ &= \frac{2+1}{6+2} \cdot \frac{0+1}{6+3} \cdot \frac{2+1}{6+3} \cdot \frac{3}{5} = 0.008 \\ 
+\cprob{Y = \high}{X = \text{college, r, $<$ 3}} &= \cprob{X_1 = \text{college}}{Y = \high} \cdot \cprob{X_2 = \text{retail}}{Y = \high} \\ &\cdot \cprob{X_3 = \text{less than 3}}{Y = \high} \cdot \prob{Y = \high} \\ &= \frac{3+1}{4+2} \cdot \frac{0+1}{4+3} \cdot \frac{1+1}{4+3} \cdot \frac{2}{5} = 0.010 \end{aligned} $$ 
+Now: $$ \cprob{Y = \low}{X = \text{college, r, $<$ 3}} < \cprob{Y = \high}{X = \text{college, r, $<$ 3}} $$ 
+The predicted class label for \textbf{Instance 2} is: \textbf{high}. \\~\\
+\textbf{Instance 3}: 
+$$ \begin{aligned} \cprob{Y = \low}{X = \text{grad, s, 3 to 10}} &= \cprob{X_1 = \text{grad}}{Y = \low} \cdot \cprob{X_2 = \text{service}}{Y = \low} \\ &\cdot \cprob{X_3 = \text{3 to 10}}{Y = \low} \cdot \prob{Y = \low} \\ &= \frac{0+1}{6+3} \cdot \frac{4+1}{6+2} \cdot \frac{2+1}{6+3} \cdot \frac{3}{5} = 0.013 \\ 
+\cprob{Y = \high}{X = \text{grad, s, 3 to 10}} &= \cprob{X_1 = \text{grad}}{Y = \high} \cdot \cprob{X_2 = \text{service}}{Y = \high} \\ &\cdot \cprob{X_3 = \text{3 to 10}}{Y = \high} \cdot \prob{Y = \high} \\ &= \frac{0+1}{4+3} \cdot \frac{1+1}{4+2} \cdot \frac{1+1}{4+3} \cdot \frac{2}{5} = 0.005 \end{aligned} $$ 
+Now: $$ \cprob{Y = \low}{X = \text{grad, s, 3 to 10}} > \cprob{Y = \high}{X = \text{grad, s, 3 to 10}} $$ 
+The predicted class label for \textbf{Instance 3} is: \textbf{low}. 
+
+For \textbf{Questions 3} and \textbf{4}, see ``Question 3 and 4.pdf." 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

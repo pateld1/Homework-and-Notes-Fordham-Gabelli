@@ -1,0 +1,155 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, listings, color} 
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color
+  basicstyle=\footnotesize,        % size of fonts used for the code
+  breaklines=true,                 % automatic line breaking only at whitespace
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  keywordstyle=\color{blue},       % keyword style
+  stringstyle=\color{mymauve},     % string literal style
+}
+
+
+
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Big Data Programming}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center} \textbf{Assignment \#1} \end{center}
+
+\section{Multiple Choice: }
+\begin{enumerate} 
+
+\item What are the daemons that are required to start the HDFS? 
+\begin{enumerate} 
+\item Resource Manager, Name Node
+\item Name Node, Secondary Name Node, Data Node
+\item Data Node, Node Manager
+\item Data Node, Node Manager, Secondary Name Node
+\end{enumerate} \textbf{Answer: B}
+
+\item You need to move a file titled weblogs into HDFS. When you try to copy the file, you can't. You know you have ample space on your DataNodes. Which action should you take to relieve this situation and store more files in HDFS? 
+\begin{enumerate} 
+\item Increase the block size on all current files in HDFS
+\item Increase the block size on your remaining files
+\item Decrease the block size on your remaining files
+\item Increase the amount of memory for the NameNode
+\end{enumerate} \textbf{Answer: C}
+
+\item How will the namenode decide that which datanode the data has to be written? Assume the replication factor is 3. 
+\begin{enumerate} 
+\item It chooses randomly
+\item It chooses the datanodes which are near by in that cluster
+\item It depends on the load on the datanodes
+\item Both (b) and (c)
+\end{enumerate} \textbf{Answer: D}
+
+\item Which command does Hadoop offer to discover missing or corrupt HDFS data?
+\begin{enumerate} 
+\item fsck
+\item du
+\item dskchk
+\item Hadoop does not provide any tools to discover missing or corrupt data; there is no need because three replicas are kept for each data block
+\end{enumerate} \textbf{Answer: A}
+ 
+\item Which describes how a client reads a file from HDFS? 
+\begin{enumerate} 
+\item The client queries the NameNode for the block location(s). The NameNode returns the block location(s) to the client. The client reads the data directory off the DataNode(s). 
+\item The client queries all DataNodes in parallel. The DataNode that contains the requested data responds directly to the client. The client reads the data directly off the DataNode.
+\item The client contacts the NameNode for the block location(s). The NameNode then queries the DataNodes for block locations. The DataNodes respond to the NameNode and the NameNode redirects the client to the DataNode that holds the requested data block(s).
+\item The client contacts the NameNode for the block location(s). The NameNode contacts the DataNode that holds the requested data block. Data is transferred from the DataNode to the NameNode and then from the NameNode to the client. 
+\end{enumerate} \textbf{Answer: A}
+
+\item Which of the following are not true? 
+\begin{enumerate} 
+\item In standalone no daemons will be running
+\item In Pseudo distributed mode no daemons will be running
+\item In fully distributed mode all the daemons will be running on the same machine
+\item (b) and (c)
+\end{enumerate} \textbf{Answer: D}
+
+\item What action occurs automatically on a cluster when a DataNode is marked as dead? 
+\begin{enumerate} 
+\item The NameNode forces re-replication of all the blocks which were stored on the dead DataNode.
+\item The next time a client submits job that requires blocks from the dead DataNode, the Resource Manager receives no heart beats from the DataNode. The Resource Manager tells the NameNode that the DataNode is dead, which triggers block re-replication on the cluster. 
+\item The replication factor of the files which had blocks stored on the dead DataNode is temporarily reduced, until the dead DataNode is recovered and returned to the cluster.
+\item The NameNode informs the client which writes the blocks that are no longer available; the client then re-writes the blocks to a different DataNode. 
+\end{enumerate} \textbf{Answer: A} \newpage
+
+\item During the MapReduce Job processing, splitting of an input file happens
+\begin{enumerate} 
+\item Randomly and decided by name node
+\item Randomly and decided by job tracker
+\item Line by Line and decided by Input Splitter
+\item None of the above and need to be specified by the mapper method explicitly
+\end{enumerate} \textbf{Answer: C}
+ 
+\item At what stage in MapReduce Job execution, the reduce function of the Job starts?
+\begin{enumerate} 
+\item at least one mapper is ready with its output
+\item map() and reduce() starts simultaneously
+\item after processing for all the map tasks is completed
+\item All of above options are possible depending on each case
+\end{enumerate} \textbf{Answer: C}
+
+\item MapReduce programming model provides a way for reducers to communicate with each other? 
+\begin{enumerate} 
+\item Yes, reducers running on the same machine can communicate with each other through shared memory
+\item No, each reducer runs independently and in isolation
+\end{enumerate} \textbf{Answer: B}
+
+\end{enumerate} \newpage
+
+\section{Short Answers: }
+
+You have 100 TB of data to store and process with Hadoop. The configuration of each available DataNode is as follows: \begin{itemize}
+\item 8 GB RAM
+\item 10 TB HDD 
+\item 100 MB/s read-write speed \end{itemize} 
+
+\begin{enumerate}
+\item Assuming the in memory execution time is negligible, how long would it take to process the 100 TB of data using only 1 DataNode? \\
+\textbf{Answer :} $$ \frac{100 \text{ TB } \times 1024 \text{ GB / TB} \times 1024 \text{ MB / GB }}{100 \text{ MB/s }} = 1048576 \text{ s } $$ 
+\item Your company has a Hadoop Cluster with replication factor = 3 and block size = 64 MB. With this configuration, how many DataNodes are required to store the 100 TB data in HDFS? \\
+\textbf{Answer: } $$ \frac{100 \times 3 \text{ TB }}{10 \text{ TB / Data Node }} = 30 \text{ Data Nodes } $$ 
+\item How long would it take a MapReduce program to finish the same task? \\
+\textbf{Answer: } $$ \frac{1048576 \text{ s }}{30} = 34952.53 \text{ s } $$ 
+\item If you want to be able to finish processing the 100 TB of data in 5 minutes, how many DataNodes would you need? \\
+\textbf{Answer: } $$ \frac{\frac{100 \text{ TB } \times 1024 \text{ GB / TB } \times 1024 \text{ MB / GB }}{100 \text{ MB / s }}}{5 \text{ mins } \times 60 \text{ s / min }} = 3495.2533 \text{ Data Nodes }$$ 
+\end{enumerate} \newpage
+
+\section{Programming: } 
+\begin{enumerate}
+
+\item Apply your MapReduce programming knowledge and write a MapReduce program to calculate the size of each word and count the number of words of that size in a given text file. \\~\\
+This is the mapper, mapQ3.py.
+\lstinputlisting[language = Python]{mapQ3.py} \newpage
+This is the reducer, reduceQ3.py.
+\lstinputlisting[language = Python]{reduceQ3.py} \newpage
+
+\item Apply your MapReduce programming knowledge and write a MapReduce program to process a dataset with temperature records in the weatherData.text file. Your task is to find out the dates with maximum temperature greater than 40 (a Hot Day) and minimum temperature lower than 10 (a Cold Day). \\~\\
+This is the mapper, mapQ4.py.
+\lstinputlisting[language = Python]{mapQ4.py} 
+This is the reducer, reduceQ4.py. 
+\lstinputlisting[language = Python]{reduceQ4.py}
+
+\end{enumerate}
+
+
+\end{document}
