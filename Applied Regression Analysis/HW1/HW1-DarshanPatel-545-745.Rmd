@@ -1,0 +1,264 @@
+---
+title: "SDGB 7840 HW 1: Chocolate & Nobel Prizes"
+author: "Darshan Patel"
+date: "1/18/2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Read the *New England Journal of Medicine* article, "Chocolate Consumption, Cognitive Function, and Nobel laureates" (Messerli, F.H., Vol. 367(16), 1562-1564; 2012). A reconstruction of Messerli's data is contained in the file "nobel_chocolate.txt." The information gathered in the dataset is from several different sources. The number of Nobel prize winnders is from Wikipedia and includes winners through November 2012, population information (used to compute the "nobel_rate" variable) is from the World Bank and chocolate market size is from the Euromonitor International's Passport Database. 
+
+Replicate Messerli's analysis. 
+
+### Question 1: According to Messerli, what is the variable "number of Nobel laureates per capita" supposed to measure? Do you think it is a reasonable measure? Justify your answer. 
+
+Answer: According to Messerli, the variable "number of Nobel laureates per capita" represents the proportion of people with "superior cognitive function." He believes that this would give a sense of the overall cognitive function of the country. In my opinion, this is not a reasonable measure because it is letting just a handful of people who have gotten an award to represent intelligence of a country. To better measure the cognitive function of a country, Messerli should use something that takes a greater proportion of the country's population and measures their cognitive intelligence rather than scaling up the variable by 10 million. 
+
+### Question 2: Are countries without Nobel prize recipients included in Messerli's study? If not, what type of bias(es) would that introduce? 
+
+Answer: Countries without Nobel prize recipients are not included in Messerli's study. This introduces selection bias because data is selected subjectively, as in, if there was a Nobel laureate from that country. 
+
+### Question 3: Are the number of Nobel laureates per capita and chocolate consumption per capita measured on the same temporal scale? If not, how could this affect the analysis? 
+
+Answer: The number of Nobel laureates per capita and chocolate consumption per capita are not measured on the same temporal scale. As stated in the article, data for $22$ countries came from different times. Data was available for $1$ country from 2011, $15$ countries from 2010, $5$ from 2004 and $1$ from 2002. There is variation in the time collection of the Nobel laureates. In addition, the data for chocolate consumption may have been taken from one year alone, that could be far from when the Nobel prize was given out in some countries. There is no consistency here. 
+
+### Question 4: Create a table of summary statistics for the following variables: Nobel laureates per capita, GDP per capita, and chocolate consumption. Include the statistics: minimum, maximum, median, mean and standard deviation. Remember to include the units of measurement in your table. 
+
+Answer: 
+```{r}
+# Import tidyverse 
+library(tidyverse)
+
+# Read in the data and select only the columns of data needed
+df <- read_delim("nobel_chocolate.txt", delim = ',')
+df <- df %>% select("country", "nobel_rate", "GDP_cap", "chocolate")
+
+# Create a table of minimum, maximum, median, mean and standard
+# deviation of the 3 variables 
+sum_stats <- data.frame("min" = apply(df[,c("nobel_rate", "GDP_cap", 
+                                           "chocolate")],2, min), 
+                       "max" = apply(df[,c("nobel_rate", "GDP_cap",
+                                           "chocolate")], 2, max), 
+                       "med" = apply(df[,c("nobel_rate", "GDP_cap",
+                                           "chocolate")], 2, median), 
+                       "mean" = apply(df[,c("nobel_rate", "GDP_cap",
+                                            "chocolate")], 2, mean), 
+                       "sd" = apply(df[,c("nobel_rate", "GDP_cap",
+                                          "chocolate")], 2, sd))
+
+# Rename the rows 
+rownames(sum_stats) <- c("Nobel laureates per capita, in number of Nobel laureates per 10 million population", 
+                        "GDP per capita, in units of currency per person", 
+                        "chocolate consumption, in kg/year/capita")
+
+# Print the summary statistics table in a viewable manner
+t(sum_stats)
+```
+
+### Question 5: Create histograms for the following variables: Nobel laureates per capita, GDP per capita and chocolate consumption. Describe the shape of the distributions. 
+
+Answer: 
+```{r}
+# Import gridExtra
+library(gridExtra)
+
+# Create histograms for each of the 3 variables 
+g1 <- ggplot(df, aes(x = nobel_rate)) + geom_histogram(binwidth = 2, 
+                                                      color = "darkblue",
+                                                      fill = "lightblue") + 
+  ggtitle("Nobel Laureates per Capita") + theme_minimal()
+g2 <- ggplot(df, aes(x = GDP_cap)) + geom_histogram(binwidth = 1000, 
+                                                   color = "forestgreen", 
+                                                   fill = "springgreen") + 
+  ggtitle("GDP per capita") + theme_minimal()
+g3 <- ggplot(df, aes(x = chocolate)) + geom_histogram(binwidth = 1, 
+                                                     color = "maroon", 
+                                                     fill = "pink") + 
+  ggtitle("Chocolate Consumption") + theme_minimal()
+
+# Print the histograms in an aesthetic view
+grid.arrange(g1, g2, g3, ncol = 2)
+```
+
+The distribution of noble laureates per capita is skewed right, as well as the distribution of chocolate consumption. The distribution of GDP per capita is slightly skewed left. 
+
+### Question 6: Construct a scatterplot of Nobel laureates per capita vs. chocolate consumption. Label Sweden on the plot. Compute the correlation between these two variables and add it to the scatterplot. How would you describe this relationship? Is correlation an appropriate measure? Why or why not? 
+
+Answer: 
+```{r}
+# Create scatterplot of NL per capita vs chocolate consumptions
+# Add the label of Sweden and the correlation value
+ggplot(df, aes(x = chocolate, y = nobel_rate)) + 
+  geom_point(color = "dodgerblue") + 
+  geom_text(data = df[df$country == "Sweden",], 
+            label = "Sweden", nudge_y = -1.5) + 
+  ggtitle("Nobel Laureates per Capita vs. Chocolate Consumption") + 
+  geom_text(label = paste("r = ", 
+                          round(cor(df$nobel_rate, df$chocolate), 3), 
+                          sep = ""), 
+            x=9, y=2, size=5, color="firebrick") + 
+  theme_minimal()
+```
+
+The relationship between nobel laureates per capita and chocolate consumption is fairly strong and linear. The correlation between nobel laureates per capita and chocolate consumption is $0.801$. Correlation would be an appropriate measure here because the relationship between the two variables is evident and can be explained using a regression line. 
+
+### Question 7: What is Messerli's correlation value? (Use the correlation value that includes Sweden.) Why is your correlation different? 
+
+Answer: Messerli's correlation value is $0.791$ (with Sweden). The correlation calculated here is different because we used an updated data set. Namely, the data set here included winners through November 2012 whereas the one Messerli used only included winners through October 20, 2011. 
+
+### Question 8: Why does Messerli consider Sweden an outlier? How does he explain it? 
+
+Answer: Messerli considers Sweden as an outlier because its predicted number of Nobel laureates is $14$ when it is actually $32$, more than twice the value expected. Messerli proposes that there is some patriotic bias by the Nobel Committee in Stockholm (the capital of Sweden) therefore they may be inclined to give out more Noble prizes to people in their country. Messerli also proposes that the Swedes are sensitive to chocolate, that even a small amount of chocolate greatly impacts their cognitive skills.
+
+### Question 9: Regress Nobel laureates per capita against chocolate consumption (include Sweden.):
+
+Answer:
+```{r}
+# Regress NL against chocolate consumption
+model <- lm(nobel_rate~chocolate, df)
+
+# Print the output of the model
+summary(model)
+```
+
+(a) What is the regression equation? (Include units of measurement.)
+```{r}
+# Print coefficients
+summary(model)$coefficients[,1]
+```
+The regression equation is 
+$$ Y  = -3.400366 + 2.496258X $$
+where $Y$ is the number of Nobel laurates per $10$ million population and $X$ is the chocolate consumption in kg/yr/capita.
+
+(b) Interpret the slope. 
+
+A one unit increase in the chocolate consumption in kg/yr/capita is associated with a $2.496258$ increase in the number of Nobel laureates per 10 million population. 
+
+(c) Conduct a residual analysis to check the regression assumptions. Make all plots within one figure. Can we conduct hypothesis tests for this regression model? Justify your answer.
+```{r}
+# Import broom
+library(broom)
+
+# Find the residuals
+residuals <- augment(model)[,c("chocolate", ".resid")]
+
+# Create a plot showing the residuals vs x values
+r1 <- ggplot(residuals, aes(x = chocolate, .resid)) + 
+  geom_point(color = "cadetblue") + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  ggtitle("Model Residuals Plot") + 
+  labs(x = "chocolate consumption, in kg/yr/capita", y = "residual") + 
+  theme_minimal()
+
+# Create a plot showing the normal quantile plot of the residuals
+r2 <- ggplot(residuals, aes(sample = .resid)) + 
+  stat_qq(color = "darkorchid") + 
+  stat_qq_line(linetype = "dashed") + 
+  ggtitle("Normal Quantile Plot of the Residuals") + 
+  labs(x = "Theoretical Quantile", y = "Sample Quantile") + 
+  theme_minimal()
+
+# Print the plots in one figure
+grid.arrange(r1, r2, ncol =2)
+```
+
+The model residuals plot shows that the residuals are not fairly bounded as chocolate consumption increase. Rather, the residuals become more spread out as chocolate consumptions increase. The normal quantile plot of the residuals shows that the points form a relatively straight line. This means that the data comes from a normal distribution. 
+
+Therefore the constant variance assumption is violated while the normality assumption is satisfied. Hypothesis testing can be conducted for this regression model with caution. 
+
+(d) Is the slope significant (conduct a hypothesis test and include the regression output)? Test at the $\alpha = 0.05$ level and specify the hypotheses being tested. 
+```{r}
+# Print the output of the model
+summary(model)
+```
+Let the null hypothesis be: $H_0: \beta_1 = 0$ and the alternative hypothesis be: $H_A: \beta_1 \neq 0$. Let $\alpha = 0.05$. Then the $t$-statistic is calculated to be $6.133$ with an associated $p$-value of roughly $0$. This means that the slope, $\beta_1$, is statistically significant since the $p$-value is strictly less than $\alpha$. 
+
+(e) Add the regression line to the scatterplot. 
+```{r}
+# Plot the regression line on the scatterplot above
+ggplot(df, aes(x = chocolate, y = nobel_rate)) + 
+  geom_point(color = "darkgreen") + 
+  geom_abline(intercept = summary(model)$coefficients[1,1],
+              slope = summary(model)$coefficients[2,1]) + 
+  lims(x = c(0, 15), y = c(0, 40)) + 
+  ggtitle("Nobel Laureates per Capita vs. Chocolate Consumption") + 
+  theme_minimal()
+```
+
+### Question 10: Using the model, what is the number of Nobel laureates expected to be for Sweden? What is the residual? (Include units of measurement.)
+
+Answer: According to the model, the number of Nobel laureates expected for Sweden is
+```{r}
+nl_sweden <- predict(model, newdata = df[df$country == "Sweden","chocolate"])
+nl_sweden
+```
+Nobel laureates per 10 million population. The residuals, or difference between the predicted value and the actual number of Nobel laureates per 10 million population is
+```{r}
+error <- df[df$country == "Sweden", "nobel_rate"] - nl_sweden
+error
+```
+
+### Question 11: Now we will see if the variable GDP per capital (i.e., "GDP_cap") is a better way to predict Nobel laureates.
+
+Answer: 
+(a) In one figure, construct a scatter plot of (i) Nobel laureates vs. GDP per capita and (ii) log(Nobel laureates) vs. GDP per capita. Which plot is more linear? Label Sweden on both plots. On the second plot, label the two countries which appear on the bottom left corner. 
+```{r}
+# Find the countries that were outliers
+df[log(df$GDP_cap) < 9.5,]
+
+# Plot GDP_cap vs nobel_rate and 
+# label Sweden
+g3 <- ggplot(df, aes(x = GDP_cap, y = nobel_rate)) + geom_point() + ggtitle("Nobel Laureates vs. GDP per capita") + 
+  geom_text(data = df[df$country == "Sweden",], label = "Sweden", nudge_x = -5000)
+
+# Plot GDP_cap vs nobel_rate and
+# label Sweden and the other 2 outliers
+g4 <- ggplot(df, aes(x = GDP_cap, y = log(nobel_rate))) + geom_point() + ggtitle("Log of Nobel Laureates \n vs. GDP per capita") + geom_text(data = df[df$country == "Sweden",], label = "Sweden", nudge_x = -7000) + geom_text(data = df[log(df$GDP_cap) < 9.5,], label = c("Brazil", "China"), nudge_x = 1000, nudge_y = 0.35)
+
+# Print the plot in 1 figure
+grid.arrange(g3, g4, ncol = 2)
+```
+
+The plot of log of Nobel Laureates per capita vs. GDP per capita is more linear than the plot of Nobel Laureates vs. GDP per capita. 
+
+
+(b) Is Sweden still an outlier? Justify your answer. 
+
+Sweden does not appear to be an outlier in this scenario because its both its Nobel Laureates per capita value and log of Nobel Laureates per capita value does not deviate much from the other countries when plotted against the GDP per capita.
+
+(c) Regress log of Nobel laureates against GDP per capita. Provide the output and add the regression line to the scatterplot. 
+```{r}
+# Create a linear model to preduct log of Nobel 
+# Laureates using GDP per capita
+model2 <- lm(log(nobel_rate)~GDP_cap, df)
+
+# Print the output of the model
+summary(model2)
+```
+
+The regression line has the equation $$ Y = -3.267 + 0.0001607X$$ where $X$ is the GDP per capita, in currency per person, and $Y$ is the log of Nobel laureates per capita, in number of Nobel laurates per 10 million population. According to this model, using log(Nobel laureates per capita) and GDP per capita to predict Nobel laureates per capita was better than using chocolate consumption, and Nobel laureates, to do the same. Here the correlation value between both variables is $0.77$ while before it was $0.64$. Furthermore, the $p$-value associated with `GDP_cap` is less than $\alpha = 0.05$ and so the null hypothesis, namely that $\beta_{\text{GDP_cap}} = 0$, can be rejected and so the coefficient is statistically significant. 
+
+This is the regression line plotted on the scatterplot. 
+```{r}
+# Plot the regression line on the scatterplot
+ggplot(df, aes(x = GDP_cap, y = log(nobel_rate))) + 
+  geom_point(color = "darkgreen") + 
+  geom_abline(intercept = summary(model2)$coefficients[1,1],
+              slope = summary(model2)$coefficients[2,1]) + 
+  ggtitle("Log of Nobel Laureates per Capita vs. GDP per Capita") + 
+  theme_minimal()
+```
+
+(d) The log-$y$ is a multiplicative model: $\log(y) = \beta_0 + \beta_1x$ is $y = e^{\beta_0 + \beta_1x}$ For such a model, the slope is interpreted as follows: a unit increase in $x$ changes $y$ by approximately $(e^{\beta_1} - 1) \times 100\%$. For the above regression model, interpret the slope as so. Include units of measurement.
+```{r}
+# Calculate the slope interpretation
+(exp(summary(model2)$coefficients[2,1]) - 1) * 100
+```
+A one unit increase in the GDP per capita, in currency per person is associated with a $0.01607463$ increase in the number of Nobel laureates per 10 million population. 
+
+### Question 12: Does increasing chocolate consumption cause an increase in the number of Nobel Laureates? Justify your answer. 
+
+Answer: Increasing chocolate consumption does not necessarily *cause* an increase in the number of Nobel Laureates. In the investigation here, a strong positive correlation between the two was found, with a correlation value of $0.64$. However, just because there is a correlation does not imply there is causation. To make this statement, a controlled experiment/study would need to be done. 

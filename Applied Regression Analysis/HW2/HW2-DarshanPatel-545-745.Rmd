@@ -1,0 +1,263 @@
+---
+title: 'SDGB 7844 HW 2: Vintage Wine'
+author: "Darshan Patel"
+date: "2/7/2019"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1: Read the posted article "Bordeaux wine vintage quality and weather," by Ashenfelter, Ashmore, and LaLorne (CHANCE, 1995). Three regression models are considered in this article. Answer the following questions. 
+
+(a) What is a wine "vintage"? 
+
+Answer: A wine "vintage" is a way to describe aged wine; it tells the year/place in which the wine was produced. According to the paper, "bad" vintages are young and usually overpriced whereas "good" vintages may be underpriced and old. 
+
+(b) What is the response variable for the three models described in this paper? 
+
+Answer: The response variable for the three models described in this paper is the (log or regular) price of vintages.
+
+Now download the data in "wine.dat". This is some of the data the authors used to fit their models. The columns are vintage (`VINT`), log of average vintage price relative to 1961 (`LPRICE2`), rainfall in the months preceding the vintage in mL (`WRAIN`), average temperature over the growing season in $^\circ$C (`DEGREES`), rainfall in September and August in mL (`HRAIN`) and age of wine in years (`TIME_SV`).
+
+*NOTE*: the average temperature in September is not available in this data set so the third regression model from the paper cannot be fit. 
+
+```{r}
+# Import tidyverse  
+library(tidyverse)
+# Read in data and note the delimiter and NA values
+df <- read_delim("wine.dat", delim = ',', na = '.')
+```
+
+(c) Which values of `LPRICE2` are missing and, according to the article, why have they been omitted? 
+
+Answer: 
+```{r}
+# Find data that has missing LPRICE2
+df[is.na(df$LPRICE2),]
+
+# Save count of missing data rows
+nulls <- nrow(df[is.na(df$LPRICE2),])
+```
+Ten of the $11$ observations that have missing values for `LPRICE2` is shown above. These values have been omitted due to one of two reasons. The two vintages from the 1950s were omitted because they were no longer being sold at the time of the publication of the article. The other nine vintages, from 1981 to 1989, were omitted because the weather conditions that created these vintages were abnormal compared to the typical growing season for vintages. The increased temperature at the time created wine that was excellent yet young. It did not make sense to add vintages that were created using abnormal conditions.
+
+(d) Make a scatterplot matrix of the variables (explanatory and response) included in the models? Discuss findings.
+
+Answer:
+```{r, message=FALSE, warning=FALSE}
+# Import GGally 
+library(GGally)
+# Create scatterplot matrix of all variables
+ggpairs(df) + theme_minimal()
+```
+
+`VINT` and `TIME_SV` are linearly correlated, which makes sense because `TIME_SV` only measures the age of the wine (in years) at the time of the study, and `VINT` gives the year the wine was made. `LPRICE2` appears to have a linear correlation with `VINT`, `DEGREES` and `TIME_SV`. No other variables appear to look correlated. 
+
+(e) Fit the two regression models from the paper. Which is the best regression model? Justify the answer and include relevant output (let $\alpha = 0.05$). Did you choose the same model as the authors? 
+Answer: 
+```{r}
+# Model 1 - Log price vs vintage
+model_vint_price <- lm(LPRICE2 ~ VINT, df)
+summary(model_vint_price)
+```
+At an $\alpha$ level of $0.05$, it appears that the coefficient estimate of $\beta_{\text{VINT}}$ is not statistically significant because its $p$-value is $0.0157$ which is greater than the significance level.
+
+```{r}
+# Model 2 - Log price vs weather vars
+model_weather_price <- lm(LPRICE2 ~ WRAIN + DEGREES + HRAIN, df)
+summary(model_weather_price)
+```
+It is found that at the $\alpha$ level of $0.05$, the coefficient estimates for $\beta_{\text{WRAIN}}$, $\beta_{\text{DEGREES}}$ and $\beta_{\text{HRAIN}}$ are statistically significant because their $p$-values are less than the significance level. This signifies that the null hypotheses, namely, $\beta_{\text{WRAIN}} = 0$, $\beta_{\text{DEGREES}} = 0$ and $\beta_{\text{HRAIN}} = 0$ can be rejected. 
+
+The better regression model is the second model, with `WRAIN`, `DEGREES` and `HRAIN`. This is because the model has an adjusted $R^2$ statistic of $0.7069$, meaning that $70.69\%$ of the variation in the log price of vintages were explained by the three variables. This contrasts with the first model that has a $R^2$ statistic of $0.212$, meaning that only $21.2\%$ of the variation in the log price of vintage was explained by `VINT`. In addition, the RSE in the second model is lower than the RSE in the first model. This is the opposite choice from the authors' choice. The authors' choice of the best model was the one that used the year of the vintages. 
+
+(f) What is the sample size for the models?
+
+Answer: 
+```{r}
+# Print sample size
+sample_size <- nrow(df) - nulls
+sample_size
+```
+The sample size of the models are $27$. $11$ observations (from the original $38$) were removed from the size of the dataset due to missingness. 
+
+(g) Write out the regression equation of the model in part (e). Include the units of measurement. Interpret the partial slopes and the $y$-intercept. Does the $y$-intercept have a practical interpretation? 
+
+Answer: 
+
+For the first model,
+```{r}
+# Print coefficients of first model
+summary(model_vint_price)$coef[,1]
+```
+$$ Y = 68.231 - 0.0354X $$ where $Y$ is the log price of the vintage in dollars and $X$ is the year the vintage was made in, in year. According to this model, an increase in $1$ in the vintage (or year a wine is made) is associated with a decrease of $0.03543$ in the log price of the vintage. Furthermore, the log price of vintage is $68.213$ in the year $0$. This $y$-intercept has no practical interpretation here. 
+
+For the second model, 
+```{r}
+# Print coefficients of second model
+summary(model_weather_price)$coef[,1]
+```
+$$ Y = -13.444 + 0.001X_1 + 0.712X_2 - 0.003X_3 $$ where $Y$ is the log of average price of the vintage (in dollars), $X_1$ is the rainfall in the months preceeding the vintage (in mL), $X_2$ is the average temperature over the growing season (in $^\circ$C) and $X_3$ is the rainfall in September and August (in mL). According to this model, an increase of $1$ mL in the average rainfall in the months preceding the vintage, while keeping average temperature and rainfall in September and August constant, is associated with a $0.001$ increase in the log of average price of the vintage in dollars. Likewise, an increase of $1^\circ$ C is associated with an increase of $0.712$ in the log average price of the vintage in dollars, while keeping the other two rainfall variables constant. In addition, an increase of $1$ mL in the average rainfall in September and August is associated with a a decrease of $0.003$ in the log average price of the vintage, while keeping the other two weather variables constant. Now, when the amount of rainfall in the months preceding the vintage is $0$ mL, and the amount of rainfall in September and August is $0$ mL, AND the average temperature over the growing season is $0^\circ$C, then the log average price of vintages is $-13.444$. This has no practical interpretation here. 
+
+(h) Make a table with the following statistics for both models: SSE, RMSE, PRESS, and RMSE$_{\text{jackknife}}$. Compare the relevant statistics. Based on this information, would you change your answer to part (e)? Justify your answers. 
+
+Answer: 
+```{r}
+# Import DAAG
+library(DAAG)
+# Model 1 Calculations
+sse1 <- summary(model_vint_price)$sigma^2 * (sample_size - 1)
+rmse1 <- sqrt(sse1 / (sample_size - (1 + 1)))
+press1 <- press(model_vint_price)
+rmsejk1 <- sqrt(press1 / (sample_size - (1 + 1)))
+# Model 2 Calculations
+sse2 <- summary(model_weather_price)$sigma^2 * (sample_size - 1)
+rmse2 <- sqrt(sse2 / (sample_size - (3 + 1)))
+press2 <- press(model_weather_price)
+rmsejk2 <- sqrt(press2 / (sample_size - (3 + 1)))
+# Store and print statistics in a nice dataframe
+stats_df <- data.frame("Model 1" = c(sse1, rmse1, press1, rmsejk1),
+                      "Model 2" = c(sse2, rmse2, press2, rmsejk2))
+rownames(stats_df) <- c("SSE", "RMSE", "PRESS", "RMSE_JACKKNIFE")
+stats_df
+```
+
+According to this table, the SSE, RMSE, PRESS and RMSE$_\text{jackknife}$ statistics from the second model are lower than the oens from the first model. This means that the second model made fewer errors than the first model. Hence the answer given to part (e) remains the same, i.e., the model using `WRAIN`, `DEGREES` and `HRAIN` to predict `LPRICE2` is better than the one using only `VINT`.
+
+(i) Could we use these regression models to predict quality for wines produced in 2005? Justify your answer. 
+
+Answer: It is not advisable to use these regression models to predict quality for wines produced in 2005. This is because 2005 falls way beyond the scope of this study, which ends in 
+```{r}
+tail(df$VINT, 1)
+```
+Predicting the quality of wines produced $16$ years in the future from when this dataset has data on is considered extrapolating. There is no clear information whether the relationships found above will hold $16$ years into the future. 
+
+
+## Question 2: Model the prestige level of occupations using variables such as education and income levels. This data was collected in 1971 by Statistics Canada (the Canadian equivalent of the US Census Bureau or the National Bureau of Statistics of China). The data is in the file "prestige.dat" and the variables are described below: 
+
+```{r}
+# Data description table
+prestige_col_df <- data.frame("variable" = c("prestige (y)", "education", "income", 
+                                            "women", "census", "type"),
+                             "description" = c("Pineo-Porter prestige score for occupation, 
+                                               from a social survey conducted in the mid-1960s",
+                                               "average education of occupational incumbents, 
+                                               years, in 1971",
+                                               "average income of incumbents, dollars, in 1971",
+                                               "percentage of incumbents who are women",
+                                               "Canadian Census occupational code",
+                                               "type of occupation: bc = blue collar, 
+                                               prof = professional / managerial / technical, 
+                                               wc = white collar"))
+# Import knitr
+library(knitr)
+# Print data description table 
+kable(prestige_col_df, caption = "Column Description")
+```
+
+(a) Do some internet research and write a short paragraph in your own words about how the Pineo-Porter prestige score is computed. Include the reference(s) you used. Do you think this score is a reliable measure? Justify your answer.
+
+Answer: In a social study done by Pineo and Porter in Canda during the 1960s, participants were asked to rank occupations in how they viewed it in terms of respect. At the same time, the US-based National Opinion Research Center also conducted a similar study where people were asked to rank occupations. The results from these two surveys were compared and used to compute the Pineo-Porter prestige score by matching the occupations to census data and then regressing prestige ranking on education and income using a subset of occupations. Then the prestige score was found by forming predictions using the regression equation for all the occupations. 
+
+Source: http://homes.chass.utoronto.ca/~boydmon/research_papers/SES_scales/Recasting_Rethinking.pdf. 
+
+I believe this is a reliable measure because education and income does play a big role in how jobs are looked at by people. People tend to view high-paying jobs, ones that require higher education, as better than low-paying jobs that only require the minimalist amount of education. 
+
+(b) Create a scatterplot matrix of all the **quantitative* variables. Use a different symbol for each profession type: no type (`pch=3`), "bc" (`pch=6`), "prof" (`pch=8`) and "wc" (`pch=0`) when making the plot. For the remainder of this question, use the explanatory variables: income, education, and type. Does restricting our regression to only these variables make sense given the explanatory analysis? Justify your answer. 
+
+Answer: 
+```{r, message=FALSE, warning=FALSE}
+# Read in data 
+df2 <- read_delim("prestige.dat", delim = ',')
+
+# Code the profession type using pch
+pch_indicator <- rep(3, nrow(df2))
+pch_indicator[df2$type == "bc"] <- 6
+pch_indicator[df2$type == "prof"] <- 8
+pch_indicator[df2$type == "wc"] <- 0
+
+# Create the scatterplot matrix of all quantitative
+# varaibles, making use of profession type symbols
+ggpairs(df2[sapply(df2, class) != "character"], 
+        mapping = aes(pch = as.factor(pch_indicator))) + 
+  theme_minimal()
+```
+
+Given the plot above, it makes sense to regress on only income, education and type. There is no correlation between prestige and percentage of incumbents who were women. The magnitude of the correlation between prestige and percentage of incumbents who were women is also not high enough to warrant it useful for regression. It can also be seen in that plot that there is a linear relationship between prestige and census but it is very scattered. 
+
+(c) Which professions are missing "type"? Since the other variables for these observations are available, we could group them together as a fourth professional category to include them in the analysis. Is this advisable or should we remove them from our data set? Justify your answer.
+
+Answer: 
+```{r}
+# Print rows with missing profession type
+df2[is.na(df2$type),]
+```
+
+The four professions that have missing "type" are: athletes, newsboys, babysitters and farmers. It would not make sense to group them together as a fourth professional category because there are only $4$ observations as such and it can introduce some bias in the analysis. It is advisable to remove them from our data set. 
+
+(d) Visually, does there seem to be an interaction between type and education and/or type and income? Justify your answer.
+
+Answer: 
+```{r}
+# Create plots of the interactions
+g1 <- ggplot(df2, aes(x = income, y = prestige, color = education)) + geom_point() + 
+  ggtitle("Income vs. Prestige, based on Education Level") + 
+  theme_minimal()
+g2 <- ggplot(df2, aes(x = income, y = prestige, color = type)) + geom_point() + 
+  ggtitle("Income vs. Prestige, based on Job Type") + 
+  theme_minimal()
+
+# Import gridExtra
+library(gridExtra)
+# Print the graphs aesthetically
+grid.arrange(g1, g2, nrow = 2)
+```
+
+There apears to be an interaction between type and education, as well as type and income. It can be seen that as education level goes up, people have higher income and higher prestige. This contrasts with the people who have low education level; their income is in the lower range, as well as their prestige. On the other plot, it can be seen that `prof` have higher prestige, yet have scattering incomes. Other than `prof`, `bc` and `wc` appear to be in the same income range as well as prestige group. This interaction, although apparent somewhat, is weak since `bc` and `wc` does not appear to be distinguishable in their income and prestige. There is a visible interaction between type and education. 
+
+(e) Fit a model to predict prestige using: income, education, type and any interaction terms based on your answer to part (d). Evaluate the model and include relevant output. Use your answer to part (c) to determine which observations to use in your analysis.
+
+Answer: 
+```{r}
+# Create model using income, education, type to predict prestige
+# and print output
+model_prestige <- lm(data = df2, prestige ~ income + education + type + type*education)
+summary(model_prestige)
+```
+This model has an adjusted $R^2$ value of $0.8306$, meaning that $83.06\%$ of the variance in prestige was explained by the income, education, type and interaction term (education and type). Furthermore, the coefficient estimates for $\beta_{\text{income}}$ and $\beta_{\text{education}}$ are statistically significant since their $p$-values are less than $\alpha = 0.05$. The observations used in this analysis were the ones that had an actual `type` of profession and not an empty value in its place. This means that the regression was not run for the following occupations: athletes, newsboys, babysitters and farmers. 
+
+(f) Create a histogram of income and a second histogram of log(income) (i.e., natural logarithm). How does the distribution change?
+
+Answer: 
+```{r}
+# Create histograms using income and log(income)
+g3 <- ggplot(df2, aes(x = income)) + geom_histogram(binwidth = 1000, 
+                                                    color = "deepskyblue4", 
+                                                    fill = "darkturquoise") + 
+  ggtitle("Histogram of Income") + theme_minimal()
+g4 <- ggplot(df2, aes(x = log(income))) + geom_histogram(binwidth = 0.25, 
+                                                         color = "darkseagreen", 
+                                                         fill = "darkseagreen1") + 
+  ggtitle("Histogram of Log(Income)") + theme_minimal()
+# Print histograms
+grid.arrange(g3, g4, nrow = 2)
+```
+
+By applying the natural logarithm to income, the distribution of income goes from skewed right to skewed left. 
+
+(g) Fit the model in (e) but this time use log(income) (i.e., natural logarithm) instead of income. Evaluate this model and provide the relevant output.
+
+Answer: 
+```{r}
+model_prestige_logincome = lm(data = df2, prestige ~ log(income) + education + type + type*education)
+summary(model_prestige_logincome)
+```
+This model has an adjusted $R^2$ value of $0.8516$, meaning that $85.16\%$ of the variance in prestige was explained by the log income, education, type and interaction term (education and type). In addition, the RSE of the model is $6.585$, which is lower than the the RSE of the previous model to predict `prestige`. Furthermore, the coefficient estimates for $\beta_{\text{log(income)}}$ and $\beta_{\text{education}}$ are statistically significant since their $p$-values are less than $\alpha = 0.05$. 
+
+(h) Is the model in (e) or (g) better? Justify your answer. Why can't a partial $F$-test be used here? 
+
+Answer: The model in (g) is *slightly* better than the one in (e). This is because the adjusted $R^2$ value goes slightly up when log of income is used rather than income, and the RSE goes down. A partial $F$-test cannot be used here because the features in one model are not a subset of the features in the model. If the income variable was removed from either models (not both), then a partial $F$-test can be done. 

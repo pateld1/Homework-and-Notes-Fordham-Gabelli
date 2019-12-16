@@ -1,0 +1,96 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, amsfonts, graphicx, commath}
+\newcommand{\ques}[1]{\noindent {\bf Question #1: }} 
+\renewcommand{\theenumi}{\alph{enumi}}
+\newcommand{\prob}[1]{\mathbb{P}(#1)}
+\newcommand{\cprob}[2]{\mathbb{P}\left(#1 ~|~ #2\right)}
+\newcommand{\pois}[2]{\left( \frac{#1^{#2} e^{-#1}}{#2!} \right) }
+\newcommand{\cov}[2]{\mathrm{Cov}[#1, #2]}
+\newcommand{\var}[1]{\mathrm{Var}[#1]}
+\newcommand{\expe}[1]{\mathrm{E}[#1]}
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Statistical Theory I}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center} \textbf{Assignment \#5: Chapter 6 Questions 2, 10, 32, 40, 88} \end{center}
+
+\ques{6.2} Let $Y$ be a random variable with a density function given by 
+$$ f(y) = \begin{cases} \frac{3}{2}y^2 &\text{ if } -1 \leq y \leq 1 \\ 0 &\text{ elsewhere } \end{cases} $$ 
+The CDF of $f(y)$ is $$ F_Y(y) = \int_{-1}^y \frac{3}{2}t^2 \, dt = \frac{t^3}{2}\Bigg|_{t = -1}^{t = y} = \frac{1}{2}(y^3 - 1) $$ in the range of $-1 \leq y \leq 1$, $0$ otherwise. 
+\begin{enumerate} 
+\item Find the density function of $U_1 = 3Y$. 
+$$ \begin{aligned} 
+F_{U_1}(u) = \prob{U_1 \leq u} &= \prob{3Y \leq u} \\ &= \prob{Y \leq \frac{u}{3}} \\ &= F_Y(\frac{u}{3}) \\ &= \frac{1}{2}(\frac{u^3}{27} - 1) 
+\end{aligned} $$ Then $$ f_{U_1}(u) = \frac{d}{du} F_{U_1}(u) = \frac{d}{du} \frac{1}{2}(\frac{u^3}{27} - 1)  = \frac{1}{2} \cdot \frac{3u^2}{27} =  \frac{u^2}{18} $$ where  $ -1 \leq \frac{u}{3} \leq 1$ or $-3 \leq u \leq 3$. 
+\item Find the density function of $U_2 = 3 - Y$. 
+$$ \begin{aligned} 
+F_{U_2}(u) = \prob{U_2 \leq u} &= \prob{3-y \leq u} \\ &= \prob{Y \geq 3 -u} \\ &= 1 - \prob{Y \leq 3-u} = 1 - F_Y(3-u) \\ &= 1 - \frac{1}{2}((3-u)^3 - 1)
+\end{aligned} $$ Then
+$$ f_{U_2}(u) = \frac{d}{du} F_{U_2}(u) = \frac{d}{du} [1 - \frac{1}{2}((3-u)^3 - 1)] = -\frac{1}{2} \cdot 3(3-u)^2 \cdot -1 = \frac{3}{2}(3-u)^2$$ where $-1 \leq 3-u \leq 1$ or $2 \leq u \leq 4$. 
+
+\item Find the density function of $U_3 = Y^2$. 
+$$ \begin{aligned} 
+F_{U_3}(u) = \prob{U_3 \leq u} &= \prob{Y^2 \leq u} \\ &= \prob{-\sqrt{u} \leq U \leq \sqrt{u}} \\ &= F_Y(\sqrt{u}) - F_Y(-\sqrt{u}) \\ &= \frac{1}{2}(u^{\frac{3}{2}} - 1) - \frac{1}{2}(-u^{\frac{3}{2}} - 1) \\ &= u^{\frac{3}{2}} 
+\end{aligned} $$ Then
+$$ f_{U_3}(u) = \frac{d}{du} F_{U_3}(u) = \frac{d}{du} u^{\frac{3}{2}} = \frac{3}{2}\sqrt{u} $$ where $ -1 \leq \sqrt{u} \leq 1$ or $0 \leq u \leq 1$. 
+\end{enumerate} 
+
+\ques{6.10} The total time from arrival to completion of service at a fast-food outlet, $Y_1$, and the time spent waiting in line before arriving at the service window, $Y_2$ has the joint density function $$ f(y_1, y_2) = \begin{cases} e^{-y_1} &\text{ if } 0 \leq y_2 \leq y_1 < \infty \\ 0 &\text{ elsewhere } \end{cases} $$ 
+Another random variable of interest is $U = Y_1 - Y_2$, the time spent at the service window. Find 
+\begin{enumerate} 
+\item the probability density function for $U$. 
+$$ \begin{aligned} 
+F_U(u) = \prob{U \leq u} &= \prob{Y_1 - Y_2 \leq u} \\ &= \prob{Y_1 \leq u + Y_2} \\ &= \int_0^\infty \int_{y_2}^{y_2 + u} e^{-y_1} \, dy_1\, dy_2 \\ &= \int_0^\infty -e^{-y_1}\Bigg|_{y_1 = y_2}^{y_1 = y_2 + u} \, dy_2 \\ &= \int_0^\infty -e^{-y_2 - u} + e^{-y_2} \, dy_2 \\ &= (e^{-u - y_2} - e^{-y_2})\Bigg|_{y_2 = 0}^{y_2 = \infty} \\ &= (0 - 0) - (e^{-u} - 1) \\ &= 1 - e^{-u} \end{aligned} $$ Then 
+$$ f_U(u) = \frac{d}{du} F_U(u) = \frac{d}{du} 1 - e^{-u} = e^{-u} $$ where $u \geq 0$. This is the Exponential distribution with parameter $\lambda = 1$.(Will simplify results for next part.)
+\item $\expe{U}$ and $\var{U}$. \\
+Since $U \sim \text{Exp}(\lambda = 1)$, $$ \expe{U} = \frac{1}{\lambda} = 1 $$ and $$ \var{U} = \frac{1}{\lambda^2} = 1 $$ 
+\end{enumerate} 
+
+\ques{6.32} Consider a random variable $Y$ that has a uniform distribution on the interval $[1,5]$. The cost of delay is given by $U = 2Y^2 + 3$. Use the method of transformations to derive the density function of $U$. \\
+Let $Y \sim U(1,5)$. Then $f_Y(y) = \frac{1}{5-1} = \frac{1}{4}$ on the interval of $1 \leq y \leq 5$. Its CDF is $F_Y(y) = \frac{y}{4}$. Then $$ \begin{aligned} U &= 2Y^2 + 3 \\ Y^2 &= \frac{U - 3}{2} \\ Y &= \sqrt{ \frac{U-3}{2}} = h^{-1}(u) \end{aligned} $$ Now $$ \abs{ \frac{dh^{-1}}{du} }  = \frac{1}{2} \cdot \left( \frac{U-3}{2}\right)^{-\frac{1}{2}} \cdot \frac{1}{2} = \frac{1}{4} \sqrt{ \frac{2}{u-3}} $$ Then $$ 
+f_U(u) = f_Y[h^{-1}(u)]\abs{ \frac{dh^{-1}}{du}} = \frac{1}{4} \cdot \frac{1}{4}\sqrt{\frac{2}{u-3}} = \frac{1}{16}\sqrt{\frac{2}{u-3}} $$ where $ 1 \leq y \leq 5$ or $5 \leq u \leq 53$. 
+\\~\\
+\ques{6.40} Suppose that $Y_1$ and $Y_2$ are independent, standard normal random variables. Find the density function of $U = Y_1^2 + Y_2^2$. \\
+If $Y_1 \sim \mathrm{N}(0,1)$ and $Y_2 \sim \mathrm{N}(0,1)$, then $Y_1^2 \sim \chi^2(v = 1)$ and $Y_2^2 \sim \chi^2(v = 1)$. Then if $U = Y_1^2 + Y_2^2$, we can use the moment generating functions of $Y_1^2$ and $Y_2^2$ to derive the density function of $U$. Now, $$ \begin{aligned} m_{Y_1}(t) &= \frac{1}{\sqrt{1-2t}} \\ m_{Y_2} &= \frac{1}{\sqrt{1-2t}} \\ m_U(u) &= m_{Y_1}(t) \cdot m_{Y_2}(t) = \frac{1}{1-2t} \\ &= (1 - 2t)^{-1} \end{aligned} $$ This is the moment generating function for a $\chi^2$  distribution with degrees of freedom $v = 2$. Its probability density function is 
+$$ f_U(u) = \frac{u^{\frac{2}{2} - 1} e^{-\frac{u}{2}}}{\Gamma( \frac{2}{2}) 2^{\frac{2}{2}}} = \frac{1}{2} e^{-\frac{u}{2}} $$ 
+
+\newpage
+\ques{6.88} Suppose that the length of time $Y$ it takes a worker to complete a certain task has the probability density function given by 
+$$ f(y) = \begin{cases} e^{-(y-\theta)} &\text{ if } y > \theta \\ 0 &\text{ elsewhere } \end{cases} $$ 
+where $\theta$ is a positive constant that represents the minimum time until task completion. Let $Y_1,\dots,Y_n$ denote a random sample of completion times from this distribution. Find 
+\begin{enumerate} 
+\item the density function for $Y_{(1)} = \min(Y_1,\dots,Y_n)$. \\
+The CDF of $Y$ is $$ \begin{aligned} 
+F_Y(y) &= \int_0^y e^{-x - \theta} \, dx \\ &= -e^{-(x-\theta)} \Bigg|_{x = \theta}^{x = y} \\ &= 1 - e^{-(y-\theta)} 
+\end{aligned} $$ Then the CDF of $Y_{(1)}$ is $$ \begin{aligned} 
+F_{Y_{(1)}}(y) &= 1 - (1 - F(y))^n \\ &= 1 - (e^{-(y-\theta)})^n \\ &= 1 - e^{-n(y-\theta)} \end{aligned} $$ Thus 
+$$ \begin{aligned} 
+f_{Y_{(1)}}(y) &= \frac{d}{dy} [1 - e^{-n(y - \theta)}] \\ &= ne^{-n(y - \theta)} \end{aligned} $$ where $y \geq \theta$. 
+
+\item $\expe{Y_{(1)}}$. 
+$$ \begin{aligned} 
+\expe{Y_{(1)}} &= \int_0^\infty y ne^{-n(y-\theta)} \, dy \\ \text{Let } x &= y - \theta \text{, then} \\ \expe{Y_{(1)}} &= \int_0^\infty (x + \theta) ne^{-nx} \, dx \\ &= \int_0^\infty xne^{-nx} \, dx + \theta \int_0^\infty ne^{-nx} \, dx \\ &= \left[\left( -\frac{1}{n}e^{-nx}(2n+1)\right) + \theta\left(-e^{-nx}\right)\right]\Bigg|_{x = 0}^{x = \infty} \\ &= (0 + 0) - (-\frac{1}{n} - \theta) \\ &= (0 + 0) - (-1(\frac{1}{n} + \theta)) \\ &= \frac{1}{n} + \theta
+\end{aligned} $$ 
+
+\end{enumerate} 
+
+
+
+
+
+
+
+
+
+
+
+\end{document} 

@@ -1,0 +1,548 @@
+---
+title: 'SDGB 7840 HW 4: Speed Dating and Isoflavones'
+author: "Darshan Patel"
+date: "3/28/2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part 1: Logistic Regression
+
+In speed dating, participants meet many people, each for a few minutes, and then decide who they would like to see again. The dataset you will be working with contains information on speed dating experiments conducted on graduate and professional students. Each person in the experiment met with $10$ to $20$ randomly selected people of the opposite sex (only heterosexual pairings) for four minutes. After each speed date, each participant filled out a questionnaire about the other person.
+
+Your goal is to build a model to predict which pairs of daters want to meet each other again (i.e., have a second date). The list of variables are: 
+```{r, echo=FALSE}
+# Clear workspace
+rm(list = ls())
+library(knitr)
+
+# Create data dictionary
+vars = data.frame("x" = c("Decision", "Like", "PartnerYes", "Age", "Race", 
+                          "Attractive", "Sincere", "Intelligent", "Fun", 
+                          "Ambitious", "Shared Interests"), 
+                  "y" = c("1 = Yes (want to see the date again), 0 = No (do not want to see date again)",
+                          "Overall, how much do you like this person? (1 = don't like at all, 10 = like a lot)", 
+                          "How probable do you think it is that this person will say `yes` for you? (1 = not probable, 10 = extremely probable)", 
+                          "Age", "Race (Caucasian, Asian, Black, Latino, or Other)", 
+                          "Rate attractiveness of partner on scale of 1-10 (1 = awful, 10 = great)", 
+                          "Rate sincerity of partner on a scale of 1-10 (1 = awful, 10 = great)", 
+                          "Rate intelligence of partner on a scale of 1-10 (1 = awful, 10 = great)", 
+                          "Rate how fun partner is on a scale of 1-10 (1 = awful, 10 = great)", 
+                          "Rate ambition of partner on a scale of 1-10 (1 = awful, 10 = great)", 
+                          "Rate the extent to which you share interests/hobbies with partner on a scale of 1-10 (1 = awful, 10 = great)"))
+
+# Display data dictionary
+kable(vars)
+```
+
+We will be using a reduced version of this experimental data will be used with $276$ unique male-female date pairs. In the file `SpeedDating.csv`, the variables have either `M` for male or `F` for female. For example, `LikeM` refers to the `Like` variable as answered by the male participant (about the female participant). Treat the rating scale variables (such as `PartnerYes`, `Attractive`, etc.) as *numerical variables* instead of categorical ones for the analysis. 
+
+```{r}
+library(tidyverse)
+# Read in data
+df = read_delim("SpeedDating.csv", delim = ',')
+# Look at class of all variables
+sapply(df, class)
+```
+All variables are of the proper types. 
+
+### Question 1
+Based on the variable `Decision`, fill out the contingency table. What percentage of dates ended with both people wanting a second date? 
+
+Answer: 
+```{r}
+# Display contingency table
+table("Decision Made by Men" = ifelse(df$DecisionM == 0, "No", "Yes"), 
+      "Decision Made by Women" = ifelse(df$DecisionF == 0, "No", "Yes"))
+```
+
+The percentage of dates that ended with both people wanting a second date is
+```{r}
+# Get percentage of second dates
+paste(round(100 * 63 / nrow(df), 2), '%', sep = '')
+```
+
+### Question 2
+A second date is planned only if both people within the matched pair want to see each other again. Make a new column in your dataset and call it `second.date`. Values in this column should be $0$ if there will be no second date, $1$ if there will be a second date. Construct a scatterplot for each numerical variable where the male values are on the $x$-axis and the female values are on the $y$-axis. Observations in your scatterplot should have a different color (or `pch` value) based on whether or not there will be a second date. Describe what you see. (Note: Jitter your points just for making these plots.)
+
+Answer:
+```{r}
+library(gridExtra)
+library(RColorBrewer)
+# Create second.date variable column
+df$second.date = ifelse((df$DecisionM == 1) & (df$DecisionF == 1), 1, 0)
+# A function to plot numerical variables
+# Params: Male rating, Female rating, second date indicator, title of variable
+plot_features = function(x, y, c, t){
+  return(as.data.frame(cbind(x,y,c)) %>% 
+           ggplot(aes(x=x, y=y, color=as.factor(c))) + 
+           geom_jitter() + 
+           scale_color_manual(name = "Decision Made", 
+                              values = brewer.pal(3, "Dark2")) + 
+           scale_x_continuous(limits = c(0, 10), breaks = seq(0, 10, 2)) + 
+           scale_y_continuous(limits = c(0,10), breaks = seq(0,10,2.5)) + 
+           labs(x = "Male Decision", y = "Female Decision", 
+                title = paste0("Scatterplot of ", t), 
+                subtitle = "by Gender") + 
+           theme_minimal() + theme(legend.position = "bottom", 
+                                   plot.title = element_text(size = 8),
+                                   plot.subtitle = element_text(size = 6), 
+                                   axis.text = element_text(size = 6)))
+}
+
+# Create plots for all numerical variables 
+g1 = plot_features(df$LikeM, df$LikeF, df$second.date, "Likeness Rating")
+g2 = plot_features(df$PartnerYesM, df$PartnerYesF, df$second.date, "Probable Rating")
+g3 = plot_features(df$AgeM, df$AgeF, df$second.date, "Age")
+g4 = plot_features(df$AttractiveM, df$AttractiveF, df$second.date, "Attractiveness Rating")
+g5 = plot_features(df$SincereM, df$SincereF, df$second.date, "Sincerity Rating")
+g6 = plot_features(df$IntelligentM, df$IntelligentF, df$second.date, "Intelligence Rating")
+g7 = plot_features(df$FunM, df$FunF, df$second.date, "Fun Rating")
+g8 = plot_features(df$AmbitiousM, df$AmbitiousF, df$second.date, "Ambitious Rating")
+g9 = plot_features(df$SharedInterestsM, df$SharedInterestsF, df$second.date, "Shared Interests Rating")
+```
+
+```{r}
+# Display 4 ratings plots
+grid.arrange(g1, g2, g4, g5, nrow = 2)
+```
+
+It is noted that whenever a second date did occur, i.e. decision made is `1`, the rating given by both genders are ranked high. The sincerity rating are very close to each other unlike the probable ratings which are more disperse. Going to a second date is correlated with high likeness rating by female and high probable rating by female. Attractiveness rating by men is also correlated with having second dates. 
+
+```{r}
+# Display other 4 rating plots
+grid.arrange(g6, g7, g8, g9, nrow = 2)
+```
+
+The people who had second dates usually fell in the top half in the rating scale for intelligence and fun ratings. People rarely rated below a $5$ on intelligence, resulting in huge crowdiness in the high ratings. The fun ratings and shared interests ratings are more disperse. Having a second date appears to be correlated with high ambition rating by men as well as high shared interests rating by men. 
+
+```{r}
+# Display age plot with replaced scales and title 
+# and y = x line 
+g3 + scale_x_continuous(limits = c(15, 45), breaks = seq(10, 45, 5)) + 
+  scale_y_continuous(limits = c(15,45), breaks = seq(15, 45, 5)) + 
+  geom_abline(slope = 1, intercept = 0, linetype = 2) + 
+  labs(x = "Male Age", y = "Female Age") + coord_cartesian()
+```
+
+The dotted line indicates a common age between male and female. According to the age scatterplot, there does not appear to be any association between age for either gender and going on a second date. There is one occurrence of a old man getting a second date with a woman who is at least $10$ years younger than him, and vice versa. 
+
+### Question 3
+Many of the numerical variables are on rating scales from $1$ to $10$. Are the responses within these ranges? If not, what should we do with these responses? Is there any missing data? If so, how many observations and for which variables?
+
+Answer: 
+
+```{r}
+# Display summary statistics of numerical variables
+summary(df[,!colnames(df) %in% c("DecisionM", "DecisionF", "second.date", "RaceM", "RaceF")])
+```
+
+All of the rating responses are well within the range from $1$ to $10$. However, there is missing data is all of the numerical columns. The shared interests columns have a high number of missing data ($27$ to $30$), whereas the ambitious ratings have moderate missing data ($10$ to $17$). The other columns have little missing data (less than $7$). 
+```{r}
+# Find number of rows with null data
+nrow(df) - nrow(df[complete.cases(df),])
+```
+A total of $76$ observations have missing data. 
+
+### Question 4
+What are the possible race categories in your dataset? Is there any missing data? If so, how many observations and what should we do with them? Make a mosaic plot with female and male race. Describe what you see. 
+
+Answer:
+```{r}
+# Find distinct races in both genders
+unique(c(df$RaceF, df$RaceM))
+```
+There are a total of $5$ race categories: `Caucasian`, `Asian`, `Black`, `Latino` and `Other`.
+```{r}
+# Find locations where race is null for either
+# male or female participant
+union(which(is.na(df$RaceM)), which(is.na(df$RaceF)))
+```
+Furthermore, $6$ observations have missing data (male or female). This is a considerably low number compared to the total number of observations. The missing race observations will be dropped. 
+
+```{r}
+# Create mosaic plot of races by gender
+mosaicplot(table(df$RaceM, df$RaceF), main = "Race of Speed Dating Pool",
+	xlab = "Race of Males", ylab = "Race of Females", 
+	las=TRUE, cex.axis=0.7, color = brewer.pal(5, "Accent"))
+```
+
+It is apparent that the `Caucasian` race makes up most of the population for both male and female participants. There are no `Black` males nor `Other` males. The `Latino`, `Black` and `Other` race make up the minority groups in the speed dating pool whereas the `Asian` and `Caucasian` races make up most of the pool. 
+
+### Question 5
+Use logistic regression to construct a model for `second.date` (i.e., `second.date` should be the response variable). Incorporate the discoveries and decisions made in question $2$, $3$ and $4$. Explain the steps you used to determine the best model. Include the summary output for your *final* model only, check the model assumptions, and evaluate the model by running the relevant hypothesis tests. Do *not* use `Decision` as an explanatory variable.
+
+Answer:
+```{r}
+## Remove observations with missing values
+## Don't remove DecisionM and Decision (useful later on)
+df = df[complete.cases(df),]
+
+## Create full model using age, likeness rating and fun rating
+base_model = glm(second.date ~ AgeM + AgeF + LikeM + LikeF + FunM + FunF - DecisionM - DecisionF, df, family = "binomial")
+
+## Perform backward stepwise selection
+best_model = step(base_model, direction = "backward", trace = 0)
+summary(best_model)
+```
+
+A logistic regression model was first trained using six explanatory variables: `AgeM`, `AgeF`, `LikeM`, `LikeF`, `FunM` and `FunF`. These variables were selected because they appeared related to success of having a second date. Using this collection of variables, backward stepwise variable selection was performed to select the best subset of variables that resulted in the lowest AIC on the dataset with no missing values for any variables. There are a few assumptions made about this model. Namely, the explanatory variables are measured without error, the model is correctly specified, the outcomes are not linearly separable, no outliers or leverage points, observations are independent, no collinearity / multicollinearity, and that the sample size is at least $10$ for each outcome per predictor in the model. Now, the dataset is composed of records by people who have partaken in a speed dating round. Thus the explanatory variables are measured without error assuming the participants gave answers that reflected their true beliefs. Furthermore, the model is correctly specified; the stepwise selection process helped to narrow down on the important variables needed to explain `second.date`. Also, the observations are not linearly separable, since the `glm` algorithm did converge and fitted probabilities did not equal $0$ nor $1$. However, the observations are not independent of each other however, since each person took part in multiple speed dating rounds (according to the data description given). 
+
+To check for outliers, box plots are made for the two numerical variables.
+```{r}
+# A function to create box plots given variable to summarize and title
+box_plotter = function(x, t){
+  return(as.data.frame(x) %>% ggplot(aes("", x)) + 
+           geom_boxplot(fill = "slateblue") + 
+           ggtitle(paste0("Box Plot of ", t)) + 
+           labs(x = "", y = "Rating Score") + coord_flip() + 
+           theme_minimal() + theme(plot.title = element_text(size = 14)))
+}
+
+# Create and display boxplots for both explanatory variables 
+bp1 = box_plotter(df$LikeM, "Male Likeness Rating")
+bp2 = box_plotter(df$FunF, "Female Fun Rating")
+grid.arrange(bp1, bp2, nrow = 2)
+```
+
+After looking at the box plot of the numerical variables, it is apparent that there are outliers in one of the two numerical variables columns. 
+
+```{r}
+# Display Cook's distance for combinations of response and explanatory variables
+par(mfcol=c(2,2))
+plot(df$LikeM[df$second.date == 0], 
+     cooks.distance(best_model)[df$second.date == 0], 
+     type="h", las=TRUE, 
+     main="Cook's Distance vs. \n Occurrence of Second Date",
+     xlab="Male Likeness Rating", ylab="Cook's Distance")
+plot(df$LikeM[df$second.date == 1], 
+     cooks.distance(best_model)[df$second.date == 1], type="h", las=TRUE, 
+     main="Cook's Distance vs. \n Occurrence of Second Date", 
+     xlab="Male Likeness Rating", ylab="Cook's Distance")
+plot(df$FunF[df$second.date == 0], 
+     cooks.distance(best_model)[df$second.date == 0], 
+     type="h", las=TRUE, 
+     main="Cook's Distance vs. \n Occurrence of Second Date", 
+     xlab="Female Fun Rating", ylab="Cook's Distance")
+plot(df$FunF[df$second.date == 1], 
+     cooks.distance(best_model)[df$second.date == 1], type="h", las=TRUE, 
+     main="Cook's Distance vs. \n Occurrence of Second Date", 
+     xlab="Female Fun Rating", ylab="Cook's Distance")
+```
+
+Since no point has a Cook's distance of greater than $1$, it is ruled that there are no leverage points in this model. However, since there outliers in one of the explanatory variables, the outlier/leverage point assumption is failed. To determine if there is collinearity or multicollinearity issues, check the variance inflation factors for the variables in the model.
+```{r}
+# Import package for vif
+library(usdm)
+# Compute vif
+vif(as.data.frame(df[,c("LikeM", "FunF")]))
+```
+The variables do not have a high inflation factor values (greater than $10$) and so it can be assumed that the two variables are not correlated with each other. Lastly, the sample size needs to be checked. There are $2$ predictors in the model, and $2$ outcomes, thus there must be $10 \times 2 = 20$ observations for when `second.date` $=0$ and likewise for `second.date` $=1$. 
+```{r}
+# Display frequency of second dates
+table("frequency" = df$second.date)
+```
+The sample size assumption is passed since there are more than $20$ observations for both outcomes. 
+
+Now that the assumptions are checked, where only two failed, relevant hypothesis tests can be performed with caution. Let the null hypothesis be that $$\beta_{\text{LikeM}} = \beta_{\text{FunF}} = 0$$ and that the alternative hypothesis be that at least one of the slopes is not $0$. Then at the $\alpha$ level of $0.05$, $G$, the test statistic, is
+```{r}
+# Calculate test statistic
+summary(best_model)$null.deviance - summary(best_model)$deviance
+```
+and the degrees of freedom is 
+```{r}
+# Calculate degrees of freedom
+summary(best_model)$df.null - summary(best_model)$df.residual
+```
+
+Then the $p$-value, or the probability that $\chi^2_{2} > G$, is
+```{r}
+# Find probability of test statistic being greater than G
+pchisq(summary(best_model)$null.deviance - summary(best_model)$deviance,
+       df=summary(best_model)$df.null - summary(best_model)$df.residual,
+       lower.tail=FALSE)
+```
+which is strictly less than $\alpha = 0.05$. This means that the null hypothesis is rejected and that at least one of the two variables is nonzero and statistically significant. In addition to the log likelihood test for the overall model, a log-likelihood test for nested models can also be conducted using the base model before variable selection was done. This can be done because the same observations were used to create both models and the explanatory variables in the best model is a subset of the explanatory variables in the base model. Now, let the null hypothesis be that 
+$$ \beta_{\text{AgeM}} = \beta_{\text{AgeF}} = \beta_{\text{LikeF}} = \beta_{\text{FunM}} = 0 $$ (These are the variables not in the best model.) Let the alternative hypothesis be that at least one of the above slopes is not $0$. The test statistic ($G$) and associated $p$-value (or the probability that $\chi^2_4 > G$) can be found from the ANOVA table with both of these models.
+```{r}
+# Perform log-likelihood test
+anova(best_model, base_model, test="LRT")
+```
+According to this, with a test statistic of $3.2375$ and degrees of freedom of $4$, the $p$-value is $0.5189$ which is strictly greater than $\alpha = 0.05$. This means that at the significance level of $0.05$, the null hypothesis cannot be rejected; this means that one of these four variables could be useful for the model. In addition to the log-likelihood test, additional $z$-tests can be done for the slopes in the best model. 
+For $\beta_{\text{LikeM}}$, let the null hypothesis be that $\beta_{\text{LikeM}} = 0$ and the alternative hypothesis be that $\beta_{\text{LikeM}} \neq 0$. Likewise, for $\beta_{\text{FunF}}$, the null and alternative hypotheses are $\beta_{\text{FunF}} = 0$ and $\beta_{\text{FunF}} \neq 0$ respectively. Then the $z$-statistics and $p$-values can be found from the summary output of the model.
+```{r}
+# Display test statistics and p values 
+summary(best_model)$coef
+```
+With a $z$-value of $4.233$ and associated $p$-value of $2.3 \times 10^{-5}$, the coefficient estimate for `LikeM` is statistically significant at the $\alpha = 0.05$ significance level since the null hypothesis is rejected. Likewise for `FunF`, the coefficient estimate has a $z$ value of $3.855$ and an associated $p$-value of $1.1 \times 10^{-4}$. Thus at the significance level of $\alpha = 0.05$, the null hypothesis is rejected and the coefficient estimate is statistically significant. 
+
+This is a pretty good model. 
+
+### Question 6
+Redo question (1) using only the observations used to fit the final logistic regression model. What is your sample size? Does the number of explanatory variables in the model follow our rule of thumb? Justify your answer.
+
+Answer:
+```{r}
+# Display counts of decisions by both gender
+table("Decision Made by Men" = ifelse(df$DecisionM == 0, "No", "Yes"), 
+      "Decision Made by Women" = ifelse(df$DecisionF == 0, "No", "Yes"))
+# Display sample size
+paste("The sample size is ", nrow(df), ".", sep = '')
+```
+According to the rule of thumb, there should be $10 \times 2$ explanatory variables, or $20$ observations in each of the outcomes. This rule is satisfied because, thanks to variable subset selection, a low number of explanatory variables was found that could explain `second.date`. Only two variables were needed, or $20$ observations per outcome. It is clear from the contingency table above that there are more than $20$ observations per outcome. 
+
+### Question 7
+Interpret the slopes in your model. Which explanatory variables increase the probability of a second date? Which ones decrease it? Is this what you expected to find? Justify.
+
+Answer: 
+```{r}
+# Display coefficients of model
+summary(best_model)$coef
+```
+
+If the male likeness rating increases by $1$, holding the fun rating by female constant, then the odds of having a second date increases by 
+```{r}
+# Calculate interpretation of coefficient of LikeM
+100 * (exp(0.5801858) - 1)
+```
+$78.63\%$. Likewise, if the fun rating by female increases by $1$, holding the male likeness rating constant, then the odds of having a second date increases by
+```{r}
+# Calculate interpretation of coefficient of FunF
+100 * (exp(0.4489956) - 1)
+```
+$56.67\%$. 
+
+Since `LikeM` and `FunF` cannot be $0$, due to the structure of the experiment, the $y$-intercept does not have a valid interpretation here. 
+
+Both of the explanatory variables increase the probability of a second date occurring; none decreased the probability. This was expected because most people like people who are fun and if a man does like a woman, a date is likely to occur. 
+
+### Question 8
+Construct an ROC curve and compute the AUC. Determine the best threshold for classifying observations(i.e., second date or no second date) based on the ROC curve. Justify your choice of threshold. For your chosen threshold, compute (a) accuracy, (b) sensitivity, and (c) specificity.
+
+Answer: 
+```{r}
+# Create ROC curve 
+library(pROC)
+roc_curve = roc(response = df$second.date, 
+                predictor = best_model$fitted.values, 
+                plot = TRUE, las = TRUE, legacy.axes = TRUE, 
+                main = "ROC Curve for Best Model")
+```
+
+The AUC, or area under the curve, is
+```{r}
+# Calculate AUC
+auc(response = df$second.date, predictor = best_model$fitted.values)
+```
+
+The best threshold for classifying observations is found by summing up the sensitivity and specificity and getting the highest value. It is the sum of the probability that a second date did occur when predicted it would and the probability that a second date would not occur when predicted it won't. This is what most people would wish for after a first date.
+```{r}
+# Find best threshold from ROC curve
+coords(roc_curve, x="best", 
+       ret=c("threshold", "specificity", "sensitivity"))
+```
+The best threshold for classifying observations is $0.2331089$. 
+
+To compute the accuracy, sensitivity, and specificity, first predictions must be made using the model and classified using the threshold. 
+```{r}
+# Create predictions of second dates
+predictions = predict(best_model, df, type = "response")
+df$chances = ifelse(predictions > 0.2331089, 1, 0)
+# Display predictions vs actual outcomes
+table("yhat" = df$chances, 
+      "y" = df$second.date)
+```
+
+According to the predictions made and actual occurrences of second dates, the accuracy is
+```{r}
+# Accuracy calculation
+(108 + 39) / nrow(df)
+```
+$73.5\%$.
+
+The sensitivity is
+```{r}
+# Sensitivity calculation
+39 / (39 + 9)
+```
+$81.25\%$.
+
+Lastly, the specificity is
+```{r}
+# Specificity calculation
+108 / (108 + 44)
+```
+$71.05\%$. 
+
+
+## Part 2: One-Way ANOVA
+
+Kudzu is a plant that was imported to the United States from Japan and now covers over seven million acres in the South. The plant contains chemicals called isoflavones that have been shown to have beneficial effects on bones. One study used three groups of rats to compare a control group with rats that were fed either a low dose or a high dose of isoflavones from kudzu. One of the oucomes examined was bone mineral density in the femur (in grams per square centimeter). Rats were randomly assigned to one of the three groups. The data can be found in `kudzu.jmp`. 
+
+### Question 9
+Identify the response variable.
+
+Answer:
+```{r}
+# Read in data from excel file
+library(readxl)
+df = read_excel("kudzu.xls", col_names = TRUE)
+summary(df)
+```
+
+The response variable is `BMD`, or bone mineral density, of rats.
+
+### Question 10
+Identify the factors (and levels) in the experiment.
+
+Answer: 
+```{r}
+# Display factor and levels of variables
+levels(factor(df$Treatment))
+```
+The variable `Treatment` is a a factor which has three levels: control, low dosage and high dosage. 
+
+### Question 11
+How many treatments are included in the experiment?
+
+Answer:
+```{r}
+# Display frequency table of treatment variable
+table(df$Treatment)
+```
+There are $45$ observations in total, $15$ each in the control group, high dosage group and low dosage group.
+
+### Question 12
+What type of experimental design is employed?
+
+Answer: In this study, the type of experimental design is completely randomized where the treatment groups are balanced. 
+
+### Question 13
+Compute the mean, standard deviation and sample size for each treatment group and put the results into a table. Remember to include the units of measurement.
+
+Answer:
+```{r}
+# Create table of mean, sd, and sample size for each treatment group
+df %>% group_by(Treatment) %>% summarize("mean, in g/cm^2" = mean(BMD), 
+                                         "sd, in g/cm^2" = sd(BMD), 
+                                         "sample size" = n())
+```
+
+### Question 14
+Construct side-by-side box plots with connected means. Describe what you see.
+
+Answer:
+```{r}
+# Create side-by-size box plots with connected means
+library(RColorBrewer)
+ggplot(df, aes(x = Treatment, y = BMD, fill = Treatment)) + 
+  geom_boxplot() + 
+  scale_fill_brewer(palette = "Set2") + 
+  scale_x_discrete(labels = c("Control", "High Dosage", "Low Dosage")) + 
+  stat_summary(fun.y = mean, geom = "line", aes(group = 1), 
+               lwd = 0.5, col = "black") + 
+  stat_summary(fun.y = mean, geom = "point", 
+               pch = 19, size = 2, col = "aliceblue") + 
+  labs(x = "Treatment Group", y = "Bone Mineral Density, in g/cm^2",
+       title = "Boxplots of Bone Mineral Densities by Treatment Group",
+       subtitle = "with Connected Means") + 
+  theme_minimal() + theme(legend.position = "none")
+```
+
+The mean bone mineral density is highest for the rats that received a high dosage of isoflavone. The mean bone mineral density is lowest for the rats that received a low dosage of isoflavones. Furthermore, the spread of the densities is greatest for the high dosage group and smallest for the low dosage group. The control group appears to come in the middle for both the mean density and spread of values. 
+
+### Question 15
+Are the one-way ANOVA model assumptions satisfied? Justify your answer.
+
+Answer: The one-way ANOVA model assumptions are: independent observations, errors are distributed with mean $0$ and standard deviation $\sigma$, and constant variance amongst treatment groups. First, the observations are independent from each other because the bone mineral density measurements come from different rats. Next, to check if errors are $\sim N(0, \sigma^2)$, check the normal quantile plot of residuals. 
+```{r}
+# Display normal quantile plot of residuals
+df %>% group_by(Treatment) %>% summarize(mean(BMD)) %>% 
+  left_join(df, ., by = "Treatment") %>% 
+  mutate("resids" = BMD - `mean(BMD)`) %>%
+  ggplot(aes(sample = resids)) + 
+  stat_qq(pch = 4, color = "darkorchid2") +
+  stat_qq_line(linetype = "dashed", color = "deepskyblue4") + 
+  labs(x = "theoretical quantiles", 
+       y = "sample quantiles", 
+       title = "Normal Quantile Plot of", 
+       subtitle = "One-Way ANOVA Model Residuals") + 
+  theme_minimal()
+```
+
+According to the plot above, the errors, or residuals, are distributed with mean $0$ and constant variance. This assumption is satisfied. Lastly, to check if there's constant variance amongst the treatment groups, create normal quantile plot of residuals for each individual treatment group. 
+```{r}
+# Display normal quantile plot of residuals by treatment group
+df %>% ggplot(aes(sample=BMD)) +
+  facet_grid(~ Treatment) +
+  stat_qq(pch = 4, color = "coral1") +
+  stat_qq_line(linetype = "dashed", color = "deeppink2") + 
+  labs(x = "theoretical quantiles", 
+       y = "sample quantiles", 
+       title = "Normal Quantile Plot of One-Way ANOVA Model Residuals", 
+       subtitle = "per Treatment Group") + 
+  theme_minimal()
+```
+According to the plot above, the distribution for all three treatment groups' normal quantile is slightly heavy tailed. This last assumption is fulfilled with some leeway. 
+
+
+### Question 16
+Run a one-way ANOVA model and discuss your results. (Let $\alpha = 0.01$; remember to include your hypotheses and identify the test statistic, degrees of freedom and $p$-value.)
+
+Answer:
+```{r}
+# Perform one-way ANOVA model
+summary(aov(BMD ~ Treatment, df))
+```
+
+Let the null hypothesis be that $$\mu_{\text{BMD, control}} = \mu_{\text{BMD, low dosage}} = \mu_{\text{BMD, high dosage}} $$ In other words, that the mean bone mineral density for all three treatment groups are the same. Let the alternative hypothesis be that at least two of the three means are different. Then at the significance level of $\alpha = 0.01$, the test statistic calculated is $F = 7.718$, with degrees of freedom $2$ and $42$. Using this test statistic, the $p$-value, or probability that $F > F_{2, 42}$, is $0.0014$, which is strictly less than $\alpha = 0.01$. Therefore the null hypothesis is rejected and it is true that at least two means are different. 
+
+
+### Question 17
+Use Tukey's multiple-comparisons method to compare the three groups. Include the visual results for the Tukey method. Which groups (if any) have significantly different means?
+
+Answer:
+```{r}
+# Save ANOVA model
+anova_model = aov(BMD ~ Treatment, df)
+# Perform Tukey's muliple-comparisons procedure
+TukeyHSD(anova_model, conf.level = 0.99)
+```
+
+The $99\%$ confidence intervals are shown below for each of these comparisons.
+```{r}
+# Plot confidence intervals
+plot(TukeyHSD(anova_model, conf.level = 0.99), cex.axis = 0.6, 
+     col = c("firebrick", "royalblue2", "darkgreen"))
+```
+
+It appears to be that the high dosage treatment group has significantly different means than the other two treatment groups. A zero *does not* appear in the confidence interval for the pair high dosage/control but let's plot this using `ggplot` for better visualizations just so it is clear to the eye. 
+
+(Credit: https://stackoverflow.com/questions/33644034/how-to-visualize-pairwise-comparisons-with-ggplot2?rq=1)
+```{r}
+# Store TukeyHSD output into dataframe
+tky = as.data.frame(TukeyHSD(anova_model)$Treatment)
+# Create column for x labels
+tky$pair = rownames(tky)
+# Plot pairwise TukeyHSD comparisons and color by significance level
+ggplot(tky, aes(colour=cut(`p adj`, c(0, 0.01, 0.05, 1), 
+                           label=c("p < 0.01","p < 0.05",
+                                   "Not significant")))) +
+  geom_hline(yintercept=0, lty="11", colour="black") +
+  geom_errorbar(aes(pair, ymin=lwr, ymax=upr), width=0.2) +
+  geom_point(aes(pair, diff), col = "black") +
+  scale_color_brewer(palette = "Dark2") + 
+  labs(x = "",
+       y = "Differences in mean labels of Treatment",
+       title = "99% family-wise confidence level", 
+       colour= "") +
+  coord_flip() + 
+  theme_minimal() + 
+  theme(legend.position = "bottom")
+```
+
+The above observation is now clearer than before. Since $0$ does not appear in the confidence intervals for the comparisons with the high dosage treatment group, it can be said that this treatment group has a significantly different mean for bone mineral density than the other two treatment group. In fact, the low dosage / high dosage group and high dosage / control group have significantly different means.
+

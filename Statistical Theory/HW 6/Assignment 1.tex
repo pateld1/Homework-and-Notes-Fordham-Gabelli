@@ -1,0 +1,68 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, physics}
+\newcommand{\ques}[1]{\noindent {\bf Question #1: }} 
+\renewcommand{\theenumi}{\alph{enumi}}
+\newcommand*\conj[1]{\overline{#1}}
+\newcommand{\union}{\cup}
+\newcommand{\intersect}{\cap}
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Statistical Theory II}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center} \textbf{Assignment \#1: Chapter 7 Questions 10, 48, 62, 92, 96} \end{center}
+
+\ques{7.10} The amount of fill dispensed by a bottling machine is normally distributed with $\sigma = 2$ ounces. \begin{enumerate} 
+\item If $n=9$ bottles are randomly selected from the output of the machine, what is $P(\abs{\bar{Y} - \mu} \leq 0.3)$? Compare this to the situation where $\sigma = 1$. \\
+If $\sigma = 2$, $$ \begin{aligned} P(\abs{\bar{Y} - \mu} \leq 0.3) &= P(-0.3 \leq \bar{Y} - \mu \leq 0.3) \\ &= P\left(-\frac{0.3}{\sigma / \sqrt{n}} \leq \frac{\bar{Y} - \mu}{\sigma / \sqrt{n}} \leq \frac{0.3}{\sigma \sqrt{n}}\right) \\ &= P\left( -\frac{0.3}{2 / \sqrt{9}} \leq Z \leq \frac{0.3}{2 / \sqrt{9}}\right) \\ &= P(-0.45 \leq Z \leq 0.45) \\ &= \texttt{pnorm(0.45) - pnorm(-0.45)} \\ &= 0.347  \end{aligned} $$ 
+Similarly, if $\sigma = 1$, $$ \begin{aligned} P(\abs{\bar{Y} - \mu} \leq 0.3) &= P\left( -\frac{0.3}{1 / \sqrt{9}} \leq Z \leq \frac{0.3}{1 / \sqrt{9}}\right) \\ &= P(-0.9 \leq Z \leq 0.9) \\ &= \texttt{pnorm(0.9) - pnorm(-0.9)} \\ &= 0.831  \end{aligned} $$ 
+The probability is smaller when $\sigma=2$. 
+
+\item Find $P(\abs{\bar{Y} - \mu} \leq 0.3)$ when $\bar{Y}$ is to be computed using samples of sizes $n = 25$, $n=36$, $n=49$ and $n=64$. \\
+When $n= 25$, $$ \begin{aligned} P(\abs{\bar{Y} - \mu} \leq 0.3)  &= P\left( -\frac{0.3}{2 / \sqrt{25}} \leq Z \leq \frac{0.3}{2 / \sqrt{25}}\right) \\ &= P(-0.75 \leq Z \leq 0.75) = \texttt{pnorm(0.75) - pnorm(-0.75)} = 0.546  \end{aligned} $$ 
+When $n= 36$, $$ \begin{aligned} P(\abs{\bar{Y} - \mu} \leq 0.3)  &= P\left( -\frac{0.3}{2 / \sqrt{36}} \leq Z \leq \frac{0.3}{2 / \sqrt{36}}\right) \\ &= P(-0.9 \leq Z \leq 0.9) = \texttt{pnorm(0.9) - pnorm(-0.9)} = 0.631  \end{aligned} $$ 
+When $n= 49$, $$ \begin{aligned} P(\abs{\bar{Y} - \mu} \leq 0.3)  &= P\left( -\frac{0.3}{2 / \sqrt{49}} \leq Z \leq \frac{0.3}{2 / \sqrt{49}}\right) \\ &= P(-1.05 \leq Z \leq 1.05) = \texttt{pnorm(1.05) - pnorm(-1.05)} = 0.706  \end{aligned} $$ 
+When $n= 64$, $$ \begin{aligned} P(\abs{\bar{Y} - \mu} \leq 0.3)  &= P\left( -\frac{0.3}{2 / \sqrt{64}} \leq Z \leq \frac{0.3}{2 / \sqrt{64}}\right) \\ &= P(-1.2 \leq Z \leq 1.2) = \texttt{pnorm(1.2) - pnorm(-1.2)} = 0.769  \end{aligned} $$ 
+
+\item What pattern do you observe among the values for $P(\abs{\bar{Y} - \mu} \leq 0.3)$ that you observed for the various values of $n$? \\
+As $n$ increases, the probability of $\abs{\bar{Y} - \mu} \leq 0.3$ becomes larger and larger.
+
+\item How do the respective probabilities obtained in this problem (where $\sigma=2$) compare to those obtained if $\sigma=1$? \\
+The probabilities would be larger because of the smaller standard deviation. \\ For example, if $n= 25$, then 
+$$ \begin{aligned} P(\abs{\bar{Y} - \mu} \leq 0.3)  &= P\left( -\frac{0.3}{1 / \sqrt{25}} \leq Z \leq \frac{0.3}{1 / \sqrt{25}}\right) \\ &= P(-1.5 \leq Z \leq 1.5) = \texttt{pnorm(1.5) - pnorm(-1.5)} = 0.866  \end{aligned} $$ This probability is larger than if $\sigma = 2$. The same would apply for the other larger $n$ values.
+
+\end{enumerate}
+
+
+\ques{7.48} An important aspect of a federal economic plan was that consumers would save a substantial portion of the money that they received from an income tax reduction. Suppose that early estimates of the portion of total tax saved, based on a random sampling of $35$ economists, had mean $26\%$ and standard deviation $12\%$. \begin{enumerate}
+\item What is the approximate probability that a sample mean estimate, based on a random sample of $n=35$ economists, will lie within $1\%$ of the mean of the population of the estimates of all economists? 
+$$ \begin{aligned} P(\abs{\bar{Y} - \mu} \leq 1) &= P(-1 \leq \bar{Y} - \mu \leq 1) \\ &= P\left( -\frac{1}{s/\sqrt{n}} \leq \frac{\bar{Y} - \mu}{s / \sqrt{n}} \leq \frac{1}{s/\sqrt{n}} \right) \\ &= P\left( -\frac{1}{12 / \sqrt{35}} \leq Z \leq \frac{1}{12/\sqrt{35}}\right) \\ &= P(-0.49 \leq Z \leq 0.49) \\ &= \texttt{pnorm(0.49) - pnorm(-0.49)} \\ &= 0.375 \end{aligned} $$ 
+
+\item Is it necessarily true that the mean of the population of estimates of all economists is equal to the percent tax saving that will actually be achieved? \\ 
+This is not true because the mean of the estimates is still an estimation and may or may not be a true representation of the real world.
+
+\end{enumerate}
+
+
+\ques{7.62} The times that a cashier spends processing individual customer's order are independent random variables with mean $2.5$ minutes and standard deviation $2$ minutes. What is the approximate probability that it will take more than $4$ hours to process the orders of $100$ people? 
+$$ \begin{aligned} P(Y_1+Y_2 + \dots + Y_{100} > 60 \cdot 4) &= P(n\bar{Y} > 240) \\ &= P\left(\bar{Y} > \frac{240}{n}\right) \\ &= P\left( \frac{\bar{Y} - \mu}{\sigma / \sqrt{n}} > \frac{\frac{240}{n} - \mu}{\sigma / \sqrt{n}}\right) \\ &= P\left(Z > \frac{\frac{240}{100} - 2.5}{2/\sqrt{100}}\right) \\ &= P(Z > -0.5) \\ &= \texttt{1 - pnorm(-0.5)} \\ &= 0.691 \end{aligned} $$ 
+
+
+\ques{7.92} From each of two normal populations with identical means and with standard deviations of $6.40$ and $7.20$, independent random samples of $64$ observations are drawn. Find the probability that the difference between the means of the samples exceeds $0.6$ in absolute value. 
+$$ \begin{aligned} P(\abs{\bar{X} - \bar{Y}} > 0.6) &= 2 \cdot P\left( \frac{\abs{\bar{X}-\bar{Y}} - (\mu_X - \mu_Y)}{\sqrt{\frac{\sigma_X^2 + \sigma_Y^2}{n}}} > \frac{0.6 - (\mu_X-\mu_Y)}{\sqrt{\frac{\sigma_X^2 + \sigma_Y^2}{n}}}\right) \\ &= 2 \cdot P\left(Z > \frac{0.6 - 0}{\sqrt{\frac{6.40^2 + 7.20^2}{64}}}\right)  \\ &= 2 \cdot P(Z > 0.498) \\ &= \texttt{2 * (1 - pnorm(0.498))} \\ &= 0.618 \end{aligned} $$ 
+
+
+\ques{7.96} Suppose that $Y_1,Y_2,\dots,Y_{40}$ denote a random sample of measurements on the proportion of impurities in iron ore samples. Let each variable $Y_i$ have a probability density function given by $$ f(y) = \begin{cases} 3y^2 &\text{ if } 0 \leq y \leq 1 \\ 0 &\text{ elsewhere } \end{cases} $$ The ore is to rejected by the potential buyer if $\bar{Y}$ exceeds $0.7$. Find $P(\bar{Y} \geq 0.7)$ for the sample of size $40$. \\
+This distribution resembles the Beta distribution with $\alpha = 3$ and $\beta = 1$. Thus $\mu = \frac{\alpha}{\alpha+\beta} = \frac{3}{4}$ and $\sigma^2 = \frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)} = \frac{3}{4^2(5)} = \frac{3}{80}$. Then $$ P(\bar{Y} > 0.7) = P\left(\frac{\bar{Y} - \mu}{\sigma / \sqrt{n}} > \frac{0.7 - \frac{3}{4}}{\sqrt{\frac{3}{80}} / \sqrt{40}}\right) = P(Z > -1.632) = \texttt{1 - pnorm(-1.632)} = 0.948 $$ 
+
+
+
+\end{document}

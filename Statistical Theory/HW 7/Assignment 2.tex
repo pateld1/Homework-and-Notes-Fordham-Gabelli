@@ -1,0 +1,89 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, physics}
+\newcommand{\ques}[1]{\noindent {\bf Question #1: }} 
+\renewcommand{\theenumi}{\alph{enumi}}
+\newcommand*\conj[1]{\overline{#1}}
+\newcommand{\union}{\cup}
+\newcommand{\intersect}{\cap}
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Statistical Theory II}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center} \textbf{Assignment \#2: Chapter 8 Questions 12, 22, 46, 60, 102} \end{center}
+
+\ques{8.12} The reading on a voltage meter connected to a test circuit is uniformly distributed over the interval $(\theta, \theta+1)$, where $\theta$ is the true but unknown voltage of the circuit. Suppose that $Y_1,\dots,Y_n$ denote a random sample of such samplings.
+\begin{enumerate} 
+\item Show that $\bar{Y}$ is a biased estimator of $\theta$ and compute the bias. \\
+Since $Y$ is from a uniform distribution over $(\theta, \theta+1)$, then 
+$$ \text{E}[Y_i] = \frac{1}{2}(\theta + \theta + 1) = \frac{2\theta + 1}{2} = \theta + \frac{1}{2} $$ Furthermore, for $\bar{Y} = \sum_i^n Y_i / n $,
+$$ \text{E}[\bar{Y}] = \text{E}\left[ \frac{\sum_i^n Y_i}{n} \right] = \frac{\text{E}[\sum_i^n Y_i]}{n} = \frac{ \sum_i^n \text{E}[Y_i]}{n} = \frac{n\left( \theta + \frac{1}{2}\right)}{n} = \theta + \frac{1}{2} $$ 
+Now, $$ \text{E}[\bar{Y}] = \theta + \frac{1}{2} \neq \theta = \text{E}[\theta] $$ 
+Therefore $\hat{\theta} = \bar{Y}$ is a biased estimator of $\theta$. The bias is
+$$ \text{Bias}[\hat{\theta}] = \text{E}[\hat{\theta}] - \theta = \theta + \frac{1}{2} - \theta = \frac{1}{2} $$ 
+
+\item Find a function of $\bar{Y}$ that is an unbiased estimator of $\theta$. \\
+According to the above result, an appropriate unbiased estimator of $\theta$ is 
+$$ \hat{\theta} = \bar{Y} - \frac{1}{2} $$ 
+
+\item Find MSE[$\bar{Y}$] when $\bar{Y}$ is used as an estimator of $\theta$.  \\
+First note that if $ \text{Var}[Y_i] = \frac{1}{12}$, then $$ \text{Var}[\bar{Y}] = \text{Var}\left[ \frac{\sum_i^n Y_i}{n}\right] = \frac{n \cdot \text{Var}[Y_i]}{n^2} = \frac{1}{12n} $$ 
+When $\hat{\theta} = \bar{Y}$ is used as an estimator of $\theta$, then $$ \text{MSE}[\bar{Y}] = \text{E}[(\hat{\theta} - \theta)^2] = \text{Var}[\hat{\theta}] + \text{Bias}[\hat{\theta}]^2 = \frac{1}{12n} + \left(\frac{1}{2}\right)^2 = \frac{1}{12n} + \frac{1}{4} $$ 
+
+\end{enumerate} 
+\newpage
+
+\ques{8.22} An increase in the rate of consumer savings frequently is tied to a lack of confidence in the economy and is said to be an indicator of a recessional tendency in the economy. A random sampling of $n=200$ savings accounts in a local community showed the mean increase in savings account values to be $7.2\%$ over the past $12$ months, with standard deviation $5.6\%$. Estimate the mean percentage increase in savings account values over the past $12$ months for depositors in the community. Place a bound on the error of estimation. \\~\\
+The mean percentage increase in savings account values over the past $12$ months is $7.2\%$. Then the standard error of estimation is $$ \frac{\sigma}{\sqrt{n}} = \frac{5.6}{\sqrt{200}} = 0.395 \% $$ and the bound on the error of estimation is $$ 2 \cdot 0.395 = 0.791\% $$ 
+
+
+\ques{8.46} Suppose that $Y$ is a single observation from an exponential distribution with mean $\theta$.
+\begin{enumerate} 
+\item Use the method of moments-generating functions to show that $\frac{2Y}{\theta}$ is a pivotal quantity and has a $\chi^2$ distribution with $2$ degrees of freedom. \\
+The moments-generating function for the exponential distribution is $$ m_Y(t) = \frac{1}{1 - \theta t} $$ Then 
+$$ m_{\frac{2Y}{\theta}}(t) = \text{E}[e^{t\frac{2Y}{\theta}}] = \text{E}[e^{\left(\frac{2t}{\theta}\right)Y}] = m_Y\left(\frac{2t}{\theta}\right) = \frac{1}{1- 2t} $$  
+The moments-generating function for the $\chi^2$ distribution, with $v$ degrees of freedom, is $$ m_{\chi^2}(t) = \frac{1}{(1-2t)^\frac{v}{2}} $$ 
+It can be seen that $m_{\frac{2Y}{\theta}}(t)$ and $m_{\chi^2}(t)$ resemble each other; the moments-generating function found is the one for the $\chi^2$ distribution with $v=2$ degrees of freedom. Therefore $\frac{2Y}{\theta} \sim \chi^2(2)$. Furthermore, it does not depend on $\theta$ and so $\frac{2Y}{\theta}$ is a pivotal quantity. 
+
+\item Use the pivotal quantity $\frac{2Y}{\theta}$ to derive a $90\%$ confidence interval for $\theta$. \\
+Start with 
+$$ P\left( \chi^2_{0.05}(2) \leq \frac{2Y}{\theta} \leq \chi^2_{0.95}(2)\right) = 0.90 $$  Note that $$ \begin{aligned} \chi^2_{0.05}(2) &= \texttt{qchisq(0.05, 2)} = 0.102 \\ \chi^2_{0.95}(2) &= \texttt{qchisq(0.95, 2)} = 5.991 \end{aligned} $$ So
+$$ P( 0.102 \leq \frac{2Y}{\theta} \leq 5.991) = 0.90 $$ Manipulate this so that the parameter is simply $\theta$.
+$$ \begin{aligned} P( 0.102 \leq \frac{2Y}{\theta} \leq 5.991) &= 0.90 \\ P \left(\frac{0.102}{2Y} \leq \frac{1}{\theta} \leq \frac{5.991}{2Y} \right) &= 0.90 \\ P\left( \frac{2Y}{0.102} \geq \theta \geq \frac{2Y}{5.991} \right) &= 0.90 \end{aligned} $$ 
+Hence the $90\%$ confidence interval for $\theta$ is $$ \left( \frac{2Y}{5.991}, \frac{2Y}{0.102} \right) \to \left( \frac{Y}{2.996}, \frac{Y}{0.051} \right) $$ 
+
+\item Compare the above interval with the interval obtained in example 8.4. \\
+In example 8.4, it was found that using a single observation $Y$ from an exponential distribution with mean $\theta$, the confidence interval for $\theta$ with a confidence level of $0.90$ was $$ \left(\frac{Y}{2.996}, \frac{Y}{0.051} \right) $$ 
+This is the exact same result found above. 
+
+\end{enumerate}
+
+\ques{8.60} What \textit{is} the normal body temperature for healthy humans? A random sample of $130$ healthy human body temperatures provided by Allen Shoemaker yielded $98.25\%$ degrees and standard deviation $0.73$ degrees.
+\begin{enumerate} 
+\item Give a $99\%$ confidence interval for the average body temperature of healthy people. \\ 
+The $99\%$ confidence interval can be given by $\hat{\theta} \pm z_{\frac{\alpha}{2}}\sigma_{\hat{\theta}}$. Now, $$ z_{\frac{\alpha}{2}} = z_{0.005} = \texttt{qnorm(0.005)} = 2.576 $$
+Then $$ \begin{aligned} \hat{\theta} &\pm z_{\frac{\alpha}{2}}\sigma_{\hat{\theta}} \\ 98.25 &\pm \left( 2.576 \cdot \frac{0.73}{\sqrt{130}}\right) \\ 98.25 &\pm 0.165 \end{aligned} $$
+
+\item Does the confidence interval obtained in part (a) contain the value $98.6$ degrees, the accepted average temperature cited by physicians and others? What conclusions can be drawn? \\
+The confidence interval calculated does not contain the value $98.6$ because the lower bound is $98.25 - 0.165 = 98.085$. This means that the accepted average temperature that physicians believe to be is inaccurate and has changed. 
+
+\end{enumerate} 
+\newpage
+
+\ques{8.102} The ages of a random sample of five university professors are $39$, $54$, $61$, $72$ and $59$. Using this information, find a $99\%$ confidence interval for the population standard deviation of the ages of all professions at the university, assuming that the ages of university professors are normally distributed. \\
+To find the $99\%$ confidence interval for the population standard deviation, find $$ \left( \frac{(n-1)S^2}{\chi^2_{\frac{\alpha}{2}}}, \frac{(n-1)S^2}{\chi^2_{1 - \frac{\alpha}{2}}}\right) $$ 
+Now $$ \begin{aligned} n-1 &= \texttt{5-1} = 4 \\ S^2 &= \texttt{sd(c(39, 54, 61, 72, 59))$^2$} = 144.5 \\ \chi^2_{0.995} &= \texttt{qchisq(0.005, 4)} = 0.206 \\ \chi^2_{0.005} &= \texttt{qchisq(0.995, 4)} = 14.860 \end{aligned} $$ Therefore the $99\%$ confidence interval for the population standard deviation is 
+$$ \left( \frac{4 \cdot 144.5}{14.860}, \frac{4 \cdot 144.5}{0.206} \right) \to (38.895, 2792.418) $$ 
+
+
+
+
+\end{document}

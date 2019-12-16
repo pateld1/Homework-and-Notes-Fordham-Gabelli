@@ -1,0 +1,66 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, physics, amssymb}
+\newcommand{\ques}[1]{\noindent {\bf Question #1: }} 
+\renewcommand{\theenumi}{\alph{enumi}}
+\newcommand*\conj[1]{\overline{#1}}
+\newcommand{\union}{\cup}
+\newcommand{\intersect}{\cap}
+\newcommand{\expe}[1]{\text{E}\left[ #1 \right]}
+\renewcommand{\var}[1]{\text{Var}\left[ #1 \right]}
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Statistical Theory II}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center} \textbf{Assignment \#3: Chapter 9 Questions 20, 46, 56, 70, 82} \end{center}
+
+\ques{9.20} If $Y$ has a binomial distribution with $n$ trials and success probability $p$, show that $\frac{Y}{n}$ is a consistent estimator of $p$.\\
+If $Y$ has a binomial distribution as stated, then $$ \begin{aligned} \expe{Y} &= np \\ \frac{\expe{Y}}{n} &= \frac{np}{n} \\ \expe{\frac{Y}{n}} &= p \end{aligned} $$ Furthermore, $$ \begin{aligned} \var{Y} &= npq \\ \frac{\var{Y}}{n^2} &= \frac{npq}{n^2} \\ \var{\frac{Y}{n}} &= \frac{pq}{n} \end{aligned} $$ Finally, $$ \lim_{n \to \infty} \var{\frac{Y}{n}} = \lim_{n\to\infty} \frac{pq}{n} = 0 $$ Since the variance of the estimator goes to $0$ as $n \to \infty$, it shows that $\frac{Y}{n}$ is a consistent estimator of $p$.
+\\~\\
+\ques{9.46} If $Y_1,Y_2,\dots,Y_n$ denote a random sample from an exponential distribution with mean $\beta$, show that $f(\mathcal{Y}~|~\beta)$ is in the exponential family and that $\bar{Y}$ is sufficient for $\beta$. \\~\\
+Let $Y \sim \text{Exp}(\beta)$. Then the likelihood function $L(\theta)$ of the sample is the joint distribution $$ \begin{aligned} L(y_1,y_2,\dots,y_n ~|~ \theta) &= f(\mathcal{Y} ~|~ \theta) = f(y_1,y_2,\dots,y_n~|~\theta) \\ &= f(y_1 ~|~ \theta) \times f(y_2 ~|~ \theta) \times \dots \times f(y_n ~|~ \theta) \\ &= \left( \frac{1}{\beta} e^{-\frac{y_1}{\beta}} \right) \times \left( \frac{1}{\beta} e^{-\frac{y_2}{\beta}} \right) \times \dots \times \left( \frac{1}{\beta} e^{-\frac{y_n}{\beta}} \right) \\ &= \frac{1}{\beta^n} e^{-\frac{y_1}{\beta}}e^{-\frac{y_2}{\beta}} \dots e^{-\frac{y_n}{\beta}} = \frac{1}{\beta^n} e^{-\frac{1}{\beta^n}(y_1 + y_2 + \dots + y_n)} \\ &= \frac{1}{\beta^n} e^{-\frac{n\bar{y}}{\beta^n}} \end{aligned} $$ 
+$f(\mathcal{Y} ~|~ \beta)$ is in the exponential family where the parameter $\beta$ is now $\beta^n$ and the realization is $n\bar{y}$. Furthermore, since $f(\mathcal{Y}~|~\beta)$ can be broken into $g(\bar{y}, \beta)$ and $h(y_1,\dots,y_n)$, where $$g(\bar{y}, \beta) = \frac{1}{\beta^n} e^{-\frac{n\bar{y}}{\beta^n}}  \text{ and } h(y_1,\dots,y_n) = 1 $$ $\bar{Y}$ is sufficient for $\beta$.
+
+\newpage
+\ques{9.56} Let $Y_1,Y_2,\dots,Y_n$ denote a random sample from a normal distribution with mean $\mu$ and variance $\sigma^2$. If $\mu$ is known and $\sigma^2$ is unknown, then $\sum_{i=1}^n (Y_i - \mu)^2$ is sufficient for $\sigma^2$. Find an MVUE of $\sigma^2$. \\
+If $\sum_{i=1}^n (Y_i - \mu)^2$ is sufficient for $\sigma^2$, then by the Rao-Blackwell theorem, there exists $\hat{\sigma}^{2*} = \expe{\hat{\sigma^2} ~|~ \sum_{i=1}^n (Y_i - \mu)^2} $, where $\hat{\sigma^2}$ is an unbiased estimator for $\sigma^2$, such that $$ \expe{\hat{\theta}^*} = \sigma^2 \text{ and } \var{\hat{\theta}^*} \leq \var{\hat{\theta}} $$ First find the sufficient estimator for $\sigma^2$. \\ The likelihood function is $$ \begin{aligned} L(y_1,y_2,\dots,y_n ~|~ \sigma^2) &= \frac{1}{\sqrt{2\pi \sigma^2}} e^{-\frac{(y_1 - \mu)^2}{2\sigma^2}} \times \frac{1}{\sqrt{2\pi \sigma^2}} e^{-\frac{(y_2 - \mu)^2}{2\sigma^2}} \times \dots \times \frac{1}{\sqrt{2\pi \sigma^2}} e^{-\frac{(y_n - \mu)^2}{2\sigma^2}}\\ &= \frac{1}{(2\pi)^{\frac{n}{2}} (\sigma^2)^{\frac{n}{2}}}e^{-\frac{1}{2\sigma^2}((y_1 - \mu)^2 + (y_2 - \mu)^2 + \dots + (y_n - \mu)^2)} \\ &= \underbrace{\frac{1}{(\sigma^2)^{-\frac{n}{2}}} e^{-\frac{\sum_{i=1}^n (y_i - \mu)^2}{2\sigma^2}}}_{g\left( \sum_{i=1}^n (y_i - \mu)^2, \sigma^2\right)} \times \underbrace{\frac{1}{(2\pi)^{-\frac{n}{2}}}}_{h(y_1,y_2,\dots,y_n)} \end{aligned} $$ 
+The sufficient estimator for $\sigma^2$ is $\hat{\theta} = \sum_{i=1}^n (y_i - \mu)^2$. Now find $\hat{\theta}^*$ such that $$\expe{\hat{\theta}^*} = \theta = \sigma^2 \text{ and } \var{\hat{\theta}^*} \leq \var{\sum_{i=1}^n (y_i - \mu)^2} $$ 
+A simple elegant solution would be the sample variance, a function of the sufficient statistic itself, $$ \hat{\theta}^* = \frac{1}{n} \sum_{i=1}^n (y_i - \mu)^2 $$ since its expected value is indeed the population variance and the variance of this quantity would be $\frac{1}{n^2}$ times smaller than the variance of the sufficient statistic $\hat{\theta}$. Therefore this quantity is the MVUE of $\sigma^2$.
+
+\newpage
+\ques{9.70} Suppose that $Y_1,Y_2,\dots,Y_n$ constitute a random sample from a Poisson distribution with mean $\lambda$. Find the method of moments estimator of $\lambda$. \\
+If $Y \sim \text{Poisson}(\lambda)$, then $ \expe{Y} = \lambda $. Note that the first moment of a random variable taken about the origin is $$ \mu' = \expe{Y} $$ which in this case is $$ \mu' = \lambda $$ 
+Now, the corresponding first sample moment of any random variable is the average $$ \mu' = m' = \frac{1}{n}\sum_{i=1}^n Y_i $$ Thus the method of moments estimator of $\lambda$ can be found by equating the two. $$ \begin{aligned} \mu' &= m' \\ \lambda &= \frac{1}{n} \sum_{i=1}^n Y_i \\ &= \bar{Y} \end{aligned} $$ Thus the method of moments estimator of $\lambda$ is $$ \hat{\lambda} = \bar{Y} $$ 
+
+\ques{9.82} Let $Y_1,Y_2,\dots,Y_n$ denote a random sample from the density function given by 
+$$ f(y~|~\theta) = \begin{cases} \left( \frac{1}{\theta} \right) ry^{r-1}e^{-y^r / \theta} &\text{ if } \theta > 0,~ y > 0 \\ 0 &\text{ otherwise} \end{cases} $$ 
+where $r$ is a known positive constant.
+\begin{enumerate}
+\item Find a sufficient statistic for $\theta$. \\
+First find the likelihood function $L(y_1,\dots,y_n ~|~ \theta)$. $$ \begin{aligned} L(y_1,\dots,y_n ~|~ \theta) &= f(y_1,\dots,y_n ~|~\theta) \\ &= \left( \frac{1}{\theta} ry_1^{r - 1} e^{-\frac{y_1^r}{\theta}} \right) \times \left( \frac{1}{\theta} ry_2^{r - 1} e^{-\frac{y_2^r}{\theta}} \right) \times \dots \times \left( \frac{1}{\theta} ry_n^{r - 1} e^{-\frac{y_n^r}{\theta}} \right) \\ &= \frac{1}{\theta^n} r^n(y_1y_2\dots y_n)^{r-1} e^{-\frac{y_1^r+y_2^r+\dots +y_n^r}{\theta}}  \end{aligned} $$ This can be broken into $g(\sum_i y_i^r, \theta)$ and $h(y_1,\dots,y_n)$ where $$ g(\sum_i y_i^r, \theta) = \frac{1}{\theta^n} r^n e^{-\frac{\sum_i y_i^r}{\theta}} \text{ and } h(y_1,\dots,y_n) = (y_1y_2\dots y_n)^{r-1} $$ 
+Therefore a sufficient statistic for $\theta$ is $$ \hat{\theta} = \sum_i y_i^r $$
+
+\newpage
+\item Find the MLE of $\theta$. \\
+To find the MLE, first take the natural log of the likelihood function.
+$$ \ln L(y_1,\dots,y_n ~|~ \theta) = -n \ln \theta + n \ln r + (r-1) \ln(y_1y_2\dots y_n) - \frac{y_1^r + y_2^r + \dots + y_n^r}{\theta} $$ 
+Differentiate this with respect to $\theta$ and equate it to $0$. 
+$$ -\frac{n}{\theta} + \frac{y_1^r + y_2^r + \dots + y_n^r}{\theta^2} = 0 $$ 
+Solve for $\theta$.
+$$ \begin{aligned} \frac{n}{\theta} &= \frac{y_1^r + y_2^r + \dots + y_n^r}{\theta^2} \\ n\theta^2 &= \theta(y_1^r + y_2^r + \dots + y_n^r) \\ \theta &= \frac{y_1^r + y_2^r + \dots + y_n^r}{n} \end{aligned} $$ 
+Thus the MLE of $\theta$ is $$ \hat{\theta} = \frac{y_1^r + y_2^r + \dots + y_n^r}{n} $$ 
+\item Is the estimator in part (b) an MVUE for $\theta$? \\
+In part(a), it was found that $\sum_i y_i^r$ was a sufficient statistic for $\theta$. Furthermore, $$\hat{\theta} = \frac{y_1^r + y_2^r + \dots + y_n^r}{n} = \frac{\sum_i y_i^r}{n}$$ is a function of the sufficient statistic. This shows that the estimator in part (b) is an MVUE for $\theta$.
+
+\end{enumerate}
+
+
+\end{document}

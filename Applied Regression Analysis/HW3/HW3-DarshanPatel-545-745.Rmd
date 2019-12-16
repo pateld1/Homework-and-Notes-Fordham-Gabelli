@@ -1,0 +1,276 @@
+---
+title: 'SDGB 7840 HW 3: Modeling Literacy Rate'
+author: "Darshan Patel"
+date: "3/13/2019"
+output:
+  pdf_document: default
+  word_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+```
+
+## Executive Summary
+
+This paper examines the literacy rate of different countries and seeks to explain it using educational, economical and social factors. It is discovered that by using the number of girls out of primary school and the mortality rate of children under 5, most of the variation in literacy rate of a country can be explained by a linear model. This shows that children have an impact on how the country is pictured on the global scale. 
+
+## Introduction 
+
+In today's time, it is very important to know how to speak, read and write in a language in order to communicate with other people. Literacy is one way to measure how educated people are. As defined by UNESCO, a country's literacy rate is defined to be the fraction of people who are literate in a given age group out of the entire population in that specific country. There are different types of literary rates that can be defined, such as adult literary rate and youth literary rate. These are for different populations of people. Factors that influence whether a person is literate or not range from economical ones such as whether the family is financially well off, to healthwise, whether people are fairly healthy in the country. Big factors that influences a country's literary rate are completion rates of children in primary school and how they fare out in the work force. It would also be indicative to look at how prominent mobile devices are in different countries, which can allow people to access social media websites such as Facebook. 
+
+In this study, several factors that may affect country adult literary rates will be explored. Focusing on socioeconomical, gender and educational variables, a relationship will be sought out to try to explain literacy rates in different countries around the world using ten variables.
+
+## Data 
+
+The data for literacy rates for countries come from the World Bank, a firm that provides support and other forms of assistance to developing countries around the world. Their goal is to reduce poverty levels and help underdeveloped nations prosper. Along with the data for adult literary rate, a number of data that could also influence literary rates was also received from the World Bank library of datasets. For this study, the features that will be used to explain literacy rates are
+
+- number of girls out of primary school
+- percentage of men over 15 who are in the labor force
+- percentage of women who are employed in agriculture
+- government expendicture on education, as a percentage of the GDP
+- percentage of mobile phone users
+- mortality rate of children under 5, per 1000 live births
+- percentage of undernourishment in the population
+- rate of primary completion for girls
+- rate of primary completion for boys
+- the ratio of student to teachers in primary school
+
+```{r, include=FALSE}
+rm(list = ls())
+library(tidyverse)
+# Read in data
+lit_rate = read_delim("API_SE.ADT.LITR.ZS_DS2_en_csv_v2_10475045.csv", delim = ',', skip = 4, col_types = cols())
+girls_no_school = read_delim("API_SE.PRM.UNER.FE_DS2_en_csv_v2_10475219.csv", delim = ',', skip = 4, col_types = cols())
+male_industry = read_delim("API_SL.IND.EMPL.MA.ZS_DS2_en_csv_v2_10477199.csv", delim = ',', skip = 4, col_types = cols())
+female_agri = read_delim("API_SL.AGR.EMPL.FE.ZS_DS2_en_csv_v2_10476013.csv", delim = ',', skip = 4, col_types = cols())
+gov_exp = read_delim("API_SE.XPD.TOTL.GD.ZS_DS2_en_csv_v2_10473740.csv", delim = ',', skip = 4, col_types = cols())
+phone_users = read_delim("API_IT.CEL.SETS.P2_DS2_en_csv_v2_10475047.csv", delim = ',', skip = 4, col_types = cols())
+mort_rate = read_delim("API_SH.DYN.MORT_DS2_en_csv_v2_10474840.csv", delim = ',', skip = 4, col_types = cols())
+unnourished = read_delim("API_SN.ITK.DEFC.ZS_DS2_en_csv_v2_10473874.csv", delim = ',', skip = 4, col_types = cols())
+girls_complete = read_delim("API_SE.PRM.CMPT.FE.ZS_DS2_en_csv_v2_10476080.csv", delim = ',', skip = 4, col_types = cols())
+boys_complete = read_delim("API_SL.TLF.TOTL.IN_DS2_en_csv_v2_10475404.csv", delim = ',', skip = 4, col_types = cols())
+pt_ratio = read_delim("API_SE.PRM.ENRL.TC.ZS_DS2_en_csv_v2_10475905.csv", delim = ',', skip = 4, col_types = cols())
+```
+
+To best explain literacy rates, it is important to see whether young children are going to school and if they are completing it as well. The size of the classroom can be indicative of whether children get personal attention from teachers which can affect whether students are motivated to actually learn or just there because everyone else is. If there is a high number of girls out of primary school, it could depect whether a country is progressive or regressive towards womens' rights and their ability to gain an education. The mortality rate of children, as well as percentage of undernourishment seeks to explain the physical features of different countries. Are children receiving adequate health care? Are people able to survive with food and water on a day to day basis? If people are not getting their nutrients everyday, it can be indicative of poor living conditions as well as literary rate. Along with these factors, it is key to look at the labor force, such as the percentage of men who in the labor force along with the percentage of women who are working in agriculture. If there is a high percentage of women working in agriculture, it can show that women are typically not educated enough in school and thus they were not able to achieve other forms of jobs. The percentage of mobile phone users is also looked to draw a connection between peoples' ability to get on the internet and join popular social media networks. If people are able to do so, it can indicate that people are literate and can read and write in one language.
+
+In creating the dataset for analyzing this question, several notions are made. Since not all countries have information for one, or two, particular year, data from 2010-2017 will be used for modeling. This is done so that there is some form of time frame for which information from each country all come from the same period of time while also maximizing how many countries' information can be received. From this time frame, data for each variable is collected by looking at each countries' latest record of information. For instance, if the UAE has data on percentage of mobile phone users in 2010, 2013 and 2017 but not other years, the value from 2017 will be used for that country. If a country has no information in this time frame, its data will be null. 
+
+Latest literacy rate data is first collected for each country. This forms a baseline of which countries will be used to study literacy rate. Afterwards, data for each of the ten explanatory variables is collected in the similar manner. Each of these variable columns are joined with the literacy rate data so that only countries with full data are retained. For instance, if Algeria does not have data on the pupil to teacher ratio, the country is taken out of the resulting dataset. 
+
+```{r, include=FALSE}
+# Function to clean data by removing countries with no non-null values and then 
+# receiving last non-null value for each country 
+clean_data = function(df, name){
+  return(df %>% select("Country Name", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017") %>% # Select needed columns
+           .[rowSums(is.na(.[,c(2:ncol(.))])) != ncol(.[,c(2:ncol(.))]),] %>% # remove countries with no numerical values
+           mutate(final_val = apply(., 1, function(x) as.numeric(tail(na.omit(x), 1)))) %>% # get the last non-null value
+           select('Country Name', final_val) %>% # select the country name and information column
+           setNames(c("country", name))) # set name of columns
+}
+
+# Vector of country names 
+countries = lit_rate$`Country Name`
+
+# Clean and join dataset with all explanatory and response variables
+# First find all countries that have a literacy rate to use for modeling
+# Then for all those countries, find the variables needed to describe it
+# If country information is not found, remove country from end table
+df = inner_join(data.frame(country = countries), clean_data(lit_rate, "litrate"), by = "country") %>%
+  inner_join(., clean_data(girls_no_school, "girlsnoschool"), by = "country") %>% 
+  inner_join(., clean_data(male_industry, "maleindustry"), by = "country") %>%
+  inner_join(., clean_data(female_agri, "femaleagri"), by = "country") %>%
+  inner_join(., clean_data(gov_exp, "govexp"), by = "country") %>%
+  inner_join(., clean_data(phone_users, "phone"), by = "country") %>%
+  inner_join(., clean_data(mort_rate, "mortality"), by = "country") %>%
+  inner_join(., clean_data(unnourished, "unnourished"), by = "country") %>%
+  inner_join(., clean_data(girls_complete, "girlscomplete"), by = "country") %>%
+  inner_join(., clean_data(boys_complete, "boyscomplete"), by = "country") %>%
+  inner_join(., clean_data(pt_ratio, "ptratio"), by = "country") %>% column_to_rownames(var = "country")
+
+# Various calculations
+nrow(lit_rate)
+nrow(df)
+abs((nrow(df) - nrow(lit_rate))) / nrow(lit_rate)
+any(df < 0) # Check if any value is negative
+```
+A total of $117$ countries are found with complete data for all $10$ explanatory variables and literacy rate. 
+
+## Methods
+
+To explain literacy rate, first consider looking at the distribution of the response variable. A histogram of the literacy rate is shown below.
+
+```{r, fig.height=2, fig.width=2}
+# Plot the distribution of literacy rate
+ggplot(df, aes(x = litrate)) + 
+  geom_histogram(fill = "bisque", color = "bisque4", bins = 20) + 
+  labs(x = "literacy rate", y = "number of countries", title = "Distribution of Literacy Rate", cex = 0.2) + 
+  theme_minimal(8)
+```
+
+It is clear that literacy rate is skewed left. The distribution is not symmetric. This will be taken into account. Now, two models will be investigated in explaining literacy rate using a systematic approach. By performing forward stepwise selection, a set of variables will be selected such that a model containing only those variables has the lowest Bayesian Information Criterion compared to models of other variable sizes. From this, a model will be constructed to predict literacy rate as it is. For the second model, transformations will be applied to the first model for better performance.
+
+```{r, include=FALSE}
+library(leaps)
+# Perform BSS and find best subset with lowest BIC
+var_subset = regsubsets(litrate ~ ., df, nvmax = 10, method = "forward")
+summary(var_subset)$which[which.min(summary(var_subset)$bic),]
+```
+
+### Model 1: Using Important Variables
+
+Using the Bayesian Information Criterion, a model with $2$ variables will provide the best ability to predict literacy rate. These variables are number of girls out of primary school and mortality rate of children under $5$. The model is constructed and the output is shown below.
+
+```{r}
+library(pander)
+# Create model with selected variables and print the output using pander
+model_1 = lm(litrate ~ girlsnoschool + mortality, df)
+pander(summary(model_1), caption = "Model 1 - Regressing on Significant Variables")
+```
+
+Using only two explanatory variables, the model was able to explain $84.98\%$ of the variability in the literacy rate in different countries. 
+
+```{r, include=FALSE}
+# Various calculations
+round(as.numeric(summary(model_1)$fstatistic["value"]), 2)
+nrow(df) - 4 - 1
+```
+
+By the overall $F$-test, it is found that at the $\alpha$ level of $0.05$, the model's null hypothesis, namely that all the coefficient estimates are equal to zero, can be rejected since the probability of $F$ statistic `r round(as.numeric(summary(model_1)$fstatistic["value"]), 2)` being greater than $F_{2, 114}$ is less than $\alpha$. This means that at least one of the coefficient estimate is not zero. Therefore the model is adequate. Furthermore, at the $\alpha$ level of $0.05$, the null hypotheses, $\beta_{\text{girlsnoschool}} = 0$ and $\beta_{\text{mortality}} = 0$ can be rejected because the $t$-values associated the estimates are $2.591$ and $-25.23$ respectively. The $p$-values associated with these $t$-statistics are $0.0108$ and $\approx 0$, both of which are less than $\alpha$ and so the coefficient estimates are statistically significant. This means that the two variables play a role in determining literacy rate when the other variable is included in the model.
+
+```{r}
+#Insights about the literacy rate can be made using the coefficient estimates. For instance, leaving number of girls out of school constant, an increase of one in the mortality rate will cause a decrease of $0.62$ in the literacy rate of a country on average. Likewise, when leaving mortality rate constant, an increase of one in the number of girls out of school will cause an increase of $0.0000002631$ in the literacy rate. Let's increase the scale a bit here; when leaving the other variable constant, an increase of $10000$ in the number of girls out of school will cause an increase of $0.002631$ in the literacy rate. Note however that the signs of the two coefficients are opposite in sign. In addition, when the mortality rate of young children is $0$ and the number of girls out of primary school is $0$, then the literacy rate is $103.4$. This has no practical value here. 
+```
+
+When diagnosing this model, several assumptions are made. It is imperative to check these assumptions are fulfilled so that the model can be deemed valuable. The assumptions are: $x$ variables are fixed and measured without error, the mean and variance of the error is $0$ and $\sigma^2$ (constant) respectively, the error terms are normally distributed and independent, and finally, the $x$ variables are not too highly correlated. For this dataset, the $x$ variables are not fixed nor measured without error. This is because surveying data comes with error in certain countries for many of the $x$ variables used in this study. In addition, $x$ variables are not chosen at fixed intervals. Thus this assumption is not fulfilled, but it should not play a huge role in the analysis of the model. Furthermore, it is found that the correlation between the two explanatory variables is $0.278$, meaning there is no high level of correlation. Attaining a variance inflation factor value of $1.084$ for both variables, it is reasonable to conclude there is no significant correlation between the two $x$ variables, despite coefficient estimates having opposite signs. 
+
+```{r, include=FALSE}
+# Get correlation between variables
+cor(df$girlsnoschool, df$mortality)
+# Get VIF of variables
+usdm::vif(df[,c("girlsnoschool", "mortality")])
+```
+
+After investigating the $x$ variables, the error terms can be looked at. Several informative plots are made about the model as shown below.
+
+```{r, fig.height=3, fig.width=3}
+library(ggfortify)
+library(RColorBrewer)
+# Create a color scheme for plot aesthetic
+color_list = brewer.pal(3, "Dark2")
+# Print the plots of the model
+autoplot(model_1, colour = color_list[1], size = 0.7,
+         smooth.colour = color_list[2], smooth.linetype = 'dashed',
+         label.size = 2, label.n = 1, label.colour = color_list[3]) + theme_light() + 
+  theme(axis.text=element_text(size=8),
+        axis.title=element_text(size=7,face="bold"),
+        plot.title = element_text(size = 8))
+```
+
+In the residuals vs. fitted values plot, a somewhat curved line is visible around $0$, signifying that the relationship between the literacy rate and the two explanatory variables is not linear. For literacy rates above $70\%$, the mean error of residuals is $0$ but below $70\%$ it is less. Furthermore, as fitted literacy rate increases, the spread of residuals decreases, indicating non-constant variance of the errors. This violation is also witnessed in the scale-location plot where the relationship between fitted values and square root of standardized residuals is nonlinear. Hence the assumption for the mean and variance of the errors being distributed with mean $0$ and constant variance is violated. Looking at the distribution of error terms in the normal quantile-quantile plot, the error terms have a heavy tailed distribution. Prediction for the literacy rate in Senegal will be inaccurate using this model as well as for other countries near the ends of this distribution. Thus the normality of the error terms assumption is also violated. In addition, the country of Cameroon has high leverage; its $x$ value(s) is/are far away from the mean. Finally, independence of error terms is looked at using a Durbin-Watson test with an $\alpha$ level of $0.05$. 
+
+```{r, include=FALSE}
+# Perform Durbin Watson test for positive correlation
+set.seed(2019)
+car::durbinWatsonTest(model_1, alternative = "positive")
+```
+With the null hypothesis that there is no residual correlation and alternative hypothesis that there is positive residual correlation, it is found that the Durbin-Watson statistic is $1.39$, with a $p$-value of $\approx 0$, signifying that the null hypothesis is rejected. Therefore there is some evidence of positive residual autocorrelation in the error terms and hence the independence of error terms assumption is violated. Using time series methods will help to further look at this.
+
+After evaluating the model and checking the regression assumptions, it is clear that this model is not the best model to explain literacy rate. Many assumptions such as normality and independence of error terms, and independence of error terms are broken. Furthermore, the coefficient estimates are of varying signs despite being significant. 
+
+### Model 2 - Transformation of Variables
+
+Since so many assumptions are violated, try transforming the variables. First look at the distribution of each of the explanatory variables.
+```{r, fig.height=2, fig.width=5, warning=FALSE, message=FALSE}
+color_list = brewer.pal(4, "PuOr")
+# Plot the distributions of the explanatory variables and print them
+g1 = ggplot(df, aes(girlsnoschool)) + geom_histogram(fill = color_list[1], color = "black") + 
+  labs(x = "# of girls out of school", y = "number of countries", 
+       title = "Distribution of Girls \n out of School") + 
+  theme_minimal(8)
+g2 = ggplot(df, aes(mortality)) + geom_histogram(fill = color_list[2], color = "black") +   
+  labs(x = "mortality rate of young children", y = "number of countries", 
+       title = "Distribution of Mortality Rate \n in Young Children") + 
+  theme_minimal(8)
+gridExtra::grid.arrange(g1, g2, nrow = 1)
+```
+
+The distribution of the number of girls out of school is heavily skewed right. This should make sense because this variable is given in integer form without accounting for the countries' population. Also, the distribution of the mortality rate of young children is also skewed right, albeit not as heavily. Taking this all into account, as well as how the distribution of literacy rate is skewed left, the second model will be made by transforming the literacy rate by taking its square root and using the log of girls not in primary school. The mortality rate variable will be kept as it is since it is not heavily skewed. In addition, the leverage point, Cameroon, will be taken out of the dataset. The output of the model is shown below. 
+
+```{r}
+# Create new dataframe without Cameroon
+df_new = df[!rownames(df) %in% c("Cameroon"),]
+# Create columns for transformed variables
+df_new$log_girlsnoschool = log(df_new$girlsnoschool)
+df_new$sqrt_litrate = sqrt(df_new$litrate)
+# Create model and print output
+model_2 = lm(sqrt_litrate ~ log_girlsnoschool + mortality, df_new)
+pander(summary(model_2), caption = "Model 2 - Transformation of Variables")
+```
+
+The difference between this model and the previous model is not aplenty. The model explains $83.62\%$ of the variability in the square root of the literacy rate. The previous model explained $84.98\%$ of the variability of literacy rate. Furthermore, by the overall $F$-test, the model is considered adequate; the model has a $F$-statistic value of `r round(as.numeric(summary(model_2)$fstatistic["value"]), 2)` and a corresponding $p$-value of $\approx 0$.  Thus at least one of the two coefficient estimates is not zero. Furthermore, at the $\alpha$ level of $0.05$, the null hypotheses, $\beta_{\text{log_girlsnoschool}} = 0$ and $\beta_{\text{mortality}} = 0$ can be rejected since the $p$-values associated with the coefficient estimates are $0.0188$ and $\approx 0$, both of which are less than $\alpha$. This makes both coefficient estimates statistically significant and so they play a role on the literacy rate when the other variable is used in the model as well. Note that just like before, the coefficient estimates for both of these variables are of the opposite sign. 
+
+```{r}
+#Given all the transformations, the coefficient estimates are interpreted as follows. when mortality rate is constant, an increase in $1\%$ of the number of girls out of primary school is associated with an $\frac{0.037}{100}$ change in the square root of literacy rate, or $3.7342e-06$ in the actual literacy rate on the average. On the other hand, when number of girls out of primary school is kept constant, an increase of one in the mortality rate is associated with a $0.039897$ decrease in the square root of literacy rate, or $0.0015$ increase in the actual literacy rate. Now, when there is only $1$ girl not in primary school, and the mortality rate is $0$, then the country's square root of literacy rate is $9.94$, or $98.96$ when squared. This can have meaning. This means that when nearly all except one school-age girls are in primary school and the mortality rate is $0$, the literacy rate of the country is almost $100\%$. However it is not believable. In my opinion, this is not practical. 
+```
+
+Like in the previous case, several assumptions are made when fitting the model. One assumption that is violated is that the $x$ values are fixed and measured without error. This is highly inaccurate because the variable values are not fixed by the researcher nor is it completely reliable. Unlike the previous model, the correlation between the two $x$ variables depicts a different image. The correlation between the two explanatory variables in this model is $0.47$ which is moderate. In addition, both variables attain a low variance inflation value of $1.283$. Keeping in mind that the coefficient signs were also of opposite signs, it will be assumed that both variables are not heavily correlated so that it would have an effect on the model.
+
+```{r, include=FALSE}
+# Calculate correlation and VIF of variables in new model
+cor(df_new$log_girlsnoschool, df_new$mortality)
+usdm::vif(df_new[, c("log_girlsnoschool", "mortality")])
+```
+
+After investigating the $x$ variables, the error terms can be looked at. Plots for the residuals are shown below.
+
+```{r, fig.height=3, fig.width=3}
+color_list = brewer.pal(3, "Dark2")
+# Print the plots of the model
+autoplot(model_2, colour = color_list[1], size = 0.7,
+         smooth.colour = color_list[2], smooth.linetype = 'dashed',
+         label.size = 2, label.n = 1, label.colour = color_list[3]) + theme_light() + 
+  theme(axis.text=element_text(size=8),
+        axis.title=element_text(size=7,face="bold"),
+        plot.title = element_text(size = 8))
+```
+
+By transforming the variables, several assumptions can now be made that were not possible before. The normal quantile-quantile plot indicates that the distribution of the error terms is only heavy tailed on one end now, not both, therefore almost satisfying the assumption that the error terms are normally distributed. The error terms can be assumed to have mean $0$ now but the variance cannot be assumed to be constant since it grows as fitted values decreases. The relationship between fitted value and square root of standardized residual is a bit more linear than before but the fact still remains; the error term does not have constant variance. The relationship between the independent variables and target variable is also not linear here, as shown in the residuals vs. fitted plot. The square root of the literacy rate for Niger is now a leverage point. Lastly, independence of error terms is investigated using the Durbin-Watson test. At an alpha level of $0.05$, the Durbin-Watson statistic is $1.46$ and the $p$-value is $0.001$. This means that the null hypothesis is rejected, that there is evidence of positive residual autocorrelation in the error terms. Further investigation using time series analysis will be good here. 
+
+```{r, include=FALSE}
+# Perform Durbin Watson test for positive correlation 
+set.seed(2019)
+car::durbinWatsonTest(model_2, alternative = "positive")
+```
+
+After evaluating this model and checking the regression assumptions, it is seen that the model performs just as well as the previous model. In addition, some of the regression assumptions get partially passed in the second model. 
+
+```{r, include=FALSE}
+# Alternative approach for showing regression output
+# Not good on MS Word.. :/ 
+library(stargazer)
+stargazer(model_1, model_2, type = "text", 
+          dep.var.labels = c("Literacy Rate", "Square root of Literacy Rate"),
+          covariate.labels = c("# of girls out of school", "log of girls out of school",
+                             "mortality rate of young children"),
+          report = "vctp*",
+          digits = 3,
+          title = "Regression Summmary")
+```
+
+## Discussion
+
+The final model that will be used for understanding literacy rate is the second model with transformed variables. Although both models performed performed similarly, using transformations helped to check off a few more regression assumptions. The final model shows some interesting insights on literacy rate. When mortality rate is constant, an increase in $1\%$ of the number of girls out of primary school is associated with an $\frac{0.037}{100}$ change in the square root of literacy rate on the average. On the other hand, when number of girls out of primary school is kept constant, an increase of one in the mortality rate is associated with a $0.0399$ decrease in the square root of literacy rate on the average. Note that squaring these values will not be helpful; it results in only positive changes for the literacy rate which may be accurate. Now, when there is only $1$ girl not in primary school, and the mortality rate is $0$, then the country's square root of literacy rate is $9.94$. In my opinion, this does not practical meaning. 
+
+This model can be used to explain how a country's literacy rate is impacted by how its children, namely, girls, are brought up. Social cause organizations such as education for girls in third world country can use this model to help their cause. Another social effect will be, by showing people that increasing mortality of young children affects literacy rate, it will help the country get medical attention so that less children die prematurely due to health reasons. By doing so, there will be more children in school, hopefully less girls not in school, and thus the country will prosper intellectually. 
+
+Although careful analysis was made when constructing the models, it can be improved using several methods. More variables could be added to the model. Variable selection using lowest BIC was utilized here; alternatively, using the variables that cause the highest $R^2_{\text{adj}}$ could improve the model and satisfy more assumptions. An outside idea for improvement is that instead of using the multiple linear model framework, use regression splines to divide up the distribution of the literacy rate so that each portion is modelled with less error. This would be useful in this case because the distribution of many explanatory variables are skewed.
+
+## References
+
+The definition of literary rate comes from the glossary of the UNESCO website (Source: "Literacy Rate." UNESCO UIS, 26 Sept. 2018, uis.unesco.org/en/glossary-term/literacy-rate). Various pieces of data come from the World Bank, an organization that helps developing countries financially and non-financially. The data for the adult literary rates comes from one of their publicly available datasets. Amongst the numerous other datasets they have, ten of which have been narrowed down for use in this study (Source: “Indicators.” Indicators | Data, data.worldbank.org/indicator.). 
+
+

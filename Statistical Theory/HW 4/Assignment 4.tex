@@ -1,0 +1,91 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, amsfonts, graphicx}
+\newcommand{\ques}[1]{\noindent {\bf Question #1: }} 
+\renewcommand{\theenumi}{\alph{enumi}}
+\newcommand{\prob}[1]{\mathbb{P}(#1)}
+\newcommand{\cprob}[2]{\mathbb{P}\left(#1 ~|~ #2\right)}
+\newcommand{\pois}[2]{\left( \frac{#1^{#2} e^{-#1}}{#2!} \right) }
+\newcommand{\cov}[2]{\mathrm{Cov}[#1, #2]}
+\newcommand{\var}[1]{\mathrm{Var}[#1]}
+\setlength\parindent{0pt}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{Statistical Theory I}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\begin{center} \textbf{Assignment \#4: Chapter 5 Questions 14, 26, 52, 82, 96} \end{center}
+
+\ques{5.14} Suppose that the random variable $Y_1$ and $Y_2$ have join probability density function $f(y_1, y_2)$ given by 
+$$ f(y_1, y_2) = \begin{cases} 6y_1^2y_2 &\text{ if } 0 \leq y_1 \leq y_1 + y_2 \leq 2 \\ 0 &\text{ elsewhere} \end{cases} $$ 
+\begin{enumerate}
+\item Verify that this is a valid joint density function. \\
+Note that $y_1$ depends on $y_2$ and $y_2$ is bounded by $2-y_1$ and $y_1$. Thus
+$$ \begin{aligned} 
+\int_0^1 \int_{y_1}^{2-y_1} 6y_1y_2 \, dy_2 \, dy_1 &= \int_0^1 3y_1^2 y_2^2\Big|_{y_2 = y_1}^{y_2 = 2-y_1} \\ &= \int_0^1 3y_1^2[(2-y_1)^2 - y_1^2] \, dy_1 \\ &= \int_0^1 3y_1^2(4 - 4y_1 + y_1^2 - y_1^2) \, dy_1 \\ &= \int_0^1 3y_1^2(4 - 4y_1)\, dy_1 \\ &= \int_0^1 12y_1^2 - 12y_1^3 \, dy_1 \\ &= 4y_1^3 - 3y_1^4\Big|_{y_1 = 0}^{y_1 = 1} \\ &= (4 - 3) - (0 - 0) \\ &= 1
+\end{aligned} $$ 
+\item What is the probability that $Y_1 + Y_2$ is less than $1$? \\
+Since $Y_1 + Y_2 < 1$, that means the maximum either can be is $\frac{1}{2}$. 
+$$ \begin{aligned}
+\prob{Y_1 + Y_2 < 1} &= \prob{Y_2 < 1 - Y_1}  = \int_0^{\frac{1}{2}} \int_{y_1}^{1 - y_1} 6y_1^2y_2 \, dy_2 \, dy_1 \\ &= \int_0^{\frac{1}{2}} 3y_1^2y_2^2\Big|_{y_2 = y_1}^{y_2 = 1 - y_1} \, dy_1 = \int_0^{\frac{1}{2}} 3y_1^2[(1-y_1)^2 - y_1^2] \, dy_1 \\ &= \int_0^{\frac{1}{2}} 3y_1^2(1 - 2y_1 + y_1^2 - y_1^2) \, dy_1 \\ &= \int_0^{\frac{1}{2}} 3y_1^2(1 - 2y_1) \, dy_1 \\ &= \int_0^{\frac{1}{2}} 3y_1^2 - 6y_1^3 \, dy_1 \\ &= y_1^3 - \frac{6}{4}y_1^4\Big|_{y_1 = 0}^{y_1 = \frac{1}{2}} \\ &= \frac{1}{8} - \left(\frac{6}{4} \cdot \frac{1}{16} \right) = \frac{4}{32} - \frac{3}{32} = \frac{1}{32}
+\end{aligned} $$ 
+\end{enumerate} 
+
+\ques{5.26} Let $$f(y_1, y_2) = \begin{cases} 4y_1y_2 &\text{ if } 0 \leq y_1 \leq 1, ~ 0 \leq y_2 \leq 1 \\ 0 &\text{ elsewhere } \end{cases} $$ be a valid probability density function. Find: 
+\begin{enumerate} 
+\item the marginal density functions for $Y_1$ and $Y_2$. \\
+For $Y_1$, $0 \leq y_1 \leq 1$: $$ f_{Y_1}(y_1) = \int_0^1 4y_1y_2 \, dy_2 = 2y_1y_2^2\Big|_{y_2 = 0}^{y_2 = 1} = 2y_1 $$ 
+For $Y_2$, $0 \leq y_2 \leq 1$: $$ f_{Y_2}(y_2) = \int_0^1 4y_1y_2 \, dy_1 = 2y_1^2y_2\Big|_{y_1 = 0}^{y_1 = 1} = 2y_2 $$ 
+Therefore $$ f_{Y_1}(y_1) = \begin{cases} 2y_1 &\text{ if } 0 \leq y_1 \leq 1 \\ 0 &\text{ elsewhere } \end{cases}, ~~~
+f_{Y_2}(y_2) = \begin{cases} 2y_2 &\text{ if } 0 \leq y_2 \leq 1 \\ 0 &\text{ elsewhere } \end{cases} $$ 
+
+\item $\cprob{Y_1 \leq \frac{1}{2}}{Y_2 \geq \frac{3}{4}}$. 
+$$ \begin{aligned}
+\cprob{Y_1 \leq \frac{1}{2}}{Y_2 \geq \frac{3}{4}} &= \frac{\prob{Y_1 \leq \frac{1}{2}} \text{ and } \prob{Y_2 \geq \frac{3}{4}}}{\prob{Y_2 \geq \frac{3}{4}}} = \frac{\int_0^{\frac{1}{2}} \int_{\frac{3}{4}}^1 4y_1y_2 \, dy_1\, dy_2}{\int_{\frac{3}{4}}^1 2y_2 \, dy_2} \\ &= \frac{\int_0^{\frac{1}{2}} 2y_1 \, dy_1 \cdot \int_{\frac{3}{4}}^1 2y_2 \, dy_2}{\int_{\frac{3}{4}}^1 2y_2 \, dy_2} \\ &= \int_0^{\frac{1}{2}} 2y_1 \, dy_1 \\ &= y_1^2\Big|_{y_1 = 0}^{y_1 = \frac{1}{2}} \\ &= \frac{1}{4} - 0 = \frac{1}{4} \end{aligned} $$ 
+
+\item the conditional density function of $Y_1$ given $Y_2 = y_2$. \\
+For $0 \leq y_1 \leq 1$,
+$$ f(Y_1~|~Y_2 = y_2) = \frac{f(Y_1, Y_2 = y_2)}{f(Y_2 = y_2)} = \frac{4y_1y_2}{2y_2} = 2y_1 $$
+So $$ f(Y_1 ~|~ Y_2 = y_2) = \begin{cases} 2y_1 &\text{ if } 0 \leq y_1 \leq 1 \\ 0 &\text{ elsewhere } \end{cases} $$ 
+\item the conditional density function of $Y_2$ given $Y_1 = y_1$. \\
+For $0 \leq y_2 \leq 1$, 
+$$ f(Y_2 ~|~ Y_1 = y_1) = \frac{f(Y_2, Y_1 = y_1)}{f(Y_1 = y_1)} = \frac{4y_1y_2}{2y_1} = 2y_2 $$ 
+So $$ f(Y_2 ~|~ Y_1 = y_1) = \begin{cases} 2y_2 &\text{ if } 0 \leq y_2 \leq 1 \\ 0 &\text{ elsewhere } \end{cases} $$ 
+
+\item $\cprob{Y_1 \leq \frac{3}{4}}{Y_2 = \frac{1}{2}}$. 
+$$ \begin{aligned}
+\cprob{Y_1 \leq \frac{3}{4}}{Y_2 = \frac{1}{2}} &= \frac{\prob{Y_1 \leq \frac{3}{4}} \text{ and } \prob{Y_2 = \frac{1}{2}}}{\prob{Y_2 = \frac{1}{2}}} \\ &= \frac{\int_0^{\frac{3}{4}} 2y_1 \, dy_1 \cdot f_{Y_2}(\frac{1}{2})}{f_{Y_2}(\frac{1}{2})} \\ &= \int_0^{\frac{3}{4}} 2y_1 \, dy_1 \\ &= y_1^2\Big|_{y_1 = 0}^{y_1 = \frac{3}{4}} \\ &= \frac{9}{16} - 0 \\ &= \frac{9}{16} 
+\end{aligned} $$ 
+
+\end{enumerate}
+
+\ques{5.52} Let $$ f(y_1, y_2) = \begin{cases} 4y_1y_2 &\text{ if } 0 \leq y_1 \leq 1, ~ 0 \leq y_2 \leq 1 \\ 0 &\text{ elsewhere } \end{cases} $$ be a valid joint probability density function. Are $Y_1$ and $Y_2$ independent?  \\
+If $f(y_1, y_2)$ can be factored into $g(y_1)h(y_1)$ for all values of $y_1$ and $y_2$, then we can say that $Y_1$ and $Y_2$ are independent.
+$$ f(y_1, y_2) = 4y_1y_2 =  \left(2 \cdot y_1 \right)\cdot \left(2 \cdot y_2\right) = g(y_1)h(y_2) $$
+ Clearly $f(y_1,y_2)$ can be factored into functions of separate variables in the range where $0 \leq y_1 \leq 1$ and $0 \leq y_2 \leq 1$. In addition, the ranges of $y_1$ and $y_2$ do not depend on each other. Outside of this range, probability is zero.Therefore $Y_1$ and $Y_2$ are independent. 
+\newpage
+\ques{5.82} The joint density function for $Y_1$, the weight in tons of a bulk item stocked by a supplier, and $Y_2$, the weight of the item sold by the supplier, is $$ f(y_1, y_2) = \begin{cases} \frac{1}{y_1} &\text{ if } 0 \leq y_2 \leq y_1 \leq 1 \\ 0 &\text{ elsewhere } \end{cases} $$ 
+In this case, the random variable $Y_1 - Y_2$ measures the amount of stock remaining at the end of the week, a quantity of great importance to the supplier. Find $\mathrm{E}[Y_1 - Y_2]$. 
+$$ \begin{aligned} 
+\mathrm{E}[Y_1 - Y_2] &= \mathrm{E}[Y_1] - \mathrm{E}[Y_2] \\ \mathrm{E}[Y_1] &= \int_0^1 \int_{y_2}^1 y_1 \cdot \frac{1}{y_1} \, dy_1 \, dy_2 = \int_0^1 \int_{y_2}^1 dy_1 \, dy_2 = \int_0^1 y_1\Big|_{y_1 = y_2}^{y_1 = 1} \, dy_2 \\ &= \int_0^1 1 - y_2 \, dy_2 = y_2 - \frac{y_2^2}{2} \Big|_{y_2 = 0}^{y_2 = 1} = 1 - \frac{1}{2} - (0 - 0) = \frac{1}{2} \\
+\mathrm{E}[Y_2] &= \int_0^1 \int_{y_2}^1 y_2 \cdot \frac{1}{y_1} \, dy_1 \, dy_2 = \int_0^1 \frac{y_2}{y_1} \, dy_1 \, dy_2 \\ &= \int_0^1 y_2 \ln y_1 \Big|_{y_1 = y_2}^{y_1 = 1} \, dy_2 = \int_0^1 y_2(0 - \ln y_2) \, dy_2 = \int_0^1 -y_2\ln y_2 \, dy_2 \\ &= \frac{y_2^2}{4} - \frac{y_2^2}{2}\ln y_2 \Big|_{y_2 = 0}^{y_2 = 1} = ( \frac{1}{4} - 0) - (0 - 0) = \frac{1}{4} \\ 
+\mathrm{E}[Y_1 - Y_2] &= \mathrm{E}[Y_1] - \mathrm{E}[Y_2] \\ &= \frac{1}{2} - \frac{1}{4} = \frac{1}{4} \end{aligned} $$ 
+
+\ques{5.96} Suppose that the random variables $Y_1$ and $Y_2$ have means $\mu_1$ and $\mu_2$ and variances $\sigma_1^2$ and $\sigma_2^2$, respectively. Use the basic definition of the covariance of two random variables to establish that
+\begin{enumerate} 
+\item $\cov{Y_1}{Y_2} = \cov{Y_2}{Y_1}$.
+$$ \cov{Y_1}{Y_2} = \mathrm{E}[(Y_1 - \mu_1)(Y_2 - \mu_2)] = \mathrm{E}[(Y_2 - \mu_2)(Y_1 - \mu_1)] = \cov{Y_2}{Y_1}  $$ 
+\item $\cov{Y_1}{Y_1} = \var{Y_1} = \sigma_1^2$. That is, the covariance of a random variable and itself is just the variance of the random variable. 
+$$ \cov{Y_1}{Y_1} = \mathrm{E}[(Y_1 - \mu_1)(Y_1 - \mu_1)] = \mathrm{E}[(Y_1 - \mu_1)^2] = \mathrm{Var}[Y_1] = \sigma_1^2 $$ 
+
+\end{enumerate} 
+
+
+
+\end{document}

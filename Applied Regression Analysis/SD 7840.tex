@@ -1,0 +1,1040 @@
+\documentclass[12pt]{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath, amsfonts, amsthm, multicol, physics} 
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Darshan Patel}
+\rhead{SD 7840: Applied Regression Analysis}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage}
+
+\begin{document}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+
+\title{SD 7840: Applied Regression Analysis}
+\author{Darshan Patel}
+\date{Spring 2019}
+\maketitle
+
+\tableofcontents 
+
+\newpage
+\section{Introduction}
+\begin{itemize}
+\item A variable describes a characteristic of an individual/object
+\item The distribution of a variable describes what values the variables takes and how often it takes these values in the population 
+\item Four Regression Models 
+$$ \begin{tabular}{c|cc} 
+model & response variable & explanatory variable(s) \\ \hline 
+simple linear regression & numerical & 1 numerical variable \\ \hline 
+multiple regression & numerical & numerical and/or \\ & & categorical variables \\ \hline 
+logistic regression & categorical variables & numerical and/or \\ & with two levels &  categorical variables \\ \hline 
+one-way ANOVA & numerical & 1 categorical variable \end{tabular} $$ 
+\item Univariate measures are means (measure of center), standard deviation (measure of spread) as well as visual description of histograms 
+\item One bivariate measure is correlation which measures the strength of the linear relationship between two numerical variables 
+\item Pearson's Correlation \begin{itemize} 
+\item Notation: population correlation $\rho$, sample correlation $r$
+\item To estimate $\rho$ using data: $$ r = \text{Cor}[X,Y] = \text{Cor}[Y,X] = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{(n-1)s_xs_y} $$ where $\bar{x}$ and $\bar{y}$ are the sample means and $s_x$ and $s_y$ are sample standard deviations
+\item Correlation measures the strength of a linear relationship - if the relationship between $X$ and $Y$ cannot be described by a line, then correlation is meaningless
+\item Correlation does not imply causation - if $X$ and $Y$ have a high correlation, it does not tell anything about whether $X$ causes $Y$ or whether $Y$ causes $X$ 
+\item Pearson's correlation is bounded on $[-1,1]$
+\item If $X$ and $Y$ have a linear relationships and as $X$ increases, $Y$ increases, then there is a positive trend and a positive $r$ value
+\item If $X$ increases and $Y$ decreases, then there is a negative trend and a negative $r$ value 
+\item If there is no trend, $r \approx 0$ 
+\item Note that $r$ has no units \end{itemize} 
+\item Simple Linear Regression Model $$ Y = \text{y-intercept} + \text{slope}X + \varepsilon = \beta_0 + \beta_1X + \varepsilon $$ 
+\item Multiple Regression $$ Y = \beta_0 + \beta_1X_1 + \dots + \beta_pX_p + \varepsilon $$ 
+\item Logistic Regression \\
+Let $Y = \begin{cases} 0 \\ 1 \end{cases} $; 
+then $$ \mathbb{P}(Y = 1) = \frac{e^{\beta_0 + \beta_1X_1 + \dots + \beta_pX_p}}{1 + e^{\beta_0 + \beta_1X_1 + \dots + \beta_pX_p}} $$ where log odds is $$ \log \left( \frac{\mathbb{P}(Y = 1)}{1 - \mathbb{P}(Y=1)}\right) = \beta_0 + \beta_1X_1 + \dots + \beta_pX_p $$ 
+\item One-Way ANOVA $$y_{ij} = \mu_j + \varepsilon_{ij} $$ where $y_{ij}$ is the response for the $i$th observation in group $j$ and $\mu_j$ is the mean of the $j$th group 
+\end{itemize}
+
+\section{Simple Linear Regression}
+\begin{itemize}
+\item Population Correlation $\rho$ is estimated by the sample correlation $r$
+$$ r = \text{Cov}[X,Y] = \text{Cov}[Y,X] = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{(n-1)s_xs_y} $$ where $\bar{x}$ and $\bar{y}$ are the sample means and $s_x$ and $s_y$ are sample standard deviations 
+\item Note that $r$ is bounded on $[-1,1]$
+\item Correlation measures the strength of a linear association \begin{itemize} 
+\item If the relationship between $X$ and $Y$ cannot be described by a line, then correlation is meaningless 
+\item Check a scatterplot to see if $X$ and $Y$ have a linear relationship before using the statistic $r$ \end{itemize} 
+\item Correlation does not imply causation; if $X$ and $Y$ have a high correlation, it does not say anything about whether $X$ causes $Y$ or whether $Y$ causes $X$ 
+\item Population Model $$ Y = \text{E}[Y~|~X] = \beta_0 + \beta_1X+\varepsilon $$ 
+Here $x$ is the explanatory/independent variable whereas $Y$ is the response/dependent variable 
+\item Estimated Model $$ \hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1x_i $$ for $i = 1,2,\dots,n$
+\item Error $\varepsilon$ is estimated by the residual, $e$
+$$ e_i = \text{observed } y - \text{ predicted } y = y_i - \hat{y}_i $$ 
+\item The model is fit by determining which values of $\hat{\beta}_0$ and $\hat{\beta}_1$ create the smallest SSE (sum of squared errors) and where the sum of the residuals is equal to $0$ 
+$$ \text{SSE} = \sum_{i=1}^n (y_i - \hat{y}_i)^2 = \sum_{i=1}^n \left(y_i - (\hat{\beta}_0 + \hat{\beta}_1x_i) \right)^2 $$ This method is called ``Ordinary Least Squares" or OLS 
+\item Using the OLS method, $$ \begin{aligned} 
+\hat{\beta}_1 &= r\frac{s_y}{s_x} \\ \hat{\beta}_0 &= \bar{y} - \hat{\beta}_1\bar{x} \end{aligned} $$ where $s_x$, $s_y$ are the sample standard deviations of the $x$ and $y$ variables respectively, $\bar{x}$ and $\bar{y}$ are the corresponding sample means and $r$ is the sample correlation (note that correlation, $r$ has no units) 
+\item The estimated slope is $\hat{\beta}_1$ \begin{itemize} 
+\item One unit increase in $x$ is associated with a $\hat{\beta}_1$ change in $y$
+\item Measurement units of slope = units of $y$ / units of $x$ \end{itemize} 
+\item The estimated $y$-intercept is $\hat{\beta}_0$ \begin{itemize} 
+\item This is the $y$-value when $x=0$ (i.e., where the line crosses the $y$-axis)
+\item Measurement units of $y$-intercept = units of $y$ 
+\item The $y$-intercept may not always be meaningful; look at contextual interpretation, is $0$ within the range of observed $x$-values? \end{itemize} 
+\item The points that are always on the regression line is $(\bar{x}, \bar{y})$ and $(0, \hat{\beta}_0)$ 
+\item $R^2$ is the coefficient of determination, which can be denoted as $r^2$ for simple linear regression 
+\item The standard deviation of $y$ is $$ s_y = \sqrt{ \frac{\sum_{i=1}^n (y_i - \bar{y})^2}{n-1}} = \sqrt{\frac{\text{SST}}{n-1}} $$ where SST is the total variation for the variable $y$ 
+\item Note that the total variation of the residuals, $e$, is SSE 
+$$ \text{SSE} = \sum_{i=1}^n (y_i - \hat{y}_i)^2 = \sum_{i=1}^n \left(y_i - (\hat{\beta}_0 + \hat{\beta}_1x_i)\right)^2 $$ 
+\item Then the coefficient of determination can be rewritten as $$ R^2 = 1 - \frac{\text{SSE}}{\text{SST}} $$ where $\frac{\text{SSE}}{\text{SST}}$ is the fraction of variation in $y$ that is not explained by $x$ using the regression model 
+\item Therefore, $R^2$ is the fraction of variability in $y$ can can be explained by $x$ using the regression model
+\item Note that $R^2$ is bounded on $[0,1]$ \begin{itemize} 
+\item If $R^2 = 0$, SSE = SST and so, $x$ is useless in explaining $y$, all $\hat{y} = \bar{y}$ 
+\item If $R^2 = 1$, SSE = $0$ and so, $x$ explains $y$ perfectly, all residuals are $0$ \end{itemize} 
+\item Regression Modeling Steps \begin{enumerate} 
+\item Hypothesize model form to explain $y$
+\item Collect sample data 
+\item Clean data and do explanatory data analysis
+\item Use sample data to estimate the unknown model parameter (e.g., $\beta_0,\beta_1,\dots,\beta_p$)
+\item Specify the probability distribution of the error term and estimate any unknown parameters of this distribution (most often, $\varepsilon \sim N(0, \sigma^2)$ is assumed to estimate $\sigma^2$); also, check the validity of each assumption made about this probability distribution and the model
+\item Statistically check the usefulness of the model
+\item When satisfied that the model is useful, use it for prediction, estimation, etc. 
+\end{enumerate} 
+\item Recall: \begin{itemize} 
+\item True Model: $Y = \beta_0 + \beta_1X + \varepsilon$
+\item Estimated Model: $\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1x_i$
+\item Slope Estimate: $\hat{\beta}_1 = r \frac{s_y}{s_x}$
+\item $y$-intercept Estimate: $\hat{\beta}_0 = \bar{y} - \hat{\beta}_1\bar{x}_i$
+\item Residual (estimated error): $e_i = y_i - \hat{y}_i$ \end{itemize} 
+\item Assumptions for Simple Linear Regression: we want to estimate the following model based on the OLS method: $$Y = \beta_0 + \beta_1X + \varepsilon$$ \begin{itemize} 
+\item $x$ values are fixed and are measured without error 
+\item $x$ and $y$ are linearly related 
+\item errors are independent of each other 
+\item the points are evenly distributed above/below the regression line \begin{itemize} 
+\item that is, $\sigma^2$ is a good estimate of he variability of $Y$ around the regression line for all values of $X$ 
+\item constant variance assumption, or homoscedasticity \end{itemize} 
+\item errors have a mean of $0$ (OLS ensures this) 
+\item the errors are normally distributed \end{itemize} 
+\item Essentially, $\varepsilon \stackrel{\text{iid}}{\sim} N(0, \sigma^2)$ 
+\item Residual Plot \begin{itemize} 
+\item Check for linearity and constant variance using a residual plot by plotting $e_i$ values against $x_i$ values 
+\item Note that the OLS method ensures the mean of the residuals is $0$ 
+\item Look out for \begin{itemize} 
+\item pattern $\to$ linearity assumption violated 
+\item increasing/decreasing spread of points as $x$ increases $\to$ constant variance assumption violated 
+\item individual points with large residuals, often are outliers, influential points or leverage points \end{itemize} 
+\item If there is a pattern in the plot, then either the linearity or constant variance assumptions have been violated \end{itemize} 
+\item If the regression assumptions are satisfied, given a specific value for $x$, $y$ is normally distributed with mean $\beta_0 + \beta_1x$ (this implies $\text{E}[\varepsilon] = 0$) and standard deviation $\sigma$; this distribution should be applicable to the whole regression line 
+\item Normal Quantile Plots: $\varepsilon$ has a normal distribution \begin{itemize} 
+\item Assumption Check: evaluate whether $\varepsilon$ has a normal distribution by looking at a normal quantile plot of the residuals, $e$ $\to$ points should form a straight line 
+\item Intuitively, the theoretical quantiles are on the $x$-axis while the empirical (sample) quantiles are on the $y$-axis 
+\item Interpretation: if the points on the plot form a straight line, the data may come from a normal distribution \begin{itemize} 
+\item A left-skewed distribution has a downward facing distribution for the quantile plot 
+\item A right-skewed distribution has an upward facing distribution for the quantile plot 
+\item Heavy-tailed distributions: more probabilities at the tails (extremes) than normal distribution (some examples include t, Cauchy, Pareto) \end{itemize} \end{itemize} 
+\item For the normality assumption to be satisfied, the points should form a straight line in the normal quantile plot of the residuals 
+\item When the variance is not constant, $\hat{\sigma}$ does not describe the variability of the residuals at all values of $x$ (high/low) and so the regression assumption is violated 
+\item Estimating and Interpreting $\sigma^2$ \begin{itemize} 
+\item Regression Assumption: $\varepsilon \stackrel{\text{iid}}{\sim} N(0, \sigma^2)$ 
+\item Estimate of $\sigma$ denoted as $\hat{\sigma}$: 
+$$ \hat{\sigma} = \sqrt{\frac{\text{SSE}}{n-2}} = \sqrt{\frac{\sum e_i^2}{n-2}} = \sqrt{\frac{\sum (y_i - \hat{y}_i)^2}{n-2}} = \sqrt{\frac{\sum (y_i - (\hat{\beta}_0 + \hat{\beta}_1x_i))^2}{n-2}} $$ 
+\item $\hat{\sigma}$ is also called the RMSE - room mean squared error 
+\item General Interpretation: since $\varepsilon$ is assumed to be normally distributed, we expect approximately $95\%$ of the observed $Y$ values to be within $\pm 2\hat{\sigma}$ of the regression line 
+\item Units of $\hat{\sigma}$ is the units of the $Y$ variable \end{itemize} 
+\item If constant variance and normality assumptions hold, $\pm 2$ RMSE above and below the regression line should contain roughly $95\%$ of the observations 
+\item Approximating RMSE ($\hat{\sigma}$) \begin{itemize} 
+\item $\hat{\sigma}$ is the standard deviation of $y$ around the regression line 
+\item $s_y$ is the standard deviation of $y$ around the sample means 
+\item For large sample sizes, $$ \hat{\sigma} \approx s_y \sqrt{1-r^2} $$ 
+\item Properties: $s_y \geq 0$, $-1 \leq r \leq 1$, $0 \leq r^2 \leq 1$ 
+\item If $r^2 = 1$, then $\hat{\sigma} = 0$ and all variation in $y$ is explained by $x$ 
+\item if $r^2 = 0$, then $\hat{\sigma} = 1$ and none of the variation in $y$ is explained by $x$ \end{itemize}
+\item Sampling Distribution of $\hat{\beta}_1$ \begin{itemize} 
+\item Assumption: $\varepsilon \stackrel{\text{iid}}{\sim} N(0, \sigma^2)$ 
+\item $\hat{\beta}_1$ is an estimate of $\beta_1$ and is a statistic 
+\item $\hat{\beta}_1$ is a random variable with a normal distribution of mean $\beta$ and standard deviation $$ \text{SD}[\hat{\beta}_1] = \frac{\sigma}{\sqrt{ \sum (x - \bar{x})^2}} $$ where $\sigma$ is the same standard deviation of the errors from $\varepsilon \stackrel{\text{iid}}{\sim} N(0, \sigma^2)$  
+\item $\sum (x - \bar{x})^2$ is the total variation in $x$ $$ s_x = \sqrt{ \frac{\sum (x - \bar{x})^2}{n-1}} $$ This is called the sampling distribution of $\hat{\beta}_1$ 
+\item $\hat{\beta}_1 = r\frac{s_y}{s_x}$ is an unbiased estimator of $\beta_1$ ($\text{E}[\hat{\beta}_1] = \beta_1$)
+\item In practice, $\sigma$ is unknown and must be estimated by $\hat{\sigma}$, or RMSE 
+\item Estimate $\text{SD}[\hat{\beta}_1]$ with the standard error of $\hat{\beta}_1$
+$$ \text{SE}[\hat{\beta}_1] = \frac{\hat{\sigma}}{\sqrt{\sum (x - \bar{x})^2}} $$ 
+\item Therefore when running hypothesis tests for $\beta_1$, use the $t$-distribution instead of the normal distribution since $\text{SD}[\hat{\beta}_1]$ is estimated by $\text{SE}[\hat{\beta}_1]$ 
+\item This theory can also be used to run hypothesis tests using the slope and constructing confidence intervals for the slope \end{itemize} 
+\item A small RMSE and large $s_x \sqrt{n-1} = \sqrt{\sum (x - \bar{x})^2} $ is good
+\item $t$-Test for the Population Slope, $\beta_1$ \begin{itemize} 
+\item Hypotheses: $$ \begin{aligned} 
+H_0 &: \beta_1 = \beta_1^0 \\ H_1 &: \beta_1 \neq \beta_1^0,~ \beta_1 < \beta_1^0 \text{, or } \beta_1 > \beta_1^0 \end{aligned} $$ 
+\item Choose significance level $\alpha$ 
+\item Collect data and check that the regression assumptions hold 
+\item Compute the test statistic assuming the null hypothesis is true 
+$$ t_1 = \frac{\hat{\beta}_1 - \beta_1^0}{\text{SE}[\hat{\beta}_1]} $$ which estimates how many standard units $\hat{\beta}_1$ is from the hypothesized $\beta_1^0$ and $SE[\hat{\beta}_1]$ is the standard deviation of slope estimate 
+\item $t_1$ has a $t(n-2)$ distribution 
+\item Compute $p$-value 
+\item Reject $H_0$ only if $p$-value$<\alpha$ 
+\end{itemize}
+\item Confidence Interval for Population Slope \begin{itemize} 
+\item For a $(1-\alpha) \times 100\%$ confidence interval for the population slope
+$$ \underbrace{\hat{\beta}_1}_{\text{point estimate}} \pm \underbrace{t_{(n-2, \alpha/2)} \times \text{SE}[\hat{\beta}_1]}_{\text{margin of error}} $$ 
+\item $t_{(n-2, \alpha/2)}$ is the critical value, the value on the $t$-distribution with $n-2$ degrees of freedom where the cumulative distribution value is $1 - \frac{\alpha}{2}$ \end{itemize}
+\item In-sample prediction: obtain predicted values from observations used to fit the model 
+\item Interpolation: prediction of $y$ from an $x$ which is in the range of the data 
+\item Extrapolation: prediction of $y$ from an $x$ which is outside the range of the data 
+\item Extrapolating is dangerous because it is unknown whether the linear relationship holds in regions of no data 
+\item When interpreting the $y$-intercept, check if you are interpolating/extrapolating 
+\item Out-of-sample prediction: predictions for observations not used to fit the model (i.e., new $x$ values)
+\item Average vs. Individual Responses \begin{itemize} 
+\item Example: $\hat{y} = \hat{\beta}_0 + \hat{\beta}_1x$ where $\hat{y}$ is a random quantity 
+\item $\hat{y}$ is the estimate of the average value for $y$ given the value of $x_0$  \begin{itemize} 
+\item can construct a confidence interval for the average estimate when $x = x_0$ 
+\item Interpretation: there is a $C\%$ chance that the confidence interval for $\hat{y}$ covers the true average $y$ given that particular value of $x_0$ \end{itemize} 
+\item For a specific estimate of $y$ given an $x_0$, expect more uncertainty a wider interval \begin{itemize} 
+\item can construct a prediction interval for a single observation when $x=x_0$ 
+\item Interpretation: there is a $C\%$ chance that the prediction interval for $\hat{y}$  covers the true value of $y$ given that particular value of $x_0$ \end{itemize} 
+\item Since the averages are less variable than single data points, confidence intervals are narrower than prediction intervals 
+\item Visualizing Confidence and Prediction Intervals for Prediction \begin{itemize} 
+\item Confidence Interval for prediction: examining average value for $y$ given $x$ variable values 
+\item Prediction Interval for prediction: examining values for a new/single $y$ given $x$ variable values 
+\item Averages are less variable than single data points and so confidence intervals are narrower than prediction intervals 
+\item In-sample predictive performance is almost always better than out-of-sample performance
+\item When reporting modeling results, always include the following: \begin{itemize}
+\item data cleaning steps 
+\item list all variables in the data set, not just the ones in the model(s)
+\item summary statistics of variables in the model 
+\item which (if any) observations were removed and why 
+\item model fitting process 
+\item final model, assumption checks, hypothesis test (for hypothesis tests, always include the following: hypotheses, test statistic, degrees of freedom (if applicable), $p$-value, and test conclusion)
+\end{itemize} \end{itemize} \end{itemize}
+\item Summary: Regression Diagnostics for Simple Linear Regression \begin{itemize} 
+\item $x$'s are fixed and measured without error - how is data explored and processed? 
+\item $x$ and $y$ are linearly related - residuals vs. $x$ variable plot $\to$ check for trends/curves 
+\item constant variance (homoscedasticity) - residuals vs. $x$ variable plot $\to$ check for fanning, different variability of residuals for various $x$ values 
+\item the errors are normally distributed - check normal quantile plot of residuals 
+\item errors are independent of each other - data collected sequentially? data collected in groups? \end{itemize} 
+\item Violations o assumptions can affect standard error estimates, test statistics, $p$-values, confidence intervals, prediction intervals, etc 
+\item Regression is fairly robust to violations of the constant variance and normality assumptions, i.e., can still proceed with inferential statistics with moderate violations of assumptions; regression is not robust to violations of other assumptions 
+\item What to do with violations of assumptions? Potential actions: \begin{itemize} 
+\item transform
+\item use weighted least squares, generalized least squares 
+\item instrumental variables to correct for measurement errors 
+\item other types of models (e.g., Poisson regression, nonlinear models, etc.) \end{itemize} 
+\end{itemize}
+
+\section{Multiple Regression}
+\begin{itemize}
+\item In simple linear regression, estimate $\beta_0,\beta_1,\sigma^2$ using $Y = \beta_0 + \beta_1X + \varepsilon$
+\item In multiple regression, estimate $\beta_0,\beta_1,\beta_2,\dots,\beta_p,\sigma^2$, where $p$ is the number of explanatory variable, using $$Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \dots + \beta_pX_p + \varepsilon $$ 
+\item Estimate the coefficients $\hat{\beta}_0,\hat{\beta}_1,\dots,\hat{\beta}_p$ values such that the SSE is minimized $$ \begin{aligned} \text{SSE} &= \sum_{j=1}^n (y_j - \hat{y}_j)^2 \\ &= \sum_{j=1}^n (y_j - (\hat{\beta}_0 + \hat{\beta}_1x_{1j} + \hat{\beta}_2x_{2j} + \dots + \hat{\beta}_px_{pj}))^2 \end{aligned} $$ 
+\item Least Squares Method \begin{itemize} 
+\item The population model in matrix notation is $y = X\beta + \varepsilon$ where 
+$$ y = \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix} ~~~~ X = \begin{bmatrix} 1 & x_{11} & x_{21} & \dots & x_{p1} \\ 1 & x_{12} & x_{22} & \dots & x_{p2} \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 1 & x_{1n} & x_{2n} & \dots & x_{pn} \end{bmatrix} $$ 
+\item $X$ is called a design matrix and has $n \times (p+1)$ dimensions
+\item Then compute $$ \hat{\beta} = (X^TX)^{-1}X^Ty = \begin{bmatrix} \hat{\beta}_0 \\ \hat{\beta}_1 \\ \vdots \\ \hat{\beta}_p \end{bmatrix} $$ where $X^T$ is the transpose of $X$ \end{itemize} 
+\item Model Assumptions: let the population model be $Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \dots + \beta_pX_p + \varepsilon$ and the sample (estimated) model be $\hat{Y} = \hat{\beta}_0 + \hat{\beta}_1X_1 + \hat{\beta}_2X_2 + \dots + \hat{\beta}_pX_p$ \begin{itemize}
+\item $x$ values are fixed and are measured without error
+\item variables are linearly related 
+\item $\text{E}[\varepsilon] = 0$ and so $\text{E}[Y~|~X_1,\dots,X_p] = \beta_0 + \beta_1X_1 + \beta_2X_2 + \dots + \beta_pX_p$, i.e. the mean of the error is $0$ and so the mean of the $Y$ given the $X_1,\dots,X_p$ values is its value on the population regression ``line"
+\item $\text{Var}[\varepsilon] = \sigma^2$ 
+\item $\varepsilon$ is normally distributed 
+\item $\varepsilon$ values are independent, i.e. the error from one value of $Y$ is not dependent on the error from any other value of $Y$ 
+\item Extra Check: $X$ variables are not too highly correlated (collinearity/multicollinearity) \end{itemize} 
+\item Model Evaluation: given that the model assumptions are satisfied, how do you determine how good the model is? \begin{itemize} 
+\item Estimate variability of response variable around the regression line using RMSE
+\item Compute fraction of variability in response variable which can be explained by the regression model using $R^2$ or adjusted $R^2$
+\item Test all slopes at once using overall $F$-test
+\item Test each slope separately using individual $t$-tests
+\item Compare nested models using partial $F$-tests \end{itemize} 
+\item Let the variance of $Y$, or average variability of $Y$ be defined as 
+$$s_y^2 = \frac{\sum (y_i - \bar{y})^2}{n-1}$$ 
+\item Then the total variability of $Y$ is $$ \text{SST} = \sum (y_i - \bar{y})^2 $$ 
+\item The goal of regression is to explain some of this variability in $Y$ using the explanatory variables
+\item The SST can be rewritten as follows: $$ \begin{aligned} \text{SST} &= \text{SSR} + \text{SSE} \\ \sum_{i=1}^n (y_i - \bar{y})^2 &= \sum_{i=1}^n (\hat{y}_i - \bar{y})^2 + \sum_{i=1}^n (y_i - \hat{y}_i)^2 \end{aligned} $$ where SSR is the regression sum of squares (explained variation) and SSE is the error sum of squares (unexplained variation) 
+\item Then $s_y^2$ becomes $$ s_y^2 = \frac{\sum_{i=1}^n (y_i - \bar{y})^2}{n-1} = \frac{\text{SST}}{n-1} $$ 
+\item The error variance estimate is given by 
+$$ \hat{\sigma} = \text{RMSE} = \sqrt{\frac{\text{SSE}}{n-(p+1)}} $$ 
+\item If regression assumptions hold, expect about $95\%$ of the $Y$ values to be within $\pm 2$ RMSE values from the regression line 
+\item Compute $R^2$ as follows: $$ R^2 = 1 - \frac{\text{SSE}}{\text{SST}} = \frac{\text{SSR}}{\text{SST}} $$ Same interpretation as before: $(100 \times R^2)\%$ of the variation in $Y$ can be explained by the $X$'s (i.e., the regression model)
+\item Every time a variable is added to the regression, the $R^2$ value will stay the same or increase, even if the variable is not helpful 
+\item $R^2_{\text{adjust}}$ is more conservative than $R^2$, essentially adjusting for more variables vs. sample size 
+\item The formula for the adjust multiple coefficient of determination is as follows $$ \begin{aligned} R^2_{\text{adjusted}} &= 1 - \left(\frac{n-1}{n-(p+1)}\right)\left(\frac{\text{SSE}}{\text{SST}}\right) \\ &= 1- \left(\frac{n-1}{n-p-1}\right)\left(1-R^2\right) \end{aligned} $$ 
+\item Note that $R^2_{\text{adjusted}} \leq R^2$ and that for every poor models, $R^2_{\text{adjusted}}$ could be negative; if sample size $n$ is not much bigger than $p+1$, then $R^2$ will not be very informative 
+\item Overall $F$-Test \begin{itemize} 
+\item Hypotheses: $$ \begin{aligned} H_0: \beta_1 = \beta_2 = \dots = \beta_p = 0 \\ H_A: \text{ at least one } \beta_i \text{ is not zero} \end{aligned} $$ 
+Note that the $y$-intercept is not included 
+\item The significance level is $\alpha$
+\item Collect sample of size $n$ and compute SST and SSE 
+\item The test statistic is as follows: $$ F_c = \frac{(\text{SST} - \text{SSE})/p}{\text{SSE}/(n-(p+1))} = \frac{\text{SSR}/p}{\text{SSE}/(n-(p+1))} = \frac{\text{MSR}}{\text{MSE}} $$ which has a $F$ distribution with $p$ and $n-(p+1)$ degrees of freedom
+\item Reject $H_0$ if $p$-value = $P(F > F_c) < \alpha$ \end{itemize} 
+\item ANOVA (Analysis of Variance) Table 
+$$ \begin{tabular}{c|cccc} 
+source & degrees of & sums of & mean square & F \\ 
+& freedom & squares & (variance) & \\ \hline
+regression model & $p$ & SSR & MSR $= \frac{\text{SSR}}{p}$ & $F_C = \frac{\text{MSR}}{\text{MSE}}$ \\ \hline
+error & $n-p-1$ & SSE & MSE = $\frac{\text{SSE}}{n-p-1}$ & \\ \hline 
+total & $n-1$ & \text{SST} & & \end{tabular} $$ 
+\item $F$ Distribution \begin{itemize} 
+\item continuous, positive distribution with density function:
+$$f(x) = \frac{\sqrt{\frac{(jx)^jk^k}{(jx+k)^{J+k}}}}{x\text{B}\left(\frac{j}{2},\frac{k}{2}\right)} $$ where $j>0$, $k>0$ and $\text{B}$ is the beta function 
+\item useful in regression for analysis of variance (ANOVA) \end{itemize}
+\item In simple linear regression only, the two-sided $t$-test for slope, the overall $F$-test and the two-sided $t$-test for population correlation $\rho$ are equivalent hypothesis tests 
+\item $t$-test for $\beta_i$ \begin{itemize} 
+\item The significance level is $\alpha$
+\item Hypotheses: $$ \begin{aligned} H_0 &: \beta_i = \beta_i^* \\ H_A &: \beta_i \neq \beta_i^* \text{ or } \beta_i < \beta_i^* \text{ or } \beta_i > \beta_i^* \end{aligned} $$ 
+\item Collect sample of size $n$ and compute $\hat{\beta}_i$ and the standard error of $\hat{\beta}_i$, $\text{SE}[\hat{\beta}_i]$ 
+\item Compute the test statistic: $$ t_i = \frac{\hat{\beta}_i - \beta_i^*}{\text{SE}[\hat{\beta}_i]} $$ which has a $t$ distribution with $n-(p+1)$ degrees of freedom 
+\item Compute the $p$-value and reject $H_0$ if $p$-value $< \alpha$
+\item The confidence interval is $$ \hat{\beta}_i \pm t_{\alpha/2} \text{SE}[\hat{\beta}_i]$$ 
+\item Note: $t$-tests in multiple regression are testing a slope assuming ALL of the other variables are already in the model \end{itemize} 
+\item Models can be compared formally if they are nested, meaning that the explanatory variables in one model are a subset of the explanatory variables in the other model, using a partial $F$-test (note: this will only work if the same observations are used in both models)
+\item Partial $F$-test \begin{itemize} 
+\item Models $$ \begin{aligned} \text{E}[Y~|~X] &= \beta_0 + \beta_1X_1 + \dots + \beta_qX_q \text{ (reduced model, RM)} \\ \text{E}[Y~|~X] &= \beta_0 + \beta_1X_1 + \dots + \beta_qX_q + \beta_{q+1}X_{q+1} + \dots + \beta_pX_p \text{ (full model, FM)} \end{aligned} $$ 
+\item The significance level is $\alpha$
+\item Hypotheses (testing $p-q$ slopes): $$ \begin{aligned} H_0 &: \beta_{q+1} = \beta_{q+2} = \dots = \beta_{p} = 0 \\ H_A &: \text{ at least one slope is not zero} \end{aligned} $$ 
+\item Collect sample of size $n$ (same observations for both models)
+\item Compute the test statistic: $$F_c = \frac{(\text{SSE}_{\text{RM}} - \text{SSE}_{\text{FM}}) / (p-q)}{\text{SSE}_{\text{FM}} / (n-(p+1))} $$ 
+which has a $F$ distribution with $p-q$ and $n-(p+1)$ degrees of freedom and where RM denotes the reduced model and FM denotes the full model
+\item Reject $H_0$ if $p$-value = $P(F > F_c) < \alpha$ \end{itemize} 
+\item Note that when explanatory variables are arranged differently in linear models and its output is compared with each other, the coefficients will be the same; in the ANOVA test for both, the SSE, SSR will be the same for both models and so the overall $F$-test statistic will be the same for all models, however the individual sums of squares for individual variables will differ because of how they are calculated (sequential sums of squares) 
+\item Predicting ``in the range of the $x$s" becomes more complicated in multiple regression; make sure that all predictions are in the correct range for all $x$s simultaneously and is feasible 
+\item Confidence and prediction intervals have the same interpretations as in simple linear regression; as in simple linear regression, averages are less variable than single data points and so prediction intervals are always wider than confidence intervals 
+\item When two models have similar predictive abilities, choose the model with the fewer number of explanatory variables or remove variables which are not statistically significant (i.e., $t$-test for slope is not statistically significant) 
+\item $n$ vs. $p$ \begin{itemize} 
+\item Let $n$ be the sample size (i.e., number of usable observations in the data set), $p$ be the number of explanatory variables available in the data set and $k$ be the number of explanatory variables in the final model  
+\item Note that $k \leq p$
+\item Ideally, $n >> p$, or, $n$ is much larger than $p$ (and therefore $k$)
+\item This means there is a lot of data to estimate each of the slope coefficients 
+\item The final model must have $n > k$, otherwise regression model cannot be fit
+\item Potential issues: $n >> p$ but $p$ is quite large, or $p > n$; in both cases, it is difficult to sift through so many explanatory variables \end{itemize} 
+\item How to choose among large $p$? \begin{itemize} 
+\item Use mechanical methods (e.g., stepwise regression) to choose $k$ variables from the $p$ available
+\item This risks including explanatory variables which are irrelevant because we will check many models when using mechanical methods \end{itemize} 
+\end{itemize}
+
+\section{Qualitative Variables and Interaction Terms}
+\begin{itemize}
+\item Explanatory variables can be nominal categorical variables and/or combinations of variables called interaction terms 
+\item Category variables of $k$ categories (i.e., levels) rare encoded into $k-1$ numerical variables, or indicator (dummy) variables 
+\item The $y$-intercept has a more nuanced meaning when categorical variables are included 
+\item Use partial $F$-test for testing if a categorical variable slope is zero or not 
+\item There are multiple $y$-intercepts when using categorical variables and interactions, interpret output wisely and add slope to intercept when applicable 
+\item A partial $F$-test comparing a model with an interaction term and without the interaction would be equivalent to the $t$-test for the slope of the interaction since the interaction term is just a dummy variable 
+\item Running a linear regression on interaction terms create multiple parallel equations where the slope coefficients are equivalent and the $y$-intercept depends on the values of the interaction term 
+\item A partial $F$-test comparing the model with or without a categorical variable is equivalent to the $t$-tests for slopes because each variable is comprised of a single dummy variable 
+\item If an interaction term is included in the mode, the lower order terms must be included in the model even if they are not statistically significant 
+\end{itemize}
+
+\section{Variable Selection Methods}
+\begin{itemize}
+\item Purpose of Building a Model \begin{itemize} 
+\item Description and model building \begin{itemize}
+\item ``science" - trying to understand the main relationships with the response variable 
+\item focus: parsimonious model (prefer smaller model) \end{itemize} 
+\item Estimation and prediction \begin{itemize} 
+\item want to use the model to predict new observations 
+\item focus: reduce RMSE even if it means extra explanatory variables are needed 
+\end{itemize} 
+\item Control \begin{itemize} 
+\item more ``science" - trying to understand the main relationships with the response variable in a causal way (note: this generally needs an experimental set up)
+\item focus: accurate estimate of slopes, small standard errors for slope estimates \end{itemize} \end{itemize}
+\item If there are $q$ possible explanatory variables, either all $q$ variables are in the true model or only $p$ of the $q$ variables are in the true model where $p < q$ 
+\item Including all $q$ variables in the model when the true model needs all $q$ variables or including only $p$ variables in the model when the true model needs those $p$ variables is good 
+\item If all $q$ variables are included when only $p$ are needed, then there is loss of precision in the estimated slopes and predictions 
+\item If only $p$ variables are included when all $q$ are needed, then the estimated slopes are biased and RMSE is biased upward 
+\item Models usually fit better on the data used to estimate the model as opposed to new data 
+\item Simulate the existence of new data by dividing data into two groups: \begin{itemize} 
+\item training set - data used to explore and fit the model
+\item test set - data used to validate the final model \end{itemize} 
+\item There is no such thing as a ``best set" of variables; what is considered a good model depends on the purpose of building the model in the first place as well 
+\item Mechanical Variable Screen Procedures \begin{itemize} 
+\item Forward Selection \begin{enumerate} 
+\item Start with a regression with the most significant explanatory variable
+\item Among the remaining variables, choose the most significant explanatory variable and add it to the model
+\item Among the remaining variables, choose the most significant explanatory variable and add it to the model, etc.
+\item Stop adding variables when (a) there are no more variables or(b) no more variables can be added based on a pre-set criterion (e.g., stop adding variables when no $p$-value is below $\alpha = 0.05$) \end{enumerate}
+\item Backward Elimination: similar to forward selection but start with all explanatory variables and remove variables one by one based on which is the least significant
+\item All-Possible Regressions: check all possible regressions (e.g., all $1$-variable models, all $2$-variable models, etc.) and choose model based on some criterion (note: if there are $k$ variables, then there $2^k$ possible models, including the $y$-intercept only model) 
+\item Best Subset Regression \begin{enumerate} 
+\item Pick best regression among all regressions with one variable based on some criterion 
+\item Pick best regression among all regressions with two variables based on some criterion 
+\item Continue doing this; then, choose among these ``best" regressions based on that criterion \end{enumerate} \end{itemize} 
+\item Common Variable Selection Criteria \begin{itemize} 
+\item $p$-values and $\alpha$ 
+\item $R^2_{\text{adj}}$, MSE (but generally better to use RMSE as it is easier to interpret) 
+\item Mallow's $C_p$, BIC, AIC \end{itemize} 
+\item These variable selection methods and criteria will not always yield the same model as ``best" 
+\item $R^2_{\text{adj}}$ and RMSE \begin{itemize}
+\item The adjusted $R^2$ can be rewritten as $$ \begin{aligned} R^2_{\text{adj}} &= 1 - \left( \frac{n-1}{n-(p+1)}\right)(1 - R^2) \\ &= 1 - (n-1)\left( \frac{\text{MSE}}{\text{SST}} \right) \end{aligned} $$ Then as MSE decreases, $R^2_{\text{adj}}$ increases since SST is the same across models
+\item Choose the model with the highest $R^2_{\text{adj}}$ or the lowest MSE (or lowest RMSE)
+\item Some people have argued that the penalty for including additional explanatory variables is too small in the $R^2_{\text{adj}}$ formula 
+\item Note: RMSE = $\sqrt{\text{MSE}}$ 
+\item Depending on the scale of the $y$ variable, MSE may be very large and is in squared units, so it's generally easier to compare RMSEs across models instead \end{itemize} 
+\item Mallow's $C_p$ Criterion \begin{itemize}
+\item Use $C_p$ to compare tow nested models (measures bias) 
+\item Formula: $$C_p = \frac{\text{SSE}_p}{\text{MSE}_q} + 2(p+1) - n $$ where $q$ and $p$ are the number of explanatory variables in the complete and subset models respectively 
+\item Want $C_p$ low and to be close to $p+1$ 
+\item When $C_p$ is close to $p+1$, there is low bias \end{itemize}
+\item AIC - Akaike Inforation Criterion \begin{itemize} 
+\item AIC tries to balance accuracy (fit) and simplicity (smaller number of variables, parsimony) 
+\item Advantage: unlike with $F$-tests, non-nested models can be compared; but, just like with partial $F$-tests, the same observations must be used in the two models being compared 
+\item Formula: $$ \text{AIC} = n\log\left( \frac{\text{SSE}_p}{n} \right) + 2(p+1) $$ where $\log$ is natural logarithm and $p$ is the number of explanatory variables 
+\item Interpretation: As AIC decreases, the model is more preferred 
+\item Therefore, for two models with similar SSE values, AIC penalizes the model with the larger number of variables \end{itemize} 
+\item BIC - Bayes Information Criterion \begin{itemize} 
+\item Formula: $$ \text{BIC} = n\log \left( \frac{\text{SSE}_p}{n} \right) + (p+1)\log n $$ where $\log$ is natural logarithm and $p$ is the number of explanatory variables 
+\item The only difference between AIC and BIC is that the penalty for more explanatory variables is larger; the $2(p+1)$ in AIC is replaced by $(p+1)\log n$ in BIC; $2 < \log n$ as long as $n \geq 8$
+\item This larger penalty term helps reduce the possibility of overfitting 
+\item Interpretation: As BIC decreases, the model is more preferred 
+\item Rule of thumb: BIC difference should be larger than $2$ between two models to be considered a substantial difference between the models \end{itemize} 
+\item External Model Validation \begin{itemize} 
+\item Models generally fit sample data better than new data
+\item If the differences are substantial, then there is chance of overfitting has occurred: fitted to the idiosyncrasies of the data, as opposed to the general process from which the data is sampled 
+\item Validation methods: \begin{itemize} 
+\item examining $\hat{y}$ - big or small residuals? 
+\item examining $\beta_1,\dots,\beta_k$ - do the signs (i.e., $+/-$) make sense? do the interpretations of the partial slopes make sense? 
+\item validating with new data 
+\item data splitting 
+\item jackknife (resampling) methods, cross-validation \end{itemize} \end{itemize} 
+\item Data Splitting \begin{itemize} 
+\item Sample size of training data is $n$
+\item Denote new (or test set) data: $n+1$, $n+2$, $\dots$, $n+m$
+\item Let $\hat{y}_i$ be the predictions for the new (or test) data 
+\item Compute $$ R^2_{\text{prediction}} = 1 - \left\{ \frac{\sum_{i=n+1}^{n+m} (y_i - \hat{y}_i)^2}{\sum_{i=n+1}^{n+m} (y_i - \bar{y})^2} \right\} $$ where $\bar{y}$ is he mean of the training set response variable 
+\item Compare $R^2_{\text{prediction}}$ with $R^2$ from the original model; if there is a big drop, then there is a problem
+\item Compute $$ \text{RMSE}_{\text{prediction}} = \sqrt{\frac{ \sum_{i=n+1}^{n+m} (y_i - \hat{y}_i)^2}{m - (p+1)}} $$ where $p$ is the number of explanatory variables in the model
+\item Compare $\text{RMSE}_{\text{prediction}}$ with RMSE from the original model \end{itemize} 
+\item Jackknife (Resampling) Methods: if the data set is too small to split, use the jackknife: \begin{enumerate} 
+\item Fit model with the first observation removed 
+\item Predict $y$ value for the first observation and call it $\hat{y}_{(1)}$ instead of $\hat{y}_1$ 
+\item Fit model with second observation excluded but add the first observation back in 
+\item Predict $y$ value for the second observation; call it $\hat{y}_{(2)}$ instead of $\hat{y}_2$ 
+\item Repeat until there are $n$ predictions $\hat{y}_{(1)},\dots,\hat{y}_{(n)}$
+\item Compute statistics: $$ \begin{aligned} 
+R^2_{\text{jackknife}} &= 1 - \frac{\sum_{i=1}^n (y_i - \hat{y}_{(i)})^2}{\sum_{i=1}^n (y_i - \bar{y})^2} = 1 - \frac{\text{PRESS}}{\sum_{i=1}^n (y_i - \bar{y})^2} \\ \text{RMSE}_{\text{jackknife}} &= \sqrt{ \frac{\sum_{i=1}^n (y_i - \hat{y}_{(i)})^2}{n-(p+1)}} = \sqrt{\frac{\text{PRESS}}{n-(p+1)}} \end{aligned} $$ where $\bar{y}$ is the mean of the training dataset response variable and $p$ is the number of explanatory variables in the model \end{enumerate} 
+\item PRESS is usually larger than SSE from the fitted model and so $R^2_{\text{jackknife}}$ is usually smaller than $R^2$ and $\text{RMSE}_{\text{jackknife}}$ is usually larger than RMSE 
+\item PRESS Criterion - related to the jackknife model validation methods; for a given model: \begin{enumerate} 
+\item Fit model with the first observation removed 
+\item Predict $y$ value for the first observation and call it $\hat{y}_{(1)}$ instead of $\hat{y}_1$ 
+\item Fit model with second observation excluded but add the first observation back in 
+\item Predict $y$ value for the second observation; call it $\hat{y}_{(2)}$ instead of $\hat{y}_2$ 
+\item Repeat until there are $n$ predictions $\hat{y}_{(1)},\dots,\hat{y}_{(n)}$
+\item Compute PRESS statistic: $$ \text{PRESS} = \sum_{i=1}^n (y_i - \hat{y}_{(i)})^2 $$
+\item Choose model with lowest PRESS statistic \end{enumerate} 
+\item Note that PRESS is usually larger than SSE = $\sum_{i=1}^n (y_i - \hat{y}_i)^2$ 
+\item This is slightly different from the MSE method because predictions are computed on data that are not used to fit the model 
+\item How to choose among a large number of variables? \begin{itemize} 
+\item Especially when using variable screening procedures, possibly hundreds of $t$-tests are carried out, checking if slopes are significant for each combination of variables 
+\item When $\alpha$ is set for these $t$-tests, then $$ P(\text{Type I error}) = \alpha \text{ for each test} $$ 
+\item Type I error - reject null hypothesis when it is true 
+\item In a $t$-test for slopes, a Type I error is saying that the slope is significant when it is actually not 
+\item Making such an error means that that explanatory variables that aren't actually significant is including in the model - just significant by chance 
+\item When many hypothesis tests are done, especially when they are related to each other, the probability of a Type I error across all tests combined is more than $\alpha$ \end{itemize} 
+\item Bonferroni Correction \begin{itemize} 
+\item Usual method: determine whether explanatory variable $x$ is significant if the $p$-value of the $t$-test is less than $\alpha$ 
+\item Bonferroni correction: for each hypothesis test, compare $p$-value instead to $\alpha / h $ where $h$ is the total number of $t$-tests 
+\item The result of using the Bonferroni correction is that fewer variables may be included in the model which are most significant 
+\item The Bonferroni correction is conservative (i.e, more hypotheses can be rejected than this algorithm permits) but it is very easy to implement \end{itemize} 
+\item Note that when using mechanized processes such as forward stepwise, transformations and interaction terms are missed; there are also many models being tried and so there are many hypothesis tests 
+\item These processes should only be used for selecting variables, not determining the final model - the usual steps, including checking assumptions and looking at plots, should be used to determine the final model
+\end{itemize}
+
+\section{Regression Diagnostics}
+\begin{itemize}
+\item When a new variable $z$ is added to a model, one of the following occurs: \begin{itemize} 
+\item Scenario 1: $t$-test for variable $z$ is not significant; slopes for other variables already in the model do not change much; thus in most cases, leave out variable $z$ from the model
+\item Scenario 2: $t$ test for variable $z$ is significant, slopes for other variables in the model change a lot; check for collinearity/multicollinearity among the explanatory variables 
+\item Scenario 3: $t$-test for variable $z$ is significant, slopes for other variables in the model do not change a lot; keep variable $z$ in the model
+\item Scenario 4: $t$-test for variable $z$ is not significant; slopes for other variables in the model change a lot; most likely collinearity/multicollinearity \end{itemize} 
+\item Getting to the final model is a trial and error process and then there is a need to check assumptions 
+\item Multiple Regression Assumptions: let the population model be $Y = \beta_0 + \beta_1X_1 + \dots + \beta_pX_p + \varepsilon$ where $y$ is linearly related to the $x$ variables and the sample (estimated) model is $\hat{Y} = \hat{\beta}_0 + \hat{\beta}_1X_1 + \dots + \hat{\beta}_pX_p$; then \begin{itemize}
+\item $x$ variables are fixed and measured without error
+\item $\text{E}[\varepsilon] = 0$, then $\text{E}[Y~|~X] = \beta_0 + \beta_1X_1 + \dots + \beta_pX_p$, i.e. the mean of the error term is $0$ and so the mean of $Y$ given the $X_1,\dots,X_p$ values is its value on the population regression ``line" 
+\item $\text{Var}[\varepsilon] = \sigma^2$, i.e. the variance of the error term is constant regardless of the $X_1,\dots,X_p$ values and is denoted by $\sigma^2$ 
+\item $\varepsilon$'s are normally distributed 
+\item $\varepsilon$'s are independent 
+\item $x$ variables are not too highly correlated (collinearity / multicollinearity) \end{itemize} 
+\item Given the population model and fitted model, where the $\varepsilon$'s are the errors, the errors $\varepsilon$ can be estimated by computing the residuals, $e$ $$ \begin{aligned} e_i &= y_i - \hat{y}_i \\ &= \text{observed } y - \text{ predicted } y \\ &= y_i - (\hat{\beta}_0 + \hat{\beta}_1x_{1i} + \dots + \hat{\beta}_px_{pi}) \end{aligned} $$ 
+\item A residual can be computed for each observation in the data set: $e_1,\dots,e_n$ 
+\item Leverage Values \begin{itemize} 
+\item Recall that $\hat{y} = X\hat{\beta}$ where the $y$-intercept and slopes are determined by $\hat{\beta} = (X^\top X)^{-1}X^\top y $ 
+\item Then by plugging in for $\hat{\beta}$ 
+$$ \hat{y} = \underbrace{X(X^\top X)^{-1}X^\top y}_{H} $$ 
+where $H = X(X^\top X)^{-1}X^\top$ is called the hat matrix or the projection matrix and is an $n \times n$ matrix 
+\item The $i$th row of $H$, denoted as $p_{i1},\dots,p_{in}$, are functions of the explanatory variables only, not the response
+\item $H$ can be used as weights to rewrite $\hat{y}_i$ for the $i$th observation as $$ \hat{y}_i = p_{i1}y_1 + p_{i2}y_2 + \dots + p_{in}y_n $$ for $i=1,\dots,n$
+\item The diagonal values of $H$ are called the leverage values: $p_{11},\dots,p_{nn}$ 
+\end{itemize} 
+\item Standardized Residuals \begin{itemize} 
+\item Another way to express those leverage values is $$ p_{ii} = \frac{1}{n} + \frac{(x_i - \bar{x})^2}{\sum (x_i - \bar{x})^2} $$ 
+$p_{ii}$ will be large if $x_i$ is far away from its mean $\bar{x}$, signifying a high leverage point 
+\item In addition, $$\text{Var}[e_i] = \sigma^2(1 - p_{ii}) $$ where $\sigma^2$ is the variability of the error term $\varepsilon$ but the variance of the statistic $e_i$ is calculated here 
+\item To get back to equal variance, compute the standardized residuals 
+$$ z_i = \frac{e_i - 0}{\sigma \sqrt{1 - p_{ii}}} $$ 
+\item $\sigma$ is unknown; therefore use $\hat{\sigma}$, or RMSE, to compute the internally studentized residual $$ r_I = \frac{e_i - 0}{\hat{\sigma}\sqrt{1 - p_{ii}}} $$ 
+\item $r_i$ is commonly referred to as the standardized residual; for large samples, $r_i$ values should be approximately $N(0,1)$ (assuming the regression assumptions hold) 
+\item This means that the empirical rule for normal distributions can be used to determine whether a residual is large or small \end{itemize} 
+\item Linearity: Two Types of Standardized Residual Plots \begin{itemize} 
+\item Plot fitted value $\hat{y}$ on the $x$-axis and the standardized residual $r_i$ on the $y$-axis and look for: trends (i.e., non-linearity), dramatic changes in variability across $\hat{y}$ values (i.e., non-constant variance), outliers, more than $5\%$ of the standardized residuals outside of $\pm 2$ from $0$ 
+\item For each explanatory variable, plot $x$ values on the $x$-axis and the standardized residual $r_i$ on the $y$-axis and look for: trends (check for linearity), dramatic changes in variability across $x$ values (check for non-constant variance), more than $5\%$ of the standardized residuals outside of $\pm 2$ \end{itemize} 
+\item Constant Variance \begin{itemize} 
+\item Assumption: $\varepsilon$'s have constant variance across the regression ``line", $\sigma^2$ - this property is called homoscedastiticy (i.e., constant variance)
+\item If this property is not true, then varying residual variance is calld heteroscedasticity (i.e., non-constant variance) 
+\item Check: standardized residuals $r_i$ vs $\hat{y}_i$ plot; for more detailed information, check each $r_i$ vs each $x$ variable plot 
+\item Regression is robust to violations of this assumption; rule of thumb: widest variation is no more than twice the narrowest variation; however, if severe, interpretation of $p$-values, hypothesis tests, confidence intervals are incorrect \end{itemize} 
+\item  In a standard residual vs $\hat{y}$ plot, look for changes in vertical variability as $\hat{y}$ increases 
+\item In a $\sqrt{\abs{\text{standard residual}}}$ vs $\hat{y}$ plot, or scale-location plot, look whether the red line is flat is flat or not 
+\item Interpreting a Normal Quantile Plot \begin{itemize} 
+\item Assumption Check: evaluate whether $\varepsilon$ has a normal distribution by looked at a normal quantile plot of the standardized residuals $r_I$ - points should form a straight line 
+\item If all points fall on a straight line, then the residuals are normally distributed 
+\item Consequences of Non-normality: affects Type I error rates for statistical tests and confidence intervals for slope coefficients, i.e., $P(\text{Type I}) \neq \alpha$
+\item Regression is fairly robust against violations of normality assumption 
+\item Be careful with heavy-tailed errors; results will be more sensitive to those extreme data points
+\end{itemize} 
+\item If the plot appears $S$-shaped on the normal quantile plot, then the distribution of residuals is heavy-tailed 
+\item If there is non-constant variance or non-normality, try transforming the data or doing weighted least squares 
+\item Outliers, Leverage, Influential Points \begin{itemize} 
+\item Outlier (univariate): unusual value for a given variable ($x$, $y$, etc.), e.g., points beyond the whiskers in a box plot
+\item Outliers in the regression context: an observation with an unusual $y$ value given the $x$ value; tends to have large residuals 
+\item Leverage: point with an unusual $x$ value, i.e., $x$ value far away from its mean
+\item Influential Point: point which is both a regression outlier and a leverage point; observation has a large influence on regression estimates \end{itemize} 
+\item To check for outliers, look at box plots where an outlier lies outside $1.5 \times \text{IQR}$ where the interquartile range (IQR) is the $75$th percentile - $25$th percentile 
+\item Cook's Distance \begin{itemize} 
+\item Cook's Distance calculation $$ C_i = \frac{r_i^2}{p+1} \cdot \frac{p_{ii}}{1 - p_{ii}} $$ where $p_{ii}$ is the leverage value for the $i$th observation and $\frac{p_{ii}}{1-p_{ii}}$ is called the potential function, $r_i$ is the standardized residual of the $i$th observation and $p$ is the number of explanatory variables 
+\item Interpretation: Cook's distance for observation $i$ measures the difference between the $\beta_j$'s from the model with all data points and the $\beta_j$'s when the $i$th data point is removed 
+\item Rule of Thumb: a point is influential if $C_i$ for the $i$h point is above the $50$th percentile value of an $F$ distribution with $p+1$ and $n-(p+1)$ degrees of freedom 
+\item More Practical Rule of Thumb: a point is influential if $C_i$ is larger than $1$ and it sticks out in the plots \end{itemize} 
+\item Other Diagnostic Measure and Plots include: \begin{itemize} 
+\item Welsch and Kuh Measure (DFITS, very similar to Cook's distance)
+\item Hadi's influence measure 
+\item potential-residual plot (related to leverage-residual plot)
+\item added-variable plot
+\item residual plus component plot \end{itemize} 
+\end{itemize}
+
+\section{Multicollinearity and Autocorrelation}
+\begin{itemize}
+\item Multiple Regression Assumptions - let the population model be $Y = \beta_0 + \beta_1X_1 + \dots + \beta_pX_p + \varepsilon$ where $y$ is linear related to the $x$ variables, and the sample (estimated) model is $\hat{Y} = \hat{\beta}_0 + \hat{\beta}_1X_1 + \dots + \hat{\beta}_pX_p$, then \begin{itemize} 
+\item the $x$ variables are fixed and measured without error 
+\item $\text{E}[\varepsilon] = 0$, then $\text{E}[Y~|~X] = \beta_0 + \beta_1X_1 + \dots + \beta_pX_p$, i.e. the mean of the error term is $0$ and so the mean of $Y$ given the $X_1,\dots,X_p$ values is its value on the population regression ``line"
+\item $\text{Var}[\varepsilon] = \sigma^2$, i.e., the variance of the error term is constant regardless of the $X_1,\dots,X_p$ values and is denoted by $\sigma^2$ 
+\item $\varepsilon$'s are normally distributed 
+\item $x$ variables are not too highly correlated (collinearity/multicollinearity) \end{itemize} 
+\item Multicollinearity - two or more explanatory variables which are moderate/highly correlated with each other 
+\item Note: If it's just two explanatory variables which are correlated, that is simply called collinearity
+\item Collinearity/multicollinearity is an issue only if the relationships are very strong
+\item Some problems caused by severe multicollinearity: \begin{itemize} 
+\item Difficulty interpreting the partial slope estimate ($\hat{\beta}_j$)
+\item Inflated $\text{SE}[\hat{\beta}_j]$ values
+\item Effects on the signs of parameters 
+\item Potential issues with prediction including when constructing prediction and confidence intervals
+\item Rounding errors when estimating $\hat{\beta}_j$'s, $\text{SE}[\hat{\beta}_j]$'s, etc. (i.e., computer errors) \end{itemize} 
+\item Detecting Multicollinearity: if one of the following occurs, it may indicate the presence of multicollinearity: \begin{itemize} 
+\item significant correlations between pairs of explanatory variables - look at the scatterplot and correlation matrices
+\item $t$-tests not significant at all (or nearly all) individual $\beta$ estimates, but the overall $F$-test is significant 
+\item opposite signs, from what is expected, in the estimated $\beta$ values 
+\item variance inflation factor, VIF, $> 10$ \end{itemize} 
+\item Solutions for Reducing the Effects of Multicollinearity: \begin{itemize} 
+\item drop one or more explanatory variables from the final model (i.e., get rid of redundant variables)
+\item combine variables, possibly using principle components 
+\item use ridge regression to reduce issues related to rounding error
+\item conduct an experiment to determine causal relationships among variables \end{itemize} 
+\item Variance Inflation Factor \begin{itemize} 
+\item Variance Inflation Factor (VIF) measures how much the variance of $\hat{\beta}_j$ is increased (inflated) by the other $x$ variables in the regression 
+\item For each $j$th explanatory variable, $$ \text{SE}[\hat{\beta}_j]^2 = \frac{\hat{\sigma}^2}{\sum_{i=1}^n (x_{ij} - \bar{x}_j)^2} \left( \frac{1}{1 - R^2_j} \right) $$ where \begin{itemize} 
+\item $\text{SE}[\hat{\beta}_j]$ is the standard error of the estimated partial slope $j$
+\item $\hat{\sigma}$ is the standard deviation of the errors (RMSE) and so $\hat{\sigma}^2$ is the variance of the errors (MSE)
+\item $\sum_{i=1}^n (x_{ij} - \bar{x}_j)^2$ is the total variability of the $j$the explanatory variable 
+\item $R_j^2$ is the coefficient of determination when regression variable $j$ against the other explanatory variables in the regression (excluding response variable) \end{itemize} 
+\item Then $$ \text{VIF}_j = \frac{1}{1-R^2_j} $$ is the amount that $\text{SE}[\hat{\beta}_j]^2$ is increased because of the other $x$ variables int he regression 
+\item The VIF value should be computed for each numerical explanatory (i.e., $x$) variable in the model
+\item Steps: \begin{enumerate} 
+\item Say $x_1,\dots,x_p$ are used in a regression model where the response is $y$ (note: $y$ is irrelevant in computing VIF)
+\item Fit model $$\hat{x}_j = \alpha_0 + \alpha_1x_1 + \dots + \alpha_{j-1}x_{j-1} + \alpha_{j+1}x_{j+1} + \dots + \alpha_px_p $$ 
+\item Compute the $R^2$ value for the regression above; this is $R^2_j$
+\item Then compute $$ \text{VIF}_j = \frac{1}{1-R^2_j} $$ \end{enumerate} 
+\item Recall that the $R^2$ is the fraction of variation in the response variable which can be explained by the explanatory variables 
+\item If one explanatory variable is regressed against the others, then $R^2_j$ would be interpreted as the fraction of variation in $x_j$ that can be explained by the other explanatory variables in the model
+\item Example: if all of the $x$ variables are uncorrelated with each other, $R_j^2$ would be $0$ and $\text{VIF}_j = 1$, meaning no inflation of variance 
+\item General Rule: multicollinearity is severe for variable $j$ if $\text{VIF}_j > 10$; moderate if $\text{VIF}_j > 5$ 
+\item NoteL some software packages compute tolerance instead of VIF, where $\text{tolerance} = \frac{1}{\text{VIF}}$ \end{itemize} 
+\item Independence of Errors \begin{itemize} 
+\item relevant for time series data - e.g. data collected hourly, daily, monthly, etc.; today's data value may be related to yesterday's data value (autocorrelation / serial correlation) 
+\item Plot residuals by order of observations 
+\item Hypothesis test: Durbin-Watson test for residual correlation - most common is ``greater" (test for positive autocorrelation)
+\item Effects of autocorrelation: standard errors of parameter estimates are underestimated, RMSE value too low, interpretation of $p$-values and confidence intervals are incorrect 
+\item If residuals are correlated, using consecutive differences, or the previous value in the regression may help (but generally, it's better to look at a time series method) \end{itemize} 
+\item Autocorrelated Residuals \begin{itemize} 
+\item Let the fitted model be $\hat{y} = \hat{\beta}_0 + \hat{\beta}_1x_1 + \dots + \hat{\beta}_px_p$, the residuals from the fitted model be $e_1,e_2,\dots,e_n$
+\item If the order the data was corrected matters (e.g., time series), consecutive residuals can be paired as follows: 
+$$ \begin{tabular}{c|c} ``$x$" & ``$y$" \\ \hline  $e_1$ & $e_2$ \\ $e_2$ & $e_3$ \\ $e_3$ & $e_4$ \\ $e_4$ & $e_5$ \\ $\vdots$ & $\vdots$ \\ $e_t$ & $e_{t-1}$ \\ $\vdots$ & $\vdots$ \\ $e_{n-1}$ & $e_n$ \end{tabular} $$ 
+\item Next step: check to see if neighboring residuals have the following relationship (e.g., first-order autoregressive serial correlation), where $\omega_t$ is an error term and $\abs{\rho} < 1$: $$ \varepsilon_t = \rho\varepsilon_{t-1} + \omega_t $$
+\end{itemize}
+\item Durbin-Watson Test for Residual Correlation - testing for positive autocorrelation \begin{itemize} 
+\item Hypotheses: $$ \begin{aligned} H_0 &: \text{ no residual correlation, } \rho = 0 \\ H_A &: \text{ positive residual correlation, } \rho > 0 \end{aligned} $$ 
+\item Let the significance level be $\alpha$
+\item Collect data and assume the residuals are normally distributed 
+\item Durbin-Watson test statistic: $$ d = \frac{ \sum_{t=2}^n (e_t - e_{t-1})^2}{ \sum_{t=1}^n e_i^2} $$ 
+\item Conclusion: get two ``critical values", $d_L$ and $d_U$, for each $\alpha$ level to which the test statistic $d$ is compared against \begin{itemize} 
+\item if $d < d_L$: reject $H_0$
+\item if $d > d_U$: fail to reject $H_0$
+\item if $d_L \leq d \leq d_U$: cannot make a conclusion \end{itemize} \end{itemize}
+\item Interpreting the Durbin-Watson $d$ Statistic \begin{itemize} 
+\item $d$ statistic: $$ d = \frac{\sum_{t=2}^n (e_t - e_{t-1})^2}{\sum_{t=1}^n e_i^2} \approx 2 - 2\hat{\rho} = 2(1 - \hat{\rho}) $$ 
+\item If $e_t$ are uncorrelated, then $\hat{\rho}$ will be close to $0$ and so $d$ will be close to $2$ 
+\item If $e_t$ are highly, positively correlated, then $\hat{\rho}$ would be close to $1$ and so $d$ will be close to $0$
+\item If $e_t$ are highly, negatively correlated, then $\hat{\rho}$ would be close to $-1$ and so $d$ will be close to $4$ 
+\item Therefore the range of $d$ is $0$ to $4$ 
+$$ d = \frac{\sum_{t=2}^n (e_t - e_{t-1})^2}{\sum_{t=1}^n e_t^2} = \underbrace{\frac{\sum_{t=2}^n e_t^2}{\sum_{t=1}^n e_t^2}}_{\approx 1} + \underbrace{\frac{\sum_{t=2}^n e_{t-1}^2}{\sum_{t=1}^n e_t^2}}_{\approx 1} - 2\underbrace{\frac{\sum_{t=2}^n e_te_{t-1}}{\sum_{t=1}^n e_t^2}}_{\approx \hat{\rho}} $$ where $\hat{\rho}$, in a first order setting, equals the correlation between consecutive pairs of residuals
+\item Note: for a test of negative autocorrelation, replace $d$ with $4-d$ in the tes
+\item The Durbin-Watson test is for lag $1$ autocorrelation - $e_t$ compared with $e_{t-1}$; it will not catch autocorrelation at higher laps even though the independence assumption would be violated 
+ \end{itemize} 
+\item Let the model be $y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \varepsilon$ and $\text{VIF}_j = \frac{1}{1 - R^2_j}$; when there are only two explanatory variables, regress one explanatory variable against the other, which is a simple linear regression; then $R_j^2$ is simply the square of the sample correlation, $r$, and $\text{VIF}_1 = \text{VIF}_2$, because correlation of $x_1$ and $x_2$ is the same as the correlation between $x_2$ and $x_1$; therefore, for models like this, the relationship between correlation and VIF can be displayed visually by plotting correlation $r$ against VIF
+\end{itemize}
+
+\section{Transformations}
+\begin{itemize}
+\item If relationships between $x$ and $y$ is not linear, as seen in the scatterplots and correlations between the explanatory and response variables, it can be made linear using a transformation
+\item Another use for transformations is to reduce heteroscedasticity 
+\item Some examples of common transformations \begin{itemize} 
+\item $y$ vs. $\log x$ 
+\item $\log y$ vs. $x$
+\item $\log y$ vs. $\log x$
+\item centering, standardizing variables \end{itemize} 
+\item Choosing the right transformation is a mixture between subject-area knowledge, trial and error and looking at scatterplots 
+\item Other variance stabilizing transformations include $\sqrt{y}$, $\sin^{-1} \sqrt{y}$, and more
+\item $\log x$ Model \begin{itemize} 
+\item models of the form $$ y = \beta_0 + \beta_1\log x + \varepsilon$$ 
+\item This transformation cannot be used directly if $x$ values are not positive 
+\item Note: Additional explanatory variables can be included and have a $\log$ explanatory variable in a larger regression mode; however the interpretation below should be applied to the $\log$ explanatory terms only
+\item Slope interpretation for $x$: a $1\%$ increase in $x$ is associated with an $\approx \hat{\beta}_1 / 100$ change in $y$
+\item $y$-intercept interpretation: since $\log 1 = 0$, the $y$-intercept is the value of $y$ when $x = 1$ - check whether this is meaningful within the context of the data \end{itemize} 
+\item $\log y$ Model \begin{itemize} 
+\item Multiplicative model: $$ \begin{aligned} y &= e^{\beta_0 + \beta_1x}\varepsilon \\ \log y &= \beta_0 + \beta_1x + \underbrace{\log \varepsilon}_{\text{error}} \end{aligned} $$ 
+\item Additional explanatory variables can be included; $y$ must be a positive variable to use the $\log$ transformation 
+\item Interpretation of slope: a $1$ unit increase in $x$ is associated with a change in $y$ by $\approx (e^{\beta_i} - 1) \times 100\%$ \end{itemize}
+\item $\log x$ and $\log y$ Models \begin{itemize} 
+\item Modes of the form $$ \begin{aligned} y &= \alpha x^{\beta_1}\varepsilon \\ \log y &= \underbrace{\beta_0}_{\log \alpha} + \beta_1 \log x + \underbrace{\log \varepsilon}_{\text{error}} \end{aligned} $$ 
+\item This transformation cannot be used directly if $x$ and $y$ values are not positive 
+\item Additional explanatory variables can be included and have a $\log$ explanatory variable in a larger regression model; however the interpretation below should be applied to the $\log$ explanatory terms only
+\item In a $\log x$ and $\log y$ model, a $1 \%$ increase in $x$ is associated with a $\%$ change in $y$ on the average; in other words, a $1\%$ increase in $x$ is associated with an $\approx \beta_1 \%$ change in $y$ 
+\item The $y$-intercept is the $\log y$ value when $x = 1$ (and so $\log x = 0$); this should still be checked if it's meaningful in the context of the data \end{itemize} 
+\item Jensen's Inequality \begin{itemize} 
+\item Let $y$ be a random variable with expected value $\text{E}[y]$ and $f(y)$ be a function of the random variable $y$ with expected value $\text{E}[f(y)]$, then if $f(\cdot)$ is a convex function, $$ f(\text{E}[y]) \leq \text{E}[f(y)] $$ an if $f(\cdot)$ is a concave function, like $\log(\cdot)$, then $$f(\text{E}[y]) \leq \text{E}[f(y)] $$ 
+\item The goal of regression is to find a model of $\text{E}[y~|~x]$, or the expected value of $y$ given $x$
+\item When the response $y$ is transformed using the natural log, the model being fitted is $\text{E}[\log y ~|~ x]$, or the expected value of $\log y$ given $x$
+\item Predictions from such a regression model are in terms of average $\log y$ given an $x$ but what is really desired is a prediction of average $y$ given an $x$ 
+\item Due to Jensen's inequality, generally speaking, $$ \text{E}[\log y] \neq \log \text{E}[y] $$ \begin{itemize} 
+\item In words, this means that the average of the variable $\log y$ is not equal to taking the $\log$ of the average value of $y$
+\item Therefore, $\text{E}[y] \neq \exp(\text{E}[\log y])$, which means that if $\text{E}[\log y]$ is modeled, average $y$ is not obtained by simply taking the inverse transformation, $\exp(\cdot)$ \end{itemize} 
+\item The solution for making predictions for $y$ when the regression model is fit on $\log y$ is as follows
+$$ \hat{y} = \exp\left\{ \hat{\log y} + \frac{(n-p-1)\text{RMSE}^2}{2n}\right\} = \exp\left\{\hat{\log y} + \frac{\text{SSE}}{2n}\right\} $$ where $\hat{\log y}$ is the prediction from the fitted regression model and the adjustment $\frac{(n-p-1)\text{RMSE}^2}{2n}$ accounts for the Jensen's inequality issue 
+\item Another method of fitting a model is called maximum likelihood estimation (MLE) \begin{itemize} 
+\item For simple and multiple regression, the MLE estimates of the $y$-intercept and slopes ($\hat{\beta}_0,\dots,\hat{\beta}_p$) is the same as the OLS estimate of the $y$-intercept and slopes; but, MLE makes specific use of $\varepsilon \sim N(0,\sigma)$ assumption
+\item However, the estimate of the error variance is not the same $$ \sigma^2_{\text{MLE}} = \frac{(n-p-1)\sigma^2_{\text{OLS}}}{n} = \frac{\text{SSE}}{n} $$ 
+\item The $\frac{(n-p-1)\text{RMSE}^2}{2n}$ adjustment is based on properties of MLEs \end{itemize} 
+\item Similar adjustments can be made when interpreting slopes, etc. for $\log y$ models \end{itemize} 
+\item Centering and Scaling Variables \begin{itemize} 
+\item Let $x$ be a variable (explanatory or response), $\bar{x}$ its sample mean and $s_x$ its sample standard deviation 
+\item Centering a variable: $x - \bar{x}$ where $\bar{x}$ is the sample mean of that variable \begin{itemize} 
+\item The mean of $x - \bar{x}$ is now $0$ but standard deviation is still $s_x$ 
+\item Units of transformed variable: units of $x$ \end{itemize} 
+\item Scaling (standardizing) a variable: $\frac{x - \bar{x}}{s_x}$ where $s_x$ is the standard deviation of the variable \begin{itemize} 
+\item The mean of $\frac{x - \bar{x}}{s_x}$ is now $0$ and the standard deviation is now $1$ 
+\item Units of transformed variable: no units; interpret in terms of standard deviations away from mean \end{itemize} 
+\item Scaling makes the variables unit-less; if the explanatory variables are on very different scales, then scaling will help with interpreting partial slopes 
+\item Some texts suggest centering a variable in an interaction term reduces multicollinearity, but there is mixed evidence on this front 
+\item Like all transformations, centering/scaling should not be an automatic step; if should only be done if it's helpful \end{itemize} 
+\end{itemize}
+
+\section{Logistic Regression}
+\begin{itemize}
+\item In multiple regression, the response $y$ is numerical and the explanatory variables are numerical or categorical
+\item In logistic regression, the response $y$ is a binary categorical variable (i.e., two categories) while the explanatory variables are numerical or categorical
+\item A one-way ANOVA model has a response $y$ which is a numerical value and one (nominal) categorical explanatory variable
+\item In a logistic regression model, the binary response is recorded as $$ y = \begin{cases} 1 \\ 0 \end{cases} $$ 
+\item $\pi = P(y = 1)$ is the probability of success for response variable $y$ given explanatory variable values 
+\item The odds of success is the probability of success / probability of failure 
+$$ \text{Odds} = \frac{P(y = 1)}{P(y=0)} = \frac{\pi}{1-\pi} $$ 
+\item The log odds is $$ \text{Log odds} = \log \left( \frac{\pi}{1-\pi} \right) $$ 
+\item The use of log odds instead of odds allow comparison of the range of $y$-axis 
+\item When \begin{itemize} 
+\item odds = $1$, then success is equally likely to failure
+\item odds $> 1$, then success is more likely than failure
+\item odds $< 1$, then success is less likely than failure \end{itemize} 
+\item The logistic regression model fitted is 
+$$ \text{logit}[\pi] = \log \left( \frac{\pi}{1-\pi} \right) = \beta_0 + \beta_1x_1 + \dots + \beta_kx_k $$ where the middle term is called the logit function (i.e., log odds), a type of link function 
+\item The model can be rewritten in terms of $\pi$ 
+$$ \pi = \frac{e^{\beta_0 + \beta_1x_1 + \dots + \beta_kx_k}}{1 + e^{\beta_0 + \beta_1x_1 + \dots + \beta_kx_k}} $$ 
+\item The model for $1-\pi$ is $$ 1 - \pi = 1 - \frac{e^{\beta_0 + \beta_1x_1 + \dots + \beta_kx_k}}{1 + e^{\beta_0 + \beta_1x_1 + \dots + \beta_kx_k}} = \frac{1}{1 + e^{\beta_0 + \beta_1x_1 + \dots + \beta_kx_k}} $$ 
+\item The logistic regression model is fit using maximum likelihood estimation 
+\item Bernoulli Trials \begin{itemize}
+\item A Bernoulli trial is a random process with binary outcome and a probability $\pi$ of success 
+\item $X$ is a Bernoulli random variable with potential outcomes: $X = 0$ or failure, $X = 1$ or success 
+\item $X$ is a discrete random variable 
+\item The probability mass function for $X$ is $$ P(X = k) = \pi^k(1-\pi)^{1-k} $$ where $k=0$ or $k=1$ as those are the only possible outcomes for $X$ \end{itemize} 
+\item The Bernoulli trial is similar to a logistic regression model where each observation in the logistic regression model is a Bernoulli trial 
+\item For each observation (i.e., Bernoulli trial), the probability mass function is $$ P(Y = y_i) = \pi_i^{y_i}(1-\pi_i)^{1-y_i} $$ where $y_i = 0$ or $y_i = 1$ 
+\item The next step is to determine the distribution of all observations together; this is the joint distribution 
+\item If each observation is assumed to be independent of the others, then the joint distribution is simply the product of the individual probability mass functions: $$ \prod_{i=1}^n \pi_i^{y_i}(1-\pi_i)^{1-y_i} $$ 
+\item Now find a function for $\pi_i  = P(Y=1~|~X = x)$, the probability of success given the values of explanatory variables
+\item A function is needed that describes $\pi_i$ as a function of $x_i$ \begin{itemize} 
+\item $\pi(x_i)$ is a linear function of $x$ which cant work because probabilities must be between $0$ and $1$ since it is a probability 
+\item $\log\left( \frac{\pi(x_i)}{1-\pi(x_i)} \right)$ is a linear function of $x$ which is better because the function can be any real number 
+\item This function is called the logit function $$ \log \left( \frac{\pi(x_i)}{1-\pi(x_i)} \right) = \beta_0 + \beta_1x_i $$ and so $$ \pi(x_i) = \frac{1}{1 + e^{-(\beta_0 + \beta_1x_i)}} $$ 
+\item The likelihood function is a function of parameters given data: $$ \begin{aligned} L(\beta_0,\beta_1) &= \prod_{i=1}^n \pi(x_i)^{y_i}(1-\pi(x_i))^{1-y_i} \\ &= \prod_{i=1}^n \left( \frac{1}{1 + e^{-(\beta_0 + \beta_1x_i)}} \right)^{y_i} \left(1 - \frac{1}{1 + e^{-(\beta_0 + \beta_1x_i)}} \right)^{1-y_i} \end{aligned} $$ \end{itemize} 
+\item Maximum Likelihood Estimation \begin{itemize}
+\item The logistic regression fit is done using a technique called maximum likelihood estimation (MLE)
+\item The likelihood function is a function of parameters given data 
+\item Find values of parameters (e.g., $\beta_0,\beta_1$) that makes the likelihood function value the largest (i.e., maximum) \begin{enumerate} 
+\item Take $\log$ of likelihood function, turning products into sums and gets rid of $e$
+\item Take partial derivatives of log-likelihood function with respect to each parameter (e.g., $\frac{\partial \log L}{\partial \beta_0}$ and $\frac{\partial \log L}{\partial \beta_1}$) 
+\item Set partial derivatives to zero and solve for parameter - done numerically for logistic regression as there is no closed form solution 
+\end{enumerate}
+\item The maximum likelihood estimates of $\beta_0$ and $\beta_1$ have the following desirable properties as $n\to\infty$: \begin{itemize} 
+\item Asymptotically normal - the estimates become more normally distributed 
+\item Consistent - estimate converges to population value 
+\item Efficient - there is no other consistent estimator which has a better asymptotic mean squared error 
+\item These properties allow hypothesis tests to work 
+\end{itemize} \end{itemize}
+\item Logistic Regression Assumptions \begin{itemize} 
+\item Explanatory variables are measured without error 
+\item The model is correctly specified (no extraneous variables, all important variables included, etc.)
+\item The outcomes are not completely linearly separable i.e., knowing $x$ values cannot completely determine whether $y = 0$ or $y=1$; makes $\beta$ estimates unstable 
+\item No outliers, etc - compare slope values, etc. when each observation is removed one at a time; look at scatterplots, box plots of data to search for outliers; look at approximated leverage values, Cook's distance, etc 
+\item Observations are independent - check data collection process 
+\item Collinearity / multicollineariy - applicable if there are multiple explanatory variables; if there is perfect collinearity or multicollinearity, a logistic regression model cannot be fitted; if there's a high level, it makes $\beta$ estimates imprecise; use VIF and look at scatterplot matrices of explanatory variables 
+\item Sample size, $n$ - requires more observations than usual regression, especially if one of the categories occurs rarely; rule of thumb: at least $10$ observations for each outcome ($0/1$) per predictor in the model \end{itemize} 
+\item Interpretation of $\beta$ Parameters in the Logistic Model \begin{itemize} 
+\item Model: $$ \log \left( \frac{\pi}{1-\pi} \right) = \beta_0 + \beta_1x_1 + \dots + \beta_px_p $$ 
+\item $\pi = P(y=1)$ and $\log\left( \frac{\pi}{1-\pi} \right) $ is the log odds 
+\item $\hat{\beta}_0$, or $e^{\hat{\beta}_0}$ is the odds of success when all $x$ variables are $0$ 
+\item $\hat{\beta}_j$ where $j > 0$ is the change in log-odds for every $1$ unit increase in $x_j$ holding all other $x$'s fixed, but this is not a very intuitive interpretation 
+\item Meaningful interpretation of $\hat{\beta}_j$: $$ (e^{\hat{\beta}_j} - 1) \times 100\%$$ is the percentage change in odds $\frac{\pi}{1-\pi}$ for every unit increase in $x_j$ holding all other $x$'s fixed \end{itemize} 
+\item Log-Likelihood Test for Overall Model \begin{itemize} 
+\item Hypotheses $$ \begin{aligned} H_0:& \beta_1 = \dots = \beta_p = 0 \\ H_A &: \text{ at least one of the slopes is not } 0 \end{aligned} $$ 
+\item Set $\alpha$ level and fit the model
+\item The test statistic is $$ G = -2 \log\left( \frac{L_{H_0}}{L_{\text{model}}} \right) = -2\log(\log L_{H_0} - \log L_{\text{model}}) $$ where $L$ is the likelihood function; $G$ has a $\chi^2$ distribution with $p$ degrees of freedom, $L_{H_0}$ is the likelihood if all slopes are zero (i.e., model n the null hypothesis) and $L_{\text{model}}$ is the likelihood for the fitted model 
+\item In R, it is $$ \text{G} = \text{null deviance} - \text{residual deviance} $$ with $df = $ null deviation $df$ - residual deviance $df$ 
+\item Reject null hypothesis if $P(\chi^2 > G) < \alpha$ \end{itemize} 
+\item The log-likelihood test for overall model is analogous to the overall $F$-test in regular regression 
+\item $\chi^2$ Distribution \begin{itemize} 
+\item The probability density function is $$ f(x) = \frac{1}{2^{k/2} \Gamma\left( \frac{k}{2} \right) } x^{\frac{k}{2} - 1} e^{-\frac{x}{2}} $$ where $$ \Gamma(z) = \int_0^\infty y^{z-1}e^{-y} \, dy $$ 
+\item Here $x \geq 0$ and the distribution is continuous 
+\item The parameter $k$ is degrees of freedom 
+\item The square of $N(0,1)$ random variable is a $\chi^2$ distribution with $1$ degree of freedom 
+\item The sum of independent $\chi^2$ random variables is also $\chi^2$ with degrees of freedom equal to the sum of the degrees of freedom of the individual variables \end{itemize} 
+\item Log-likelihood test requires null deviance and residual deviance, bu since the logistic model models the the log odds and not the $0$s and $1$s directly, there is a different notion of residuals 
+\item There are two definitions of residuals: Pearson residuals and deviance residuals 
+\item Deviance Residual $$ d_i = s_i \sqrt{-2(\log \hat{\pi}_i + (1-y_i)\log(1-\hat{\pi}_i))} $$ where $$ s_i = \begin{cases} 1 &\text{ if } y_i = 1 \\ -1 &\text{ if } y_i = 0 \end{cases} $$ The deviance residual measures the contribution of each point to the likelihood equation 
+\item Null Deviance and Residual Deviance \begin{itemize} 
+\item Hypotheses: $$ \begin{aligned} H_0 &: \beta_1 = \dots = \beta_p = 0 \\ H_A &: \text{ at least one of the slopes is not } 0 \end{aligned} $$ 
+\item Null deviance: deviance computed for the $y$-intercept only model 
+\item Residual deviance: deviance computed for the fitted model \end{itemize} 
+\item $z$-Tests for Slopes \begin{itemize} 
+\item Hypotheses: $$ \begin{aligned} H_0 &: \beta_j = 0 \\ H_A &: \beta_j \neq 0 \end{aligned} $$ 
+\item Set $\alpha$ and fit the model 
+\item Test statistic: $$ z = \frac{\hat{\beta}_j - 0}{\text{se}_{\hat{\beta}_j}} $$ where the test statistic $z$ has a standard normal distribution 
+\item The $p$-value is for the two-sided test: $2P(Z > \abs{z})$  
+\item Notes: estimates computed using maximum likelihood become normally distributed as $n$ increases; this test is different from the likelihood test for the overall model \end{itemize} 
+\item For logistic regression, leverage values are computed differently because multiple regression has a linear setup and logistic regression does not 
+\item To compute standardized deviance residuals, calculate $$ d_i^* = \frac{d_i}{\sqrt{1-H_{ii}}} $$ where $H_{ii}$ is the leverage 
+\item The fitted values from logistic regression model are $\hat{\pi}$, the probability of success, not log odds
+\item Recall that the response variable $y$ is originally categorical; estimated probability for an observation can be converted into categories \begin{itemize} 
+\item Recall: $\pi = P(y=1)$
+\item Choose a threshold $\pi^*$ 
+\item if estimated probability $< \pi^*$, then classify the observation as $\hat{y} = 0$ 
+\item if estimated probability $> \pi^*$, then classify the observation as $\hat{y}  =1$ 
+\item Note: usually if estimated probability $= \pi^*$, then classify as $\hat{y} = 1$ \end{itemize} 
+\item Evaluating Classifications $$ \begin{tabular}{c|c|c} & 1 & 0 \\ \hline 1 & TP = true positive & FP = false positive \\ 0 & FN = false negative & TN = true negative \\ \hline & P=positive & N=negative  \end{tabular} $$ where vertically is category in data $y$ and horizontally is predicted category $\hat{y}$ \begin{itemize}
+\item Correct decision - true positive, true negative 
+\item Incorrect decision - false positive, false negative 
+\item False positive - Type I error 
+\item False negative - Type II error 
+\item TP, TN, FP and FN all depend on the threshold value \end{itemize} 
+\item As false positive decreases, false negatives increases as the threshold value is moved 
+\item Accuracy: the probability a correct prediction is made $$ \text{accuracy} = P(\text{correct prediction}) = \frac{TP + TN}{P+N} = \frac{TP + TN}{n} $$ where $P+N=n$ is the sample size; accuracy rate changes with threshold chosen
+\item Accuracy is too general; FN and FP have different repercussions 
+\item Sensitivity and specificity are conditional probabilities \begin{itemize}
+\item Sensitivity: probability that an observation is classified as $1$ given that the true category is $1$ 
+$$ \text{sensitivity} = P(\hat{y} = 1 ~|~ y= 1) = \frac{TP}{P} $$ 
+\item High sensitivity means low Type II error rate (i.e., false negatives) 
+\item Specificity: probability that an observation is classified as $0$ given that the true category is $0$
+$$ \text{specificity} = P(\hat{y} = 0 ~|~ y = 0) = \frac{TN}{N} $$ 
+\item High specificity means low Type I error rate (i.e., false positives) 
+\item Rates changes based on the classification threshold 
+\item Ideally, both should be high but as sensitivity increases, specificity decreases \end{itemize} 
+\item ROC Curves \begin{itemize} 
+\item ROC = receiver operating characteristic 
+\item Allows seeing how choosing different thresholds perform 
+\item It plots the true positive rate ($y$-axis) vs false positive rate ($x$-axis) at different threshold values 
+\item Compare the curve against the $45^\circ$ line 
+\item Note: false positive rate = $1 - $ specificity \end{itemize} 
+\item AUC is the area under the ROC curve; ideally, it should be close to $1$ 
+\item When AUC $=1$, the observations are perfectly classified, i.e., almost completely non-overlapping distributions of outcomes
+\item When AUC $=0.5$, it is just as good as random guessing, i.e., nearly completely overlapping distributions of outcomes 
+\item Rule of thumb for interpreting AUC curves: \begin{itemize} 
+\item $0.9 < \text{AUC} < 1$: excellent 
+\item $0.8 < \text{AUC}  < 0.9$: good 
+\item $0.7 < \text{AUC}  < 0.8$: fair
+\item $0.6 < \text{AUC}  < 0.7$: poor 
+\item $0.5 < \text{AUC}  < 0.6$: fail 
+\item $\text{AUC}  < 0.5$: worse than guessing \end{itemize} 
+\end{itemize}
+
+\section{Multiple Logistic Regression}
+\begin{itemize}
+\item Multiple logistic regression models a binary response variable with variables that can be categorical, interaction terms, etc 
+\item Multicollinearity can be an issue with logistic regression - check scatterplots and/or VIF 
+\item The largest issue with multiple logistic regression is sample size; a rule of thumb is to have at least $10$ observations for each outcome ($0/1$) per predictor in the model
+\item Odds and Log Odds \begin{itemize} 
+\item Binary response: $$ y = \begin{cases} 1 & \text{ success} \\ 0 &\text{ failure} \end{cases} $$ 
+\item $\pi = P(y=1)$, the probability of ``success" for response variable $y$ given explanatory variable values
+\item Odds of success: $$ \text{Odds} = \frac{\text{probability of success}}{\text{probability of failure}} = \frac{P(y=1)}{P(y=0)} = \frac{\pi}{1-\pi} $$ \begin{itemize} 
+\item If odds $=1$, success is equally likely to failure
+\item if odds $>1$, success is more likely than failure
+\item if odds $<1$, success is less likely than failure \end{itemize} \end{itemize} 
+\item Logistic Regression \begin{itemize}
+\item Odds are always positive, log odds can be any real number, thus it is better to construct models using log odds 
+\item Logistic regression model: $$ \text{logit}[\pi] = \log \left( \frac{\pi}{1-\pi} \right) = \beta_0 + \beta_1x_1 + \dots + \beta_px_p $$ 
+The middle term is called the logit function (i.e., log odds), a type of link function 
+\item The model can be rewritten in terms of $\pi$ 
+$$ \pi = \frac{e^{\beta_0 + \beta_1x_1 + \dots + \beta_px_p}}{1+e^{\beta_0 + \beta_1x_1 + \dots + \beta_px_p}} $$
+\item The model for $1-\pi$ is $$ 1-\pi = 1 - \frac{e^{\beta_0 + \beta_1x_1 + \dots + \beta_px_p}}{1 + e^{\beta_0 + \beta_1x_1 + \dots + \beta_px_p}} = \frac{1}{1 + e^{\beta_0 + \beta_1x_1 + \dots + \beta_px_p}} $$ 
+\item The logistic regression model is fit using maximum likelihood estimation \end{itemize} 
+\item Logistic Regression Assumptions \begin{itemize} 
+\item explanatory variables are measured without error 
+\item model is correctly specified (no extraneous variables, all important variables included, etc.)
+\item outcomes are not completely linearly separable \begin{itemize} 
+\item i.e., knowing $x$ values cannot completely determine whether $y=0$ or $y=1$
+\item makes $\beta$ estimates unstable \end{itemize} 
+\item no outliers, etc \begin{itemize} 
+\item compare slope values, etc. when each observation is removed one at a time 
+\item look at scatterplots, box plots of data to search for outliers 
+\item look at approximated leverage values, Cook's distance, etc \end{itemize} 
+\item observations are independent - check data collection process 
+\item collinearity / multicollinearity (applicable if there are multiple explanatory variables) \begin{itemize} 
+\item perfect collinearity / multicollinearity - cannot fit logistic regression 
+\item high level of collinearity / multicollinearity - makes $\beta$ estimates imprecise 
+\item use VIF and look at scatterplot matrices of explanatory variables; VIF $> 10$ for an explanatory variable indicates a collinearity / multicollinearity issue \end{itemize} 
+\item sample size, $n$ - requires more observations than usual regression, especially if one of the categories occurs rarely; rule of thumb: at least $10$ observations for each outcome ($0/1$) per predictor in the model \end{itemize} 
+\item Log-Likelihood Test for Overall Model \begin{itemize} 
+\item Hypotheses: $$ \begin{aligned} H_0 &: \beta_1 = \dots = \beta_p = 0 \\ H_A &: \text{ at least one of the slopes is not $0$} \end{aligned} $$ 
+\item Set $\alpha$ level and fit the model
+\item Test statistic: $$ G = -2\log(L_{H_0} / L_{\text{model}}) = -2(\log L_{H_0} - \log L_{\text{model}}) $$ where $L$ is the likelihood function, $G$ has a $\chi^2$ distribution with $p$ degrees of freedom, $L_{H_0}$ is the likelihood if all slopes are zero (i.e., model in the null hypothesis) and $L_{\text{model}}$ is the likelihood for the fitted model
+\item Reject null hypothesis if $P(\chi^2 > G) < \alpha$ \end{itemize} 
+\item Log-Likelihood Test for Comparing Nested Models \begin{itemize} 
+\item Nested models: $$ \begin{aligned} \log\left( \frac{\pi}{1-\pi} \right) &= \beta_0 + \beta_1x_1 + \dots + \beta_gx_g \text{ (reduced model) } \\ \log \left( \frac{\pi}{1-\pi} \right) &= \beta_0 + \beta_1x_1 + \dots + \beta_gx_g + \beta_{g+1}x_{g+1} + \dots + \beta_kx_k \text{ (complete model) } \end{aligned} $$ 
+\item Set significance level $\alpha$
+\item Hypotheses (testing $k-g$ slopes): $$ \begin{aligned} H_0 &: \beta_{g+1} = \beta_{g+2} = \dots = \beta_k = 0 \\ H_A &: \text{ at least one slope is not $0$} \end{aligned} $$ 
+\item sample size of $n$ (same observations for both models) 
+\item Test statistic: $$G = \text{residual deviance for reduced model} - \text{residual deviance for complete model } $$ which has a $\chi^2$ distribution with $k-g$ degrees of freedom
+\item Reject $H_0$ if $p$-value = $P(\chi^2 > G) < \alpha$ \end{itemize} 
+\item $z$-Tests for Slopes \begin{itemize} 
+\item Hypotheses: $$ \begin{aligned} H_0&: \beta_j = 0 \\ H_A &: \beta_j \neq 0 \end{aligned} $$ 
+\item Set significance level $\alpha$
+\item Test statistic $$ z = \frac{\hat{\beta}_j - 0}{\text{se}_{\hat{\beta}_j}} $$ This test statistic has a standard normal distribution 
+\item $p$-value for two-sided test: $2P(Z > \abs{z})$ 
+\item Reject $H_0$ if $p$-value $< \alpha$ \end{itemize} 
+\item Fitted values from logistic regression model are the predicted probability of success (i.e., $\hat{P}(y=1~|~x)$)
+\item The estimated probability can be converted into categories for observations \begin{itemize} 
+\item $\pi = P(y=1)$
+\item Choose a threshold $\pi^*$
+\item If estimated probability $< \pi^*$, classify the observation as $\hat{y} = 0$ 
+\item If estimated probability $> \pi^*$, classify the observation as $\hat{y} = 1$
+\item Note: usually if estimated probability $= \pi^*$, classify the observation as $\hat{y} = 1$ \end{itemize} 
+\item Evaluating Classifications $$ \begin{tabular}{c|c|c} & 1 & 0 \\ \hline 1 & TP = true positive & FP = false positive \\ 0 & FN = false negative & TN = true negative \\ \hline & P=positive & N=negative  \end{tabular} $$ where vertically is category in data $y$ and horizontally is predicted category $\hat{y}$ \begin{itemize}
+\item Correct decision - true positive, true negative 
+\item Incorrect decision - false positive, false negative 
+\item False positive - Type I error 
+\item False negative - Type II error 
+\item TP, TN, FP and FN all depend on the threshold value \end{itemize} 
+\item Accuracy: the probability a correct prediction is made $$ \text{accuracy} = P(\text{correct prediction}) = \frac{TP + TN}{P+N} = \frac{TP + TN}{n} $$
+\item Accuracy is too general; FN and FP have different repercussions 
+\item Sensitivity: probability that an observation is classified as $1$ ($\hat{y}$) given that the true category is $1$ ($y$)
+$$ \text{sensitivity} = P(\hat{y} = 1 ~|~ y= 1) = \frac{TP}{P} $$ 
+\item High sensitivity means low Type II error rate (i.e., false negatives) 
+\item Specificity: probability that an observation is classified as $0$ ($\hat{y}$) given that the true category is $0$ ($y$)
+$$ \text{specificity} = P(\hat{y} = 0 ~|~ y = 0) = \frac{TN}{N} $$ 
+\item High specificity means low Type I error rate (i.e., false positives) 
+\item Ideally, both should be high but as sensitivity increases, specificity decreases
+\item ROC  = receiver operating characteristic - a plot of the true positive rate ($y$-axis) vs. false positive rate ($x$-axis) at different threshold values); compare the curve against the $45^\circ$ line
+\item Note: false positive rate $= 1 - $ specificity 
+\item A $50\%$ threshold is standard (but somewhat arbitrary) and the classification rates can be improved on by choosing a different threshold 
+\item ROC curves show how well the models do at predictions at different thresholds 
+\item A common definition of ``best" thresholds is the one which maximizes the sum of sensitivity and specificity, but this assumes that FNs and FPs are equally bad (which is not always the case) 
+\item AUC = area under the ROC curve - overall measure of quality for fitted model; it should be close to $1$ (i.e., area under $1 \times 1$ square is $1$) 
+\item If AUC $=1$, observations are perfectly classified; if AUC $=0.5$, observations are classified as good as randomly guessing 
+\item Rule of thumb for interpreting AUC curves: \begin{itemize} 
+\item $0.9 < \text{AUC} < 1$: excellent 
+\item $0.8 < \text{AUC}  < 0.9$: good 
+\item $0.7 < \text{AUC}  < 0.8$: fair
+\item $0.6 < \text{AUC}  < 0.7$: poor 
+\item $0.5 < \text{AUC}  < 0.6$: fail 
+\item $\text{AUC}  < 0.5$: worse than guessing \end{itemize} 
+\item Ways of defining the ``best threshold": choose the threshold which has the largest sum of sensitivity and specificity, choose the threshold which has the largest AUC
+\item When dealing with missing data, probabilities cannot be predicted and thus not classify; accuracy, sensitivity and specificity can be recalculated taking this into account but predictive performance will be lower
+\item Other methods such as classification and regression trees (CART), random forests, etc. are able to make predictions for missing data but that does not mean the reasons why observations are missing can be ignored, nor can the (possibly unknown) effects / biases those missing observations have on the resulting model can be ignored 
+\item Regardless of whether the missing data are included or excluded, classifications will still generally be better for the observations used to fit the model
+\item Similar to multiple regression, techniques like splitting data into training and test sets (need large $n$) and jackknife / cross - validation to mimic training and test sets can be used to do in-sample and out-of-sample classifications 
+\item When there are a lot of explanatory variables to choose from, use forward/backward/ etc. stepwise techniques to help narrow the list of potentially useful variable; just like in multiple regression, these should help in determining which variables to look at closer and not which variables should be in the final model
+\item Getting to the final model, especially when there are a lot of explanatory variables requires doing many hypothesis tests; be aware that, as a result, variables that look significant may get included, but actually aren't; the Bonferroni correction is helpful to reduce this problem
+\end{itemize}
+
+\section{Experimental Design and One-Way ANOVA}
+\begin{itemize}
+\item Experiments, if carried out correctly, can help determine causality; but correlation does not imply causation 
+\item By controlling the explanatory variables, the effect of the variables on the response can be determined 
+\item There are many types of experimental design: completely randomized, randomized block, Latin square/cub, incomplete block, complete factorial, and more 
+\item This section will be on balanced completely randomized designs, analyzed using a one-way ANOVA model 
+\item Main Principles of Experimental Design: \begin{itemize} 
+\item Control the effects of lurking / confounding variables on the response through the design of the experiment 
+\item Randomize: use chance to assign subjects to treatment groups 
+\item Replicate: repeat with as many experimental units as possible \end{itemize} 
+\item Following these principles reduces biases
+\item Keywords \begin{itemize} 
+\item experiment: process of collecting data under a controlled setting 
+\item design of the experiment: method of collecting the data 
+\item response variable: variable measured in the experiment 
+\item experimental unit: item/person upon which the response variable is measured (not the response variable itself)
+\item factors: explanatory variables in the experiment 
+\item level: intensities of the explanatory variable (within a factor) 
+\item treatment: combination of levels in an experiment 
+\item lurking variable: variables that affect the results but which were not included in the study \end{itemize} 
+\item Designing an Experiment \begin{itemize} 
+\item Choose factors to be included, identify the response variable(s)
+\item Choose the treatments (i.e., factor-level combinations)
+\item Determine sample size (usually based on some combination of desired standard error and time and cost constraints)
+\item Determine how treatments will be assigned to the experimental units (i.e., design of experiment) \end{itemize} 
+\item One-Way Model with a Completely Randomized Design \begin{itemize} 
+\item response variable $y$ - numerical variable 
+\item explanatory variable $x$ - qualitative with $p$ categories (called treatments)
+\item Goal: want to compare average of response variable $y$ across $p$ treatments 
+\item have $1$ factor, with $p$ levels 
+\item sample size $n$ 
+\item randomly assign each of the $n$ experimental units to one of the $p$ treatments \end{itemize} 
+\item Balanced and Unbalanced Designs \begin{itemize} 
+\item Balanced design: equal sample sizes for each treatment group
+\item Unbalanced design: unequal sample sizes for each treatment group (this means that there is more information about some  groups, with higher sample sizes, than other groups, with smaller sample sizes)
+\item Unbalanced designs can cause a lot of problems especially with more complex experimental design schemes
+\item It is possible to start off with a balanced design but because of nonresponse and/or test subjects dropping out before the end of the study, the resulting data becomes unbalanced \end{itemize} 
+\item Suppose there are two populations, each with a sample from which a parameter is measured \begin{itemize} 
+\item Goal: compare parameter A with parameter B using statistic A and statistic B respectively 
+\item Hypotheses: $$ \begin{aligned} H_0 &: \mu_1 = \mu_2 \\ H_A &: \mu_1 \neq \mu_2 \end{aligned} $$ 
+\item Two populations have the same variance; compute the test statistic assuming the null hypothesis is true 
+$$ t = \frac{(\bar{x}_1 - \bar{x}_2) - (\mu_1 - \mu_2)}{\sqrt{s^2 \left( \frac{1}{n_1} + \frac{1}{n_2} \right) } } $$ which has a $t$ distribution with $n)1 + n_2 - 2$ degrees of freedom
+\item The pooled variance is $$ s^2 = \frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{(n_1 - 1) + (n_2 - 1)} $$ 
+\item Assumptions: independent SRSs, $\sigma_1 = \sigma^2$, hypothesis test is exact if populations are normally distributed, approximated for large $n$
+\item Rule of thumb: if the larger sample standard deviation is no more than twice the smaller standard deviation, it is generally ok to assume that $\sigma_1 = \sigma_2$
+\item Note: the $n_1 = n_2$ case is more robust against both assumptions 
+\item The $(1 - \alpha)\%$ confidence interval for $\mu_1 - \mu_2$ is $$ (\bar{x}_1 - \bar{x}_2) \pm t_{\alpha / 2} \sqrt{ s_p^2 \left( \frac{1}{n_1} + \frac{1}{n_2} \right) }  $$ 
+\item Now, if the two populations have different variances, then the test statistic is 
+$$ t = \frac{(\bar{x}_1 - \bar{x}_2) - (\mu_1 - \mu_2)}{\sqrt{ \frac{s_1^2}{n_1} + \frac{s_2^2}{n_2} }} $$ 
+\item The test statistic comes from an approximate $t$-distribution with the Satterthwaite approximation for degrees of freedom:
+$$ \text{df} = \frac{ \left( \frac{s_1^2}{n_1} + \frac{s_2^2}{n_2} \right)^2}{ \frac{ \left( \frac{s_1^2}{n_1} \right)^2}{n_1 - 1}  + \frac{ \left( \frac{s_2^2}{n_2} \right)^2}{n_2 - 1} } $$ 
+\item Assumptions: independent SRSs, hypothesis test is exact if populations are normally distributed, otherwise approximate for large $n$ 
+\item Note: the case where $n_1 = n_2$ is more robust against normality \end{itemize} 
+\item One-Way ANOVA Model \begin{itemize} 
+\item Regression Model: $$y = \beta_0 + \beta_1x_1 + \dots + \beta_{p-1}x_{p-1} + \varepsilon $$ 
+\item This model can be rewritten as $$ y_{ij} = \mu_j + \varepsilon_{ij} $$ where $j$ is the treatment ($j = 1,\dots,p$) and $i$ is the $i$th experimental unit in the $j$th treatment group
+\item $\mu_j$ is the mean of the response variable in the $j$th treatment group; $y_{ij}$ is the response variable value of the $i$th experimental unit in the $j$th treatment group; $\varepsilon_{ij}$ is the random error for the $i$th experimental unit in the $j$th treatment group
+\item The estimate of $\mu_j$ goes to $\bar{y}_j$, the mean of the response values in the $j$th treatment group
+\item Note: think of the model as $\beta_0 = \mu_0$, $\beta_0 + \beta_1 = \mu_1$, $\beta_0 + \beta_2 = \mu_2$, and so foth; so group $p$ would be the dropped category when converting categorical variables into dummy variables \end{itemize}
+\item Completely Randomized Design \begin{itemize} 
+\item Regression model: $$ y = \beta_0 + \beta_1x + \varepsilon $$ 
+\item There are two treatments, so one dummy (indicator) variable: $$ x = \begin{cases} 1 &\text{ treatment 1} \\ 0 &\text{ treatment 2} \end{cases} $$ 
+\item Converting the regression model notation into the one-way ANOVA model notation: $$ y_{ij} = \mu_j + \varepsilon_{ij} $$ where $\mu_1$ is the average response for one treatment and $\mu_2$ is ths average response for the other treatment 
+\item One-Way ANOVA Model Assumptions \begin{itemize} 
+\item independent observations - completely randomized design takes care of this assumption, assuming observations are a simple random sample from the population to begin with
+\item Assume $\varepsilon_{ij}$ are normally distributed with mean $0$ and standard deviation $\sigma$, i.e., $\varepsilon_{ij} \sim N(0, \sigma)$
+\item To check assumptions, normality - check normal quantile plot of residuals, constant variance - satisfied if largest standard deviation is less than twice the smallest standard deviation; if violated, try transforming the data; this assumption check becomes more difficult with an unbalanced layout 
+\item $\sigma$ estimate is $s$ \end{itemize} \end{itemize}
+\item One-Way ANOVA $F$-test for Balanced, Completely Randomized Designs \begin{itemize} 
+\item Specify the null ($H_0: \mu_1 = \mu_2 = \dots = \mu_p$) and alternate hypothesis ($H_A$: not all of the $\mu_j$ are equal; i.e., at least two means are different)
+\item Choose significance level $\alpha$
+\item Collect data: $p$ independent SRSs of sizes $n_1 + n_2 + \dots + n_p = n$, estimate parameters $\mu_1,\mu_2,\dots,\mu_p$ by $\bar{y}_1,\bar{y}_2,\dots,\bar{y}_p$ and standard deviation $s_j$ for each group $j$
+\item Compute test statistic assuming the null hypothesis is true
+$$ F = \frac{\text{MSG}}{\text{MSE}} = \frac{ \frac{\sum_{i=1}^p n_j (\bar{y}_j - \bar{y})^2}{p-1}}{ \frac{\sum_{j=1}^p (n_j - 1)s_j^2}{n-p}} $$ with an $F(p-1,n-p)$ distribution 
+\item Compute the $p$-value and reject $H_0$ if $p$-value $< \alpha$ 
+\item Assumptions: independent observations, normally distributed measurements in each group with the same population standard deviation \end{itemize} 
+\item One-Way ANOVA Analysis: SST = SSG + SSE 
+$$ \begin{tabular}{|c|c|c|c|c|} \hline 
+source & df & sum of squares & mean square (variance) & $F$ \\ \hline 
+groups & $p-1$ & $\text{SSG} = \sum_{j=1}^p n_j(\bar{y}_j - \bar{y})^2$ & $\text{MSG} = \frac{\text{SSG}}{p-1}$ & $F = \frac{\text{MSG}}{\text{MSE}}$  \\ 
+error & $n-p$ & $\text{SSE} = \sum_{j=1}^p (n_j - 1)s_j^2$ & $\text{MSE} = \frac{\text{SSE}}{n-p}$ & - \\ \hline 
+total & $n-1$ & $\text{SST} = \sum_{i,j} (y_{ij} - \bar{y})^2$ & - & -  \\ \hline \end{tabular} $$ 
+Note: $n_1 + n_2 + \dots + n_p = n$ and $s_j$ is the treatment group sample standard deviation 
+\item Degrees of Freedom \begin{itemize} 
+\item For linear regression: 
+$$ \begin{tabular}{|c|c|} \hline source & df \\ \hline regression & $k$ \\ error & $n - (k+1)$ \\ total & $n-1$ \\ \hline \end{tabular} $$ 
+\item For one-way ANOVA: 
+$$ \begin{tabular}{|c|c|} \hline source & df \\ \hline groups & $p-1$ \\ error & $n_1 + n_2 + \dots + n_p - p = n-p$ \\ total & $n_1 + n_2 + \dots + n_p - 1 = n-1$ \\ \hline \end{tabular} $$ 
+\item In regression, $k$ = number of explanatory variables = number of slopes 
+\item In one-way ANOVA, $p$ = number of groups; note that if a categorical variable has $p$ types, then $p-1$ dummy variables are needed, leading to $p-1$ slopes \end{itemize} 
+\item Sum of Squares \begin{itemize} 
+\item For linear regression: 
+$$ \begin{tabular}{|c|c|} \hline source & sums of squares \\ \hline regression & $\text{SSR} = \sum_{i=1}^n (\hat{y}_i - \bar{y})^2$ \\ error & $\text{SSE} = \sum_{i=1}^n (y_i - \hat{y}_i)^2$ \\ total & $\text{SST} = \sum_{i=1}^n (y_i - \bar{y})^2$ \\ \hline \end{tabular} $$ 
+\item For one-way ANOVA: 
+$$ \begin{tabular}{|c|c|} \hline source & sum of squares \\ \hline groups & $\text{SSG} = \sum_{j=1}^p n_j(\bar{y}_j - \bar{y})^2$ \\ error & $\text{SSE} = \sum_{j=1}^p (n_j - 1)s_j^2$ \\ total & $\text{SST} = \sum_{i,j} (y_{ij} - \bar{y})^2$ \\ \hline \end{tabular} $$ 
+\item $\hat{y}_i$ in regression is $\bar{y}_j$ in one-way ANOVA
+\item In each group $j$m there is only one prediction: $\bar{y}_j$
+\item Note that $$s_j^2 = \frac{\sum_{i=1}^{n_j} (y_{ij} - \bar{y}_j)^2}{n_j - 1} $$ \end{itemize} 
+\item Comparing Means \begin{itemize} 
+\item One-way ANOVA $F$-test is used for testing all means at once (like an overall $F$-test in multiple regression), but i is not useful to see which treatment group means are significantly different from each other (i.e., pairwise difference) 
+\item If there are treatment pairs we are particularly interested in when designing the experiment, construct pairwise confidence intervals \begin{itemize} 
+\item Confidence interval for a single treatment $j$: $$ \bar{y}_j \pm t_{\alpha / 2} \left( \frac{s}{\sqrt{n_j}} \right) $$ 
+\item Pairwise confidence interval - difference between two treatments $j$ and $j^*$:
+$$ (\bar{y}_j - \bar{y}_{j^*}) \pm t_{\alpha/2}s \sqrt{\frac{1}{n_j} + \frac{1}{n_{j^*}}} $$ where $t_{\alpha/2}$ is the upper tail value on the $t$-distribution with probability $\alpha/2$ with $n-p$ degrees of freedoms and $s$ is the pooled standard deviation \end{itemize} \end{itemize}
+\item Pooled Standard Deviation \begin{itemize} 
+\item One of the one-way ANOVA assumptions is that the population standard deviation $\sigma$ is the same across all $p$ groups 
+\item This means that the sample standard deviation of each group $s_j$ is an estimate of the same population standard deviation value 
+\item A better estimate of $\sigma$ is calculated by combining data across the $p$ groups, forming the pooled standard deviation 
+\item $\sigma$ estimated by the pooled standard deviation 
+$$ \begin{aligned} s &= \sqrt{\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2 + \dots + (n_p - 1)s_p^2}{(n_1 - 1) + (n_2 - 1) + \dots + (n_p - 1)}} \\ &= \sqrt{ \frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2 + \dots + (n_p - 1)s_p^2}{n-p}} \end{aligned} $$ if $n_1 + n_2 + \dots + n_p = n$ 
+\item $s$ is a weighted average of the treatment group standard deviations (basically weighed by sample size) \end{itemize} 
+\item Multiple Comparisons \begin{itemize} 
+\item Type I error - reject null hypothesis when it is true 
+\item $P(\text{Type I error}) = \alpha$ for each hypothesis test 
+\item When many tests are done at once, the combined probability of a Type I error is higher than $\alpha$ across all tests 
+\item In multiple regression, the Bonferroni correction was used to check for the significance of individual explanatory variables 
+\item If all pairwise confidence intervals of differences were constructed, the same problem would occur 
+\item Solution: post-hoc comparisons of all pairwise treatment means: Bonferroni's Method, Scheffe's Method, Tukey's Method 
+\item These methods will give an experimentwise Type I error rate of $\alpha$ as opposed to a comparisonwise rate of $\alpha$ \end{itemize} 
+\item Tukey's Method \begin{itemize} 
+\item There are two versions: balanced and unbalanced - most common method used 
+\item The unbalanced version is approximate
+\item This method is also called the Tukey-Kramer method or Tukey's HSD (honestly significant difference) \end{itemize} 
+\item Tukey's Multiple Comparisons Procedure (balanced) \begin{itemize} 
+\item Set $\alpha$ level (i.e., Type I error rate) 
+\item Assume independent observations, normality and equal $\sigma$ across groups 
+\item Hypotheses: $$ \begin{aligned} H_0 &: \mu_j = \mu_{j'} \\ \mu_j \neq \mu_{j'} \end{aligned} $$ 
+\item Pairwise confidence interval $$ \bar{y}_j - \bar{y}_{j'} \pm q_\alpha(p, n-p) \frac{s}{\sqrt{n'}} $$ \begin{itemize}
+\item $j \neq j'$, $\bar{y}_j - \bar{y}_{j'}$ is a pairwise difference in means 
+\item $p$ is the number of treatments 
+\item $s = $ RMSE, from one-way ANOVA model 
+\item $n'$ - number of observations within a treatment 
+\item $q_\alpha(p, (n'p) - p)$ - critical value of the studentized range distribution, degrees of freedom is $(n'p) - p$ (same as RMSE degrees of freedom) \end{itemize} 
+\item If $0$ is in the interval, then there is no a significant difference between groups $j$ and $j'$; in other words, significantly different pairs have confidence intervals which do not include $0$
+\item Pairwise test statistic: $$\frac{\bar{y}_j - \bar{y}_{j'}}{s / \sqrt{n'}} $$ 
+\item Pairwise $p$-value: probability of being greater than the absolute value of the test statistic on a studentized range distribution for a level $\alpha$ test, $p$ treatment groups and degrees of freedom $(n' p) - p$ \end{itemize} 
+\item When to use $p$-value Adjustments \begin{itemize} 
+\item Before data is collected, if here are only one or two pairs of differences, adjustments are not needed because the total number of hypothesis tests being done is low
+\item Post-hoc test: need to be conservative when checking all pairs - use Tukey's HSD (or Bonferroni, etc.) - these adjustments are there to reduce errors \end{itemize} 
+\item Order Statistics \begin{itemize} 
+\item Order statistics is a subfield of statistics and is the study of the statistical properties of ordered/ranked data; minimum, maximum, median, quantiles are all examples of statistics based on ordered/ranked data 
+\item $n$ independently and identically distributed observations: $x_1,\dots,x_n$ 
+\item Let $x_{1:n}$ denote the $i$th order statistic, this means \begin{itemize} 
+\item $x_{1:n}$ denotes the smallest observation in the data set $\to$ first order statistic (i.e., minimum) 
+\item $x_{2:n}$ denotes the second smallest observation in the data set $\to$ second order statistic 
+\item This keeps going on
+\item $x_{n:n}$ denotes the largest observation in the data set $\to$ $n$th order statistic (i.e., maximum) \end{itemize} 
+\item Let $x_1,\dots,x_n$ be iid random variables drawn from a continuous distribution with pdf $f(x)$ and cdf $F(x)$, then the pdf of the $i$th order statistic, $x_{i:n}$ is $$ f_{i:n}(x) = \frac{n!}{(i-1)!(n-i)!}(F(x))^{i-1}(1 - F(x))^{n-i} f(x) $$ \end{itemize} 
+\item Studentized Range Distribution \begin{itemize} 
+\item Recall: the null hypothesis for the Tukey tests are that there are no difference in means between the two groups 
+\item Draw $n'$ independent observations from $p$ independent populations which have the same distribution, $N(\mu, \sigma)$: \begin{itemize} 
+\item $\bar{x}_1,\bar{x}_2,\dots,\bar{x}_p$ - $p$ sample means 
+\item $\bar{x}_{1:p}$ - smallest sample mean
+\item $\bar{x}_{p:p}$ - largest sample mean \end{itemize} 
+\item Studentized range distribution is the distribution of the following random variable $$ q = \frac{\bar{x}_{p:p} - \bar{x}_{1:p}}{s / \sqrt{n'}} $$ where $s$ is the pooled standard deviation 
+\item The distribution of $q$ is defined by $p$, the number of groups, and the degrees of freedoms, $n - p$, where $n$ is the total sample size in the balanced case: $n = n' p$ \end{itemize} 
+\end{itemize}
+
+
+\end{document}
